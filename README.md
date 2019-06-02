@@ -1,4 +1,4 @@
-# Analysis of the sequencing data of the entire exome
+# Analysis of Whole-Exome Sequencing data
 
 A pipeline for the bioinformatics analysis of WES data.
 
