@@ -1,0 +1,4 @@
+# A Snakefile for a WES analysis pipeline.
+
+## BAM files
+GERMLINE_BAM = expand("data/BAM/{sample}.bam", sample=GERMLINE)
