@@ -5,3 +5,11 @@ GERMLINE = ['sample1']
 
 ## BAM files
 GERMLINE_BAM = expand("data/BAM/{sample}.bam", sample=GERMLINE)
+
+rule bowtie2_align:
+    input:
+        "file.fastq"
+    output:
+        "file.bam"
+    shell:
+        "bowtie2 ..."
