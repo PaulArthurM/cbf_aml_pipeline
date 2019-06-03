@@ -17,7 +17,8 @@ echo "SGE O WORKDIR: $SGE_O_WORKDIR"
 echo "SGE TASK ID: $SGE_TASK_ID"
 echo "NSLOTS: $NSLOTS"
 
+echo Start at:`date`
 
+# Put your code here
 
-
-
+echo End at:`date`
