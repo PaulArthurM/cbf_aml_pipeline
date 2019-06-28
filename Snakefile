@@ -19,8 +19,8 @@ for SAMPLE in SAMPLES:
     sample_name = re.match("(.+?)\.bam$", SAMPLE).group(1)
     ALL_BAI.append("/data1/scratch/pamesl/projet_cbf/data/bai/{sample_name}.bai".format(sample_name=sample_name))
 
-print(ALL_BAI)
-#TARGETS.extend(ALL_BAI)
+
+TARGETS.extend(ALL_BAI)
 
 rule all:
     input: TARGETS
