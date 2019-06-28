@@ -2,8 +2,8 @@
 #$ -S /bin/bash
 #$ -N snakemake_run
 #$ -cwd
-#$ -o /data1/scratch/pamesl/stdoe_sge
-#$ -e /data1/scratch/pamesl/stdoe_sge
+#$ -o /data1/scratch/pamesl/projet_cbf/stdoe_sge
+#$ -e /data1/scratch/pamesl/projet_cbf/stdoe_sge
 #$ -q short.q
 #$ -l h_rt=01:00:00
 #$ -pe thread 1
