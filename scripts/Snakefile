@@ -1,15 +1,54 @@
 # A Snakefile for a WES analysis pipeline.
 
-GERMLINE = ['sample1']
+import json
+import re
+
+# Configuration file
+configfile: "config.yaml"
+
+# Load json configuration file
+CONFIG_JSON = json.load(open(config["SAMPLES"]))
+
+SAMPLES = CONFIG_JSON['samples']
 
 
-## BAM files
-GERMLINE_BAM = expand("data/BAM/{sample}.bam", sample=GERMLINE)
+ALL_BAI = []
+TARGETS = []
 
-rule bowtie2_align:
+for SAMPLE in SAMPLES:
+    sample_name = re.match("(.+?)\.bam$", SAMPLE).group(1)
+    ALL_BAI.append("data/bai/{sample_name}.bai".format(sample_name=sample_name))
+
+
+TARGETS.extend(ALL_BAI)
+
+rule all:
+    input: TARGETS
+
+
+# Rule for create index from BAM file with samtools index
+rule samtools_index:
     input:
-        "file.fastq"
+        "data/bam/{sample}.bam"
     output:
-        "file.bam"
+        "data/bai/{sample}.bai"
     shell:
-        "bowtie2 {input} {output}"
+        "conda activate samtools_env && \
+        samtools index -b {input} {output} && \
+        conda deactivate samtools_env"
+
+
+# Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
+rule mark_duplicates:
+    input:
+        "data/bam/{sample}.bam"
+    output:
+        marked_bam="data/bam/{sample}_marked_duplicates.bam"
+        metrics_txt="data/metrics/{sample}_marked_dup_metrics.txt"
+    shell:
+        "conda activate gatk4_4.1.2.0_env &&"
+        "java -jar picard.jar MarkDuplicates \
+            I={input} \
+            O={output.marked_bam} \
+            M={output.metrics_txt} &&"
+        "source deactivate"
