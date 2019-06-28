@@ -17,10 +17,10 @@ TARGETS = []
 
 for SAMPLE in SAMPLES:
     sample_name = re.match("(.+?)\.bam$", SAMPLE).group(1)
-    ALL_BAI.append("data/bai/{sample_name}.bai".format(sample_name=sample_name))
+    ALL_BAI.append("/data1/scratch/pamesl/projet_cbf/data/bai/{sample_name}.bai".format(sample_name=sample_name))
 
-
-TARGETS.extend(ALL_BAI)
+print(ALL_BAI)
+#TARGETS.extend(ALL_BAI)
 
 rule all:
     input: TARGETS
@@ -29,9 +29,9 @@ rule all:
 # Rule for create index from BAM file with samtools index
 rule samtools_index:
     input:
-        "data/bam/{sample}.bam"
+        "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}.bam"
     output:
-        "data/bai/{sample}.bai"
+        "/data1/scratch/pamesl/projet_cbf/data/bai/{sample}.bai"
     shell:
         "conda activate samtools_env && \
         samtools index -b {input} {output} && \
@@ -43,8 +43,8 @@ rule mark_duplicates:
     input:
         "data/bam/{sample}.bam"
     output:
-        marked_bam="data/bam/{sample}_marked_duplicates.bam"
-        metrics_txt="data/metrics/{sample}_marked_dup_metrics.txt"
+        marked_bam="/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_marked_duplicates.bam"
+        metrics_txt="/data1/scratch/pamesl/projet_cbf/data/metrics/{sample}_marked_dup_metrics.txt"
     shell:
         "conda activate gatk4_4.1.2.0_env &&"
         "java -jar picard.jar MarkDuplicates \
