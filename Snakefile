@@ -11,7 +11,6 @@ CONFIG_JSON = json.load(open(config["SAMPLES"]))
 
 SAMPLES = CONFIG_JSON['samples']
 
-
 ALL_BAI = []
 TARGETS = []
 
