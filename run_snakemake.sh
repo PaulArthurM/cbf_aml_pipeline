@@ -21,6 +21,6 @@ echo Start at:`date`
 
 conda activate smk_env
 snakemake
-conda deactivate smk_env
+conda deactivate
 
 echo End at:`date`

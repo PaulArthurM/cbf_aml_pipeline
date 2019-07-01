@@ -35,7 +35,7 @@ rule samtools_index:
     shell:
         "conda activate samtools_env && \
         samtools index -b {input} {output} && \
-        conda deactivate samtools_env"
+        conda deactivate"
 
 
 # Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
