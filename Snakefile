@@ -33,7 +33,7 @@ rule samtools_index:
     output:
         "/data1/scratch/pamesl/projet_cbf/data/bai/{sample}.bai"
     shell:
-        "source activate samtools_env && \
+        "conda activate samtools_env && \
         samtools index -b {input} {output} && \
         source deactivate samtools_env"
 
@@ -46,7 +46,7 @@ rule mark_duplicates:
         marked_bam="/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_marked_duplicates.bam",
         metrics_txt="/data1/scratch/pamesl/projet_cbf/data/metrics/{sample}_marked_dup_metrics.txt"
     shell:
-        "source activate gatk4_4.1.2.0_env &&"
+        "conda activate gatk4_4.1.2.0_env &&"
         "java -jar picard.jar MarkDuplicates \
             I={input} \
             O={output.marked_bam} \
