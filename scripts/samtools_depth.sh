@@ -1,0 +1,26 @@
+#!/bin/bash
+#$ -S /bin/bash
+#$ -N samtools_flagstat
+#$ -cwd
+#$ -o /data1/scratch/pamesl/projet_cbf/stdoe_sge
+#$ -e /data1/scratch/pamesl/projet_cbf/stdoe_sge
+#$ -q short.q
+#$ -l h_rt=01:00:00
+#$ -pe thread 1
+#$ -l h_vmem=2.75G
+
+echo "JOB NAME: $JOB_NAME"
+echo "JOB ID: $JOB_ID"
+echo "QUEUE: $QUEUE"
+echo "HOSTNAME: $HOSTNAME"
+echo "SGE O WORKDIR: $SGE_O_WORKDIR"
+echo "SGE TASK ID: $SGE_TASK_ID"
+echo "NSLOTS: $NSLOTS"
+
+echo Start at:`date`
+
+module load samtools/1.2
+echo samtools flagstat EGAR00001347178_SJCBF016_D-C0DG1ACXX.5.bam | awk -F "[(|%]" 'NR == 3 {print $2}'
+module unload samtools/1.2
+
+echo End at:`date`
