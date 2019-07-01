@@ -20,7 +20,7 @@ echo "NSLOTS: $NSLOTS"
 echo Start at:`date`
 
 module load samtools/1.2
-samtools flagstat $1 | awk -F "[(|%]" 'NR == 3 {print $2}'
+samtools flagstat $1 
 module unload samtools/1.2
 
 echo End at:`date`
