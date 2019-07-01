@@ -16,7 +16,7 @@ TARGETS = []
 
 for SAMPLE in SAMPLES:
     sample_name = re.match("(.+?)\.bam$", SAMPLE).group(1)
-    bai_file = "/data1/scratch/pamesl/projet_cbf/data/bai/{sample_name}.bai"
+    bai_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}.bai"
     ALL_BAI.append(bai_file.format(sample_name=sample_name))
 
 
@@ -31,7 +31,7 @@ rule samtools_index:
     input:
         "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}.bam"
     output:
-        "/data1/scratch/pamesl/projet_cbf/data/bai/{sample}.bai"
+        "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}.bai"
     shell:
         "samtools index -b {input} {output}"
 
