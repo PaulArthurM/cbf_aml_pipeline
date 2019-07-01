@@ -33,9 +33,7 @@ rule samtools_index:
     output:
         "/data1/scratch/pamesl/projet_cbf/data/bai/{sample}.bai"
     shell:
-        "conda activate samtools_env && \
-        samtools index -b {input} {output} && \
-        conda deactivate"
+        "samtools index -b {input} {output}"
 
 
 # Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
