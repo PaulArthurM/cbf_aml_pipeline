@@ -19,8 +19,8 @@ echo "NSLOTS: $NSLOTS"
 
 echo Start at:`date`
 
-#source activate smk_env
+conda activate smk_env
 snakemake
-#source deactivate smk_env
+conda deactivate smk_env
 
 echo End at:`date`
