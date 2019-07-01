@@ -19,8 +19,10 @@ echo "NSLOTS: $NSLOTS"
 
 echo Start at:`date`
 
+echo Work on: $1
+
 module load samtools/1.2
-samtools flagstat $1 
+samtools flagstat $1
 module unload samtools/1.2
 
 echo End at:`date`
