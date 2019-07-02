@@ -12,12 +12,15 @@ CONFIG_JSON = json.load(open(config["SAMPLES"]))
 SAMPLES = CONFIG_JSON['samples']
 
 ALL_BAI = []
+MERGES = []
 TARGETS = []
 
 for SAMPLE in SAMPLES:
-    sample_name = re.match("(.+?)\.bam$", SAMPLE).group(1)
-    bai_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}.bai"
-    ALL_BAI.append(bai_file.format(sample_name=sample_name))
+    SPLIT in SAMPLE:
+        sample_name = re.match("(.+?)\.bam$", SPLIT).group(1)
+        bai_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}.bai"
+        ALL_BAI.append(bai_file.format(sample_name=sample_name))
+
 
 
 TARGETS.extend(ALL_BAI)
@@ -34,6 +37,11 @@ rule samtools_index:
         "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}.bai"
     shell:
         "samtools index -b {input} {output}"
+
+
+# To do
+#rule merge_sam_files:
+#    input:
 
 
 # Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
