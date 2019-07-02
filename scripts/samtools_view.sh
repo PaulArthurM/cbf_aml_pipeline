@@ -24,7 +24,7 @@ bam_file=$1
 echo Work on ${bam_file} file.
 
 conda activate samtools_env
-samtools view -F 0x400 $bam_file
+samtools view -f 0x400 $bam_file | head -100
 conda deactivate
 
 echo End at:`date`
