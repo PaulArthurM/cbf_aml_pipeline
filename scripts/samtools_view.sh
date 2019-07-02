@@ -24,7 +24,7 @@ bam_file=/data1/scratch/pamesl/projet_cbf/data/bam/samples/$1
 echo Work on ${bam_file} file.
 
 conda activate samtools_env
-samtools view $bam_file | head -500
+samtools view -F 0x400 $bam_file
 conda deactivate
 
 echo End at:`date`
