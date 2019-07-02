@@ -19,7 +19,7 @@ echo "NSLOTS: $NSLOTS"
 
 echo Start at:`date`
 
-bam_file=/data1/scratch/pamesl/projet_cbf/data/bam/samples/$1
+bam_file=$1
 
 echo Work on ${bam_file} file.
 
