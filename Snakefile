@@ -12,7 +12,7 @@ CONFIG_JSON = json.load(open(config["SAMPLES"]))
 SAMPLES = CONFIG_JSON['samples']
 
 
-def sample_name(sample):
+def get_sample_name(sample):
     return re.match("(.+?)\.bam$", sample).group(1)
 
 
@@ -22,7 +22,7 @@ TARGETS = []
 
 for SAMPLE in SAMPLES:
     for LANE in SAMPLE:
-        sample_name = sample_name(LANE)
+        sample_name = get_sample_name(LANE)
         bai_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}.bai"
         ALL_BAI.append(bai_file.format(sample_name=sample_name))
         bqsr_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}_BQSR.bam"
