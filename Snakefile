@@ -27,8 +27,8 @@ for SAMPLE in SAMPLES:
         ALL_BAI.append(bai_file.format(sample_name=sample_name))
         bqsr_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}_BQSR.bam"
         bqsr_table = "/data1/scratch/pamesl/projet_cbf/data/bam/recal_data_{sample_name}.table"
-        BQSR_BAM.append(bqsr_table)
-        BQSR_BAM.append(bqsr_file)
+        BQSR_BAM.append(bqsr_table.format(sample_name=sample_name))
+        BQSR_BAM.append(bqsr_file.format(sample_name=sample_name))
 
 
 TARGETS.extend(ALL_BAI)
