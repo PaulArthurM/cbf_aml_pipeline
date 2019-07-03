@@ -18,17 +18,20 @@ def get_sample_name(sample):
 
 ALL_BAI = []
 BQSR_BAM = []
+NORMALS = []
 TARGETS = []
 
 for SAMPLE in SAMPLES:
-    for LANE in SAMPLE:
-        sample_name = get_sample_name(LANE)
-        bai_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}.bai"
-        ALL_BAI.append(bai_file.format(sample_name=sample_name))
-        bqsr_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}_BQSR.bam"
-        bqsr_table = "/data1/scratch/pamesl/projet_cbf/data/bam/recal_data_{sample_name}.table"
-        BQSR_BAM.append(bqsr_table.format(sample_name=sample_name))
-        BQSR_BAM.append(bqsr_file.format(sample_name=sample_name))
+    for TYPE in SAMPLE:
+        for LANE in TYPE:
+            sample_name = get_sample_name(LANE)
+            bai_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}.bai"
+            ALL_BAI.append(bai_file.format(sample_name=sample_name))
+            bqsr_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}_BQSR.bam"
+            bqsr_table = "/data1/scratch/pamesl/projet_cbf/data/bam/recal_data_{sample_name}.table"
+            BQSR_BAM.append(bqsr_table.format(sample_name=sample_name))
+            BQSR_BAM.append(bqsr_file.format(sample_name=sample_name))
+    #NORMALS.append()
 
 
 TARGETS.extend(ALL_BAI)
@@ -98,3 +101,20 @@ rule apply_BQSR:
             -I {input.bam} \
             --bqsr-recal-file {input.table} \
             -O {output}"
+
+rule variant_calling_Mutect2:
+    input:
+        tumour_bam="none",
+        normal_bam="none"
+    output:
+        "none"
+
+    shell:
+        "gatk Mutect2 \
+            -R reference.fa \
+            -I tumor.bam \
+            -I normal.bam \
+            -normal normal_sample_name \
+            --germline-resource af-only-gnomad.vcf.gz \
+            --panel-of-normals pon.vcf.gz \
+            -O somatic.vcf.gz"
