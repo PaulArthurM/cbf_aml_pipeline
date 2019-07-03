@@ -21,7 +21,7 @@ BQSR_BAM = []
 TARGETS = []
 
 for SAMPLE in SAMPLES:
-    LANE in SAMPLE:
+    for LANE in SAMPLE:
         sample_name = sample_name(LANE)
         bai_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}.bai"
         ALL_BAI.append(bai_file.format(sample_name=sample_name))
