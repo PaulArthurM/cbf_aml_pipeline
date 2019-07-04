@@ -118,10 +118,10 @@ rule apply_BQSR:
 
 rule variant_calling_Mutect2:
     input:
-        tumour_bam_1="/data1/scratch/pamesl/projet_cbf/data/bam/{tumour_1}.bam",
-        tumour_bam_2="/data1/scratch/pamesl/projet_cbf/data/bam/{tumour_2}.bam",
-        normal_bam_1="/data1/scratch/pamesl/projet_cbf/data/bam/{normal_1}.bam",
-        normal_bam_2="/data1/scratch/pamesl/projet_cbf/data/bam/{normal_2}.bam"
+        tumour_bam_1="/data1/scratch/pamesl/projet_cbf/data/bam/{tumour_1}_BQSR.bam",
+        tumour_bam_2="/data1/scratch/pamesl/projet_cbf/data/bam/{tumour_2}_BQSR.bam",
+        normal_bam_1="/data1/scratch/pamesl/projet_cbf/data/bam/{normal_1}_BQSR.bam",
+        normal_bam_2="/data1/scratch/pamesl/projet_cbf/data/bam/{normal_2}_BQSR.bam"
     output:
         "/data1/scratch/pamesl/projet_cbf/data/vcf/{normal_1}_and{normal_2}_vs_{tumour_1}_and_{tumour_2}_mutect2.vcf"
     shell:
