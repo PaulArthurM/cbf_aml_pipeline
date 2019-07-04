@@ -16,12 +16,24 @@ def get_sample_name(sample):
     return re.match("(.+?)\.bam$", sample).group(1)
 
 
+def return_vcf_name(pairs):
+    vcf="/data1/scratch/pamesl/projet_cbf/data/vcf/{normal_1}_and{normal_2}_vs_{tumour_1}_and_{tumour_2}_mutect2.vcf"
+    return vcf.format(normal_1=pairs[2], normal_2=pairs[3], tumour_1=pairs[0], tumour_2=pairs[1])
+
+
 ALL_BAI = []
 BQSR_BAM = []
 NORMALS = []
+VARIANT_CALLING = []
 TARGETS = []
 
 for SAMPLE in SAMPLES:
+    tumour_1 = SAMPLES[SAMPLE]["D"][0]
+    tumour_2 = SAMPLES[SAMPLE]["D"][1]
+    normal_1 = SAMPLES[SAMPLE]["G"][0]
+    normal_2 = SAMPLES[SAMPLE]["G"][1]
+    pairs = [tumour_1, tumour_2, normal_1, normal_2]
+    VARIANT_CALLING.append(return_vcf_name(pairs))
     for TYPE in SAMPLES[SAMPLE]:
         for LANE in SAMPLES[SAMPLE][TYPE]:
             sample_name = LANE #get_sample_name(LANE)
@@ -36,6 +48,7 @@ for SAMPLE in SAMPLES:
 
 TARGETS.extend(ALL_BAI)
 TARGETS.extend(BQSR_BAM)
+TARGETS.extend(VARIANT_CALLING)
 
 rule all:
     input: TARGETS

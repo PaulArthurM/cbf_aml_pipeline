@@ -1,3 +1,7 @@
 SAMPLES: "samples.json"
 
+#  Panel of Normales parameters:
 VCF_MAP: "/data1/scratch/pamesl/projet_cbf/data/map/sample_vcf.map"
+reader_threads: 1
+batch_size: 50
+intervals_size: 500
