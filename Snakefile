@@ -118,15 +118,19 @@ rule apply_BQSR:
 
 rule variant_calling_Mutect2:
     input:
-        tumour_bam="-I /data1/scratch/pamesl/projet_cbf/data/bam/{tumour_1}.bam -I /data1/scratch/pamesl/projet_cbf/data/bam/{tumour_2}.bam",
-        normal_bam="-I /data1/scratch/pamesl/projet_cbf/data/bam/{normal_1}.bam -I /data1/scratch/pamesl/projet_cbf/data/bam/{normal_2}.bam"
+        tumour_bam_1="/data1/scratch/pamesl/projet_cbf/data/bam/{tumour_1}.bam",
+        tumour_bam_2="/data1/scratch/pamesl/projet_cbf/data/bam/{tumour_2}.bam",
+        normal_bam_1="/data1/scratch/pamesl/projet_cbf/data/bam/{normal_1}.bam",
+        normal_bam_2="/data1/scratch/pamesl/projet_cbf/data/bam/{normal_2}.bam"
     output:
         "/data1/scratch/pamesl/projet_cbf/data/vcf/{normal_1}_and{normal_2}_vs_{tumour_1}_and_{tumour_2}_mutect2.vcf"
     shell:
         "gatk Mutect2 \
             -R reference.fa \
-            {input.tumour_bam}} \
-            {input.normal_bam} \
+            -I {input.tumour_bam_1}} \
+            -I {input.tumour_bam_2} \
+            -I {input.normal_bam_1} \
+            -I {input.normal_bam_2} \
             -normal {normal_1} \
             -normal {normal_2} \
             --germline-resource af-only-gnomad.vcf.gz \
