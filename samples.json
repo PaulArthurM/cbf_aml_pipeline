@@ -10,5 +10,9 @@
        "EGAR00001347181_SJCBF016_G-C0DG1ACXX.6.bam"
       ]
     }
-  }
+  },
+  "panelOfNormals": [
+    "EGAR00001347180_SJCBF016_G-C0DG1ACXX.5.bam",
+    "EGAR00001347181_SJCBF016_G-C0DG1ACXX.6.bam"
+  ]
 }

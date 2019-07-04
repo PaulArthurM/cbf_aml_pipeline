@@ -102,19 +102,20 @@ rule apply_BQSR:
             --bqsr-recal-file {input.table} \
             -O {output}"
 
+
 rule variant_calling_Mutect2:
     input:
-        tumour_bam="none",
-        normal_bam="none"
+        tumour_bam="-I /data1/scratch/pamesl/projet_cbf/data/bam/{tumour_1}.bam -I /data1/scratch/pamesl/projet_cbf/data/bam/{tumour_2}.bam",
+        normal_bam="-I /data1/scratch/pamesl/projet_cbf/data/bam/{normal_1}.bam -I /data1/scratch/pamesl/projet_cbf/data/bam/{normal_2}.bam"
     output:
-        "none"
-
+        "/data1/scratch/pamesl/projet_cbf/data/vcf/{normal_1}_and{normal_2}_vs_{tumour_1}_and_{tumour_2}_mutect2.vcf"
     shell:
         "gatk Mutect2 \
             -R reference.fa \
-            -I tumor.bam \
-            -I normal.bam \
-            -normal normal_sample_name \
+            {input.tumour_bam}} \
+            {input.normal_bam} \
+            -normal {normal_1} \
+            -normal {normal_2} \
             --germline-resource af-only-gnomad.vcf.gz \
             --panel-of-normals pon.vcf.gz \
-            -O somatic.vcf.gz"
+            -O {normal_1}_{normal_2}_vs_{tumour_1}_and_{tumour_2}.vcf.gz"

@@ -1,1 +1,3 @@
 SAMPLES: "samples.json"
+
+VCF_MAP: "/data1/scratch/pamesl/projet_cbf/data/map/sample_vcf.map"
