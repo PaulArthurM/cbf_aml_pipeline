@@ -23,9 +23,7 @@ TARGETS = []
 
 for SAMPLE in SAMPLES:
     for TYPE in SAMPLES[SAMPLE]:
-        print(SAMPLES[SAMPLE][TYPE])
         for LANE in SAMPLES[SAMPLE][TYPE]:
-            print(LANE)
             sample_name = LANE #get_sample_name(LANE)
             bai_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}.bai"
             ALL_BAI.append(bai_file.format(sample_name=sample_name))
