@@ -17,7 +17,7 @@ VCF_MAP = config["VCF_MAP"]
 
 
 TARGETS = []
-TARGETS.append(config['PON_VCF'])
+#TARGETS.append(config['PON_VCF'])
 for SAMPLE in NORMALS_SAMPLES:
     TARGETS.append("/data1/scratch/pamesl/projet_cbf/data/vcf/{sample}_single_sample.vcf.gz".format(sample=SAMPLE))
 
