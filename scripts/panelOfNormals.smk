@@ -6,7 +6,7 @@ import json
 
 
 # Configuration file
-configfile: "config.yaml"
+configfile: "/data2/home/pamesl/cbf_aml_pipeline/config.yaml"
 
 
 # Load json configuration file

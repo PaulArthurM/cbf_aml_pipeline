@@ -1,4 +1,4 @@
-SAMPLES: "samples.json"
+SAMPLES: "/data2/home/pamesl/cbf_aml_pipeline/samples.json"
 
 #  Reference Genome
 REFERENCE: "reference.fa"
