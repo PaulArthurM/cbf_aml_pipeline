@@ -59,13 +59,17 @@ rule create_DB_GenomicsDBImport:
             -R {params.reference}"
 
 
+# Wait to see GenomicsDBImport output files
 rule create_somatic_panelOfNormals:
+    input:
+        db=config["db_GDBI"]
     output:
-        ""
+        pon=config["VCF_MAP"]
     params:
-        db=directory(config["db_GDBI"])
+        db=directory(config["db_GDBI"]),
+        reference=config["REFERENCE"]
     shell:
         "gatk CreateSomaticPanelOfNormals \
-        -R reference.fasta \
-        -V gendb://{output.db} \
-        -O pon.vcf.gz"
+        -R {params.reference} \
+        -V gendb://{params.db} \
+        -O {output.pon}"
