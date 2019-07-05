@@ -124,6 +124,8 @@ rule variant_calling_Mutect2:
         normal_bam_2="/data1/scratch/pamesl/projet_cbf/data/bam/{normal_2}_BQSR.bam"
     output:
         "/data1/scratch/pamesl/projet_cbf/data/vcf/{normal_1}_and{normal_2}_vs_{tumour_1}_and_{tumour_2}_mutect2.vcf"
+    params:
+        pon=config['PON_VCF']
     shell:
         "gatk Mutect2 \
             -R reference.fa \
@@ -134,5 +136,5 @@ rule variant_calling_Mutect2:
             -normal {normal_1} \
             -normal {normal_2} \
             --germline-resource af-only-gnomad.vcf.gz \
-            --panel-of-normals pon.vcf.gz \
+            --panel-of-normals {params.pon} \
             -O {normal_1}_{normal_2}_vs_{tumour_1}_and_{tumour_2}.vcf.gz"
