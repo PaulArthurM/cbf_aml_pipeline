@@ -47,13 +47,13 @@ rule create_DB_GenomicsDBImport:
         sample_map=config["VCF_MAP"],
         reader_threads=config["reader_threads"],
         batch_size=config["batch_size"],
-        intervals_size=config["intervals_size"],
+        intervals_list=config["intervals_list"],
         reference=config["REFERENCE"]
     shell:
         "gatk GenomicsDBImport \
             --genomicsdb-workspace-path {output.db} \
             --batch-size {params.batch_size} \
-            -L {params.intervals_size} \
+            -L {params.intervals_list} \
             --sample-name-map {params.sample_map} \
             --reader-threads {params.reader_threads} \
             -R {params.reference}"

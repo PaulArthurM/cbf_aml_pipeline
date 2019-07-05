@@ -7,7 +7,7 @@ REFERENCE: "reference.fa"
 VCF_MAP: "/data1/scratch/pamesl/projet_cbf/data/map/sample_vcf.map"
 reader_threads: 1
 batch_size: 50
-intervals_size: 500
+intervals_list: /data1/scratch/pamesl/projet_cbf/data/hg19_data/hg19_intervals.list
 PON_VCF: "/data1/scratch/pamesl/projet_cbf/data/vcf/SJCBF_panel_of_normals.vcf.gz"
 
 #  DataBase GenomicsDBImport
