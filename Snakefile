@@ -47,9 +47,8 @@ for SAMPLE in SAMPLES:
             BQSR_BAM.append(bqsr_file.format(sample_name=sample_name))
     #NORMALS.append()
 
-for SAMPLE in NORMALS_SAMPLES:
-    TARGETS.append("/data1/scratch/pamesl/projet_cbf/data/vcf/{sample}_single_sample.vcf.gz".format(sample=SAMPLE))
-
+TARGETS.extend(expand("/data1/scratch/pamesl/projet_cbf/data/vcf/{sample}_single_sample.vcf.gz", sample=NORMALS_SAMPLES))
+TARGETS.append(config["VCF_MAP"])
 
 #TARGETS.extend(ALL_BAI)
 TARGETS.extend(BQSR_BAM)
