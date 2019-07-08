@@ -37,7 +37,7 @@ for SAMPLE in SAMPLES:
     pairs = [tumour_1, tumour_2, normal_1, normal_2]
     VARIANT_CALLING.append(return_vcf_name(pairs))
     for TYPE in SAMPLES[SAMPLE]:
-        MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_{lane_2}_BQSR_merge.bam".format(lane_1=SAMPLES[SAMPLE][TYPE][0], lane_2=SAMPLES[SAMPLE][TYPE][1]))
+        MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_{lane_2}_{type}_BQSR_merge.bam".format(lane_1=SAMPLES[SAMPLE][TYPE][0], lane_2=SAMPLES[SAMPLE][TYPE][1], type=TYPE))
         for LANE in SAMPLES[SAMPLE][TYPE]:
             sample_name = LANE #get_sample_name(LANE)
             bai_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}.bai"
@@ -122,7 +122,7 @@ rule apply_BQSR:
             --bqsr-recal-file {input.table} \
             -O {output}"
 
-
+"""
 rule variant_calling_Mutect2:
     input:
         tumour_bam_1="/data1/scratch/pamesl/projet_cbf/data/bam/{tumour_1}_BQSR.bam",
@@ -146,6 +146,26 @@ rule variant_calling_Mutect2:
             --germline-resource af-only-gnomad.vcf.gz \
             --panel-of-normals {input.pon} \
             -O {normal_1}_{normal_2}_vs_{tumour_1}_and_{tumour_2}.vcf.gz"
+"""
+
+rule variant_calling_Mutect2:
+    input:
+        tumour="/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_{lane_2}_D_BQSR_merge.bam",
+        normal="/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_{lane_2}_G_BQSR_merge.bam",
+        pon=config['PON_VCF']
+    output:
+        "/data1/scratch/pamesl/projet_cbf/data/vcf/{}_{}_mutect2.vcf"
+    params:
+        reference=config["REFERENCE"]
+    shell:
+        "gatk Mutect2 \
+            -R {params.reference} \
+            -I {input.tumour}} \
+            -I {input.normal} \
+            -normal {input.normal} \
+            --germline-resource af-only-gnomad.vcf.gz \
+            --panel-of-normals {input.pon} \
+            -O {normal_1}_{normal_2}_vs_{tumour_1}_and_{tumour_2}.vcf.gz"
 
 
 # Merge multiple sorted alignment files, producing a single sorted output file
@@ -154,7 +174,7 @@ rule merge_sam_files:
         lane_1="/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_BQSR.bam",
         lane_2="/data1/scratch/pamesl/projet_cbf/data/bam/{lane_2}_BQSR.bam"
     output:
-        "/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_{lane_2}_BQSR_merge.bam"
+        "/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_{lane_2}_{type}_BQSR_merge.bam"
     shell:
         "gatk MergeSamFiles \
             I={lane_1} \
