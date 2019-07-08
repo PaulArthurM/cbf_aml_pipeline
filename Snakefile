@@ -92,10 +92,12 @@ rule base_recalibrator:
         "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}.bam"
     output:
         "/data1/scratch/pamesl/projet_cbf/data/bam/recal_data_{sample}.table"
+    params:
+        reference=config["REFERENCE"]
     shell:
         "gatk BaseRecalibrator \
             -I {input} \
-            -R reference.fasta \
+            -R {reference} \
             --known-sites /data1/scratch/pamesl/projet_cbf/data/dbSNP/All_20180423.vcf.gz \
             --known-sites /data1/scratch/pamesl/projet_cbf/data/mills_1000G/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf.gz \
             -O {output}"
@@ -106,11 +108,13 @@ rule apply_BQSR:
     input:
         table="/data1/scratch/pamesl/projet_cbf/data/bam/recal_data_{sample}.table",
         bam="/data1/scratch/pamesl/projet_cbf/data/bam/{sample}.bam"
+    params:
+        reference=config["REFERENCE"]
     output:
         "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_BQSR.bam"
     shell:
         "gatk ApplyBQSR \
-            -R reference.fasta \
+            -R {reference} \
             -I {input.bam} \
             --bqsr-recal-file {input.table} \
             -O {output}"
@@ -125,10 +129,11 @@ rule variant_calling_Mutect2:
     output:
         "/data1/scratch/pamesl/projet_cbf/data/vcf/{normal_1}_and{normal_2}_vs_{tumour_1}_and_{tumour_2}_mutect2.vcf"
     params:
-        pon=config['PON_VCF']
+        pon=config['PON_VCF'],
+        reference=config["REFERENCE"]
     shell:
         "gatk Mutect2 \
-            -R reference.fa \
+            -R {reference} \
             -I {input.tumour_bam_1}} \
             -I {input.tumour_bam_2} \
             -I {input.normal_bam_1} \
