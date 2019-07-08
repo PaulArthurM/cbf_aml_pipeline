@@ -49,6 +49,9 @@ for SAMPLE in SAMPLES:
 
 TARGETS.extend(expand("/data1/scratch/pamesl/projet_cbf/data/vcf/{sample}_single_sample.vcf.gz", sample=NORMALS_SAMPLES))
 TARGETS.append(config["PON_VCF"])
+TARGETS.append(config["db_GDBI"])
+TARGETS.append(config["VCF_MAP"])
+
 
 #TARGETS.extend(ALL_BAI)
 TARGETS.extend(BQSR_BAM)
