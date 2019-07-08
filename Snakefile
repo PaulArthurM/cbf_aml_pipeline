@@ -167,7 +167,8 @@ rule create_vcf_for_normal:
 
 rule create_DB_GenomicsDBImport:
     input:
-        test="create_vcf_for_normal.done"
+        #test="create_vcf_for_normal.done"
+        expand("/data1/scratch/pamesl/projet_cbf/data/vcf/{normal}_single_sample.vcf.gz", normal=NORMALS_SAMPLES)
     output:
         db=directory(config["db_GDBI"])
     params:
@@ -193,10 +194,10 @@ rule create_somatic_panelOfNormals:
     output:
         pon=config["VCF_MAP"]
     params:
-        db=directory(config["db_GDBI"]),
+        #db=directory(config["db_GDBI"]),
         reference=config["REFERENCE"]
     shell:
         "gatk CreateSomaticPanelOfNormals \
         -R {params.reference} \
-        -V gendb://{params.db} \
+        -V gendb://{input.db} \
         -O {output.pon}"
