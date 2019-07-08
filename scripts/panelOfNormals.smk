@@ -29,18 +29,21 @@ rule all:
 rule create_vcf_for_normal:
     input:
         normal="/data1/scratch/pamesl/projet_cbf/data/bam/{normal}.bam"
+    params:
+        reference=config["REFERENCE"]
     output:
-        vcf="/data1/scratch/pamesl/projet_cbf/data/vcf/{normal}_single_sample.vcf.gz"
+        vcf="/data1/scratch/pamesl/projet_cbf/data/vcf/{normal}_single_sample.vcf.gz",
+        done=touch("create_vcf_for_normal.done")
     shell:
         "gatk Mutect2 \
-            -R reference.fa \
+            -R {reference} \
             -I {input.normal} \
             -O {output.vcf}"
 
 
 rule create_DB_GenomicsDBImport:
     input:
-        test="/data1/scratch/pamesl/projet_cbf/data/vcf/EGAR00001347180_SJCBF016_G-C0DG1ACXX.5_single_sample.vcf.gz"
+        test="create_vcf_for_normal.done"
     output:
         db=directory(config["db_GDBI"])
     params:
