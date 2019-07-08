@@ -8,8 +8,10 @@ configfile: "config.yaml"
 
 # Load json configuration file
 CONFIG_JSON = json.load(open(config["SAMPLES"]))
+NORMALS_SAMPLES = json.load(open(config["SAMPLES"]))["panelOfNormals"]
 
 SAMPLES = CONFIG_JSON['samples']
+VCF_MAP = config["VCF_MAP"]
 
 
 def get_sample_name(sample):
@@ -44,6 +46,9 @@ for SAMPLE in SAMPLES:
             BQSR_BAM.append(bqsr_table.format(sample_name=sample_name))
             BQSR_BAM.append(bqsr_file.format(sample_name=sample_name))
     #NORMALS.append()
+
+for SAMPLE in NORMALS_SAMPLES:
+    TARGETS.append("/data1/scratch/pamesl/projet_cbf/data/vcf/{sample}_single_sample.vcf.gz".format(sample=SAMPLE))
 
 
 #TARGETS.extend(ALL_BAI)
@@ -125,11 +130,11 @@ rule variant_calling_Mutect2:
         tumour_bam_1="/data1/scratch/pamesl/projet_cbf/data/bam/{tumour_1}_BQSR.bam",
         tumour_bam_2="/data1/scratch/pamesl/projet_cbf/data/bam/{tumour_2}_BQSR.bam",
         normal_bam_1="/data1/scratch/pamesl/projet_cbf/data/bam/{normal_1}_BQSR.bam",
-        normal_bam_2="/data1/scratch/pamesl/projet_cbf/data/bam/{normal_2}_BQSR.bam"
+        normal_bam_2="/data1/scratch/pamesl/projet_cbf/data/bam/{normal_2}_BQSR.bam",
+        pon=config['PON_VCF']
     output:
         "/data1/scratch/pamesl/projet_cbf/data/vcf/{normal_1}_and{normal_2}_vs_{tumour_1}_and_{tumour_2}_mutect2.vcf"
     params:
-        pon=config['PON_VCF'],
         reference=config["REFERENCE"]
     shell:
         "gatk Mutect2 \
@@ -141,5 +146,57 @@ rule variant_calling_Mutect2:
             -normal {normal_1} \
             -normal {normal_2} \
             --germline-resource af-only-gnomad.vcf.gz \
-            --panel-of-normals {params.pon} \
+            --panel-of-normals {input.pon} \
             -O {normal_1}_{normal_2}_vs_{tumour_1}_and_{tumour_2}.vcf.gz"
+
+
+rule create_vcf_for_normal:
+    input:
+        normal="/data1/scratch/pamesl/projet_cbf/data/bam/{normal}.bam"
+    params:
+        reference=config["REFERENCE"]
+    output:
+        vcf="/data1/scratch/pamesl/projet_cbf/data/vcf/{normal}_single_sample.vcf.gz",
+        done=touch("create_vcf_for_normal.done")
+    shell:
+        "gatk Mutect2 \
+            -R {reference} \
+            -I {input.normal} \
+            -O {output.vcf}"
+
+
+rule create_DB_GenomicsDBImport:
+    input:
+        test="create_vcf_for_normal.done"
+    output:
+        db=directory(config["db_GDBI"])
+    params:
+        sample_map=config["VCF_MAP"],
+        reader_threads=config["reader_threads"],
+        batch_size=config["batch_size"],
+        intervals_list=config["intervals_list"],
+        reference=config["REFERENCE"]
+    shell:
+        "gatk GenomicsDBImport \
+            --genomicsdb-workspace-path {output.db} \
+            --batch-size {params.batch_size} \
+            -L {params.intervals_list} \
+            --sample-name-map {params.sample_map} \
+            --reader-threads {params.reader_threads} \
+            -R {params.reference}"
+
+
+# Wait to see GenomicsDBImport output files
+rule create_somatic_panelOfNormals:
+    input:
+        db=config["db_GDBI"]
+    output:
+        pon=config["VCF_MAP"]
+    params:
+        db=directory(config["db_GDBI"]),
+        reference=config["REFERENCE"]
+    shell:
+        "gatk CreateSomaticPanelOfNormals \
+        -R {params.reference} \
+        -V gendb://{params.db} \
+        -O {output.pon}"
