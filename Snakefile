@@ -48,7 +48,7 @@ for SAMPLE in SAMPLES:
     #NORMALS.append()
 
 TARGETS.extend(expand("/data1/scratch/pamesl/projet_cbf/data/vcf/{sample}_single_sample.vcf.gz", sample=NORMALS_SAMPLES))
-TARGETS.append(config["VCF_MAP"])
+TARGETS.append(config["PON_VCF"])
 
 #TARGETS.extend(ALL_BAI)
 TARGETS.extend(BQSR_BAM)
@@ -151,7 +151,7 @@ rule variant_calling_Mutect2:
 
 rule create_vcf_for_normal:
     input:
-        normal="/data1/scratch/pamesl/projet_cbf/data/bam/{normal}.bam"
+        normal="/data1/scratch/pamesl/projet_cbf/data/bam/{normal}_BQSR.bam"
     params:
         reference=config["REFERENCE"]
     output:
