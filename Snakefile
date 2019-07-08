@@ -37,6 +37,7 @@ for SAMPLE in SAMPLES:
     pairs = [tumour_1, tumour_2, normal_1, normal_2]
     VARIANT_CALLING.append(return_vcf_name(pairs))
     for TYPE in SAMPLES[SAMPLE]:
+        MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_{lane_2}_BQSR_merge.bam".format(lane_1=SAMPLES[SAMPLE][TYPE][0], lane_2=SAMPLES[SAMPLE][TYPE][1]))
         for LANE in SAMPLES[SAMPLE][TYPE]:
             sample_name = LANE #get_sample_name(LANE)
             bai_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}.bai"
@@ -54,6 +55,7 @@ TARGETS.append(config["VCF_MAP"])
 
 
 #TARGETS.extend(ALL_BAI)
+TARGETS.extend(MERGE)
 TARGETS.extend(BQSR_BAM)
 TARGETS.extend(VARIANT_CALLING)
 
@@ -69,12 +71,6 @@ rule samtools_index:
         "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}.bai"
     shell:
         "samtools index -b {input} {output}"
-
-
-# Merge multiple sorted alignment files, producing a single sorted output file
-#rule merge_sam_files:
-#    input:
-
 
 
 # Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
@@ -140,7 +136,7 @@ rule variant_calling_Mutect2:
         reference=config["REFERENCE"]
     shell:
         "gatk Mutect2 \
-            -R {reference} \
+            -R {params.reference} \
             -I {input.tumour_bam_1}} \
             -I {input.tumour_bam_2} \
             -I {input.normal_bam_1} \
@@ -152,6 +148,20 @@ rule variant_calling_Mutect2:
             -O {normal_1}_{normal_2}_vs_{tumour_1}_and_{tumour_2}.vcf.gz"
 
 
+# Merge multiple sorted alignment files, producing a single sorted output file
+rule merge_sam_files:
+    input:
+        lane_1="/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_BQSR.bam",
+        lane_2="/data1/scratch/pamesl/projet_cbf/data/bam/{lane_2}_BQSR.bam"
+    output:
+        "/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_{lane_2}_BQSR_merge.bam"
+    shell:
+        "gatk MergeSamFiles \
+            I={lane_1} \
+            I={lane_2} \
+            O={output}"
+
+
 rule create_vcf_for_normal:
     input:
         normal="/data1/scratch/pamesl/projet_cbf/data/bam/{normal}_BQSR.bam"
@@ -159,17 +169,15 @@ rule create_vcf_for_normal:
         reference=config["REFERENCE"]
     output:
         vcf="/data1/scratch/pamesl/projet_cbf/data/vcf/{normal}_single_sample.vcf.gz"
-        #done=touch("create_vcf_for_normal.done")
     shell:
         "gatk Mutect2 \
-            -R {reference} \
+            -R {params.reference} \
             -I {input.normal} \
             -O {output.vcf}"
 
 
 rule create_DB_GenomicsDBImport:
     input:
-        #test="create_vcf_for_normal.done"
         expand("/data1/scratch/pamesl/projet_cbf/data/vcf/{normal}_single_sample.vcf.gz", normal=NORMALS_SAMPLES)
     output:
         db=directory(config["db_GDBI"])
@@ -203,3 +211,13 @@ rule create_somatic_panelOfNormals:
         -R {params.reference} \
         -V gendb://{input.db} \
         -O {output.pon}"
+
+
+#rule orientation_bias_CollectF1R2Counts:
+#    input:
+#        ""
+#    output:
+#        ""
+#    shell:
+#        "gatk CollectF1R2Counts \
+#            -I {}"
