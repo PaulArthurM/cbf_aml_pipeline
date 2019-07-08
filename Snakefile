@@ -156,8 +156,8 @@ rule create_vcf_for_normal:
     params:
         reference=config["REFERENCE"]
     output:
-        vcf="/data1/scratch/pamesl/projet_cbf/data/vcf/{normal}_single_sample.vcf.gz",
-        done=touch("create_vcf_for_normal.done")
+        vcf="/data1/scratch/pamesl/projet_cbf/data/vcf/{normal}_single_sample.vcf.gz"
+        #done=touch("create_vcf_for_normal.done")
     shell:
         "gatk Mutect2 \
             -R {reference} \
