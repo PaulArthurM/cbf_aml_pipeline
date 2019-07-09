@@ -19,7 +19,7 @@ def get_sample_name(sample):
 
 
 def return_vcf_name(pairs):
-    vcf="/data1/scratch/pamesl/projet_cbf/data/vcf/{normal_1}_and{normal_2}_vs_{tumour_1}_and_{tumour_2}_mutect2.vcf"
+    vcf="/data1/scratch/pamesl/projet_cbf/data/vcf/{normal_1}_and_{normal_2}_vs_{tumour_1}_and_{tumour_2}_mutect2.vcf"
     return vcf.format(normal_1=pairs[2], normal_2=pairs[3], tumour_1=pairs[0], tumour_2=pairs[1])
 
 
