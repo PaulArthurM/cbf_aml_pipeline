@@ -7,7 +7,7 @@
 #$ -q short.q
 #$ -l h_rt=01:00:00
 #$ -pe thread 1
-#$ -l h_vmem=3.75G
+#$ -l h_vmem=5G
 
 echo "JOB NAME: $JOB_NAME"
 echo "JOB ID: $JOB_ID"
