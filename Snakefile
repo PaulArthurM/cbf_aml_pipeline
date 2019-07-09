@@ -59,7 +59,7 @@ TARGETS.append(config["VCF_MAP"])
 TARGETS.extend(MERGE)
 TARGETS.extend(BQSR_BAM)
 TARGETS.extend(VARIANT_CALLING)
-
+print(TARGETS)
 rule all:
     input: TARGETS
 
