@@ -23,7 +23,7 @@ echo Variant file: ${1}
 echo Output VCF: ${2}
 
 conda activate gatk4_4.1.2.0_env
-gatk --java-options -Xmx2G SelectVariants \
+gatk --java-options -Xmx1G SelectVariants \
     -V ${1} \
     -select-type SNP -restrict-alleles-to BIALLELIC \
     -O ${2}.vcf.gz
