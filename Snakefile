@@ -144,7 +144,8 @@ rule variant_calling_Mutect2:
         normal="/data1/scratch/pamesl/projet_cbf/data/bam/{normal}_from_G_BQSR_merge.bam",
         pon=config['PON_VCF']
     output:
-        "/data1/scratch/pamesl/projet_cbf/data/vcf/{tumour}_vs_{normal}_mutect2.vcf"
+        vcf="/data1/scratch/pamesl/projet_cbf/data/vcf/{tumour}_vs_{normal}_mutect2.vcf",
+        f1r2="/data1/scratch/pamesl/projet_cbf/data/counts/{tumour}_vs_{normal}_f1r2counts.tar.gz"
     params:
         reference=config["REFERENCE"],
         germline_resource=config["germline_resource"]
@@ -156,7 +157,8 @@ rule variant_calling_Mutect2:
             -normal {input.normal} \
             --germline-resource {params.germline_resource} \
             --panel-of-normals {input.pon} \
-            -O {wildcards.tumour}_vs_{wildcards.normal}.vcf.gz"
+            -O {wildcards.tumour}_vs_{wildcards.normal}.vcf.gz \
+            --f1r2-tar-gz {output.f1r2}"
 
 
 rule create_vcf_for_normal:
@@ -210,11 +212,27 @@ rule create_somatic_panelOfNormals:
         -O {output.pon}"
 
 
-#rule orientation_bias_CollectF1R2Counts:
-#    input:
-#        ""
-#    output:
-#        ""
-#    shell:
-#        "gatk CollectF1R2Counts \
-#            -I {}"
+rule LearnReadOrientationModel:
+    input:
+        "/data1/scratch/pamesl/projet_cbf/data/counts/{tumour}_vs_{normal}_f1r2counts.tar.gz"
+    output:
+        "/data1/scratch/pamesl/projet_cbf/data/counts/{tumour}_vs_{normal}_artifacts.tar.gz"
+    shell:
+        "gatk LearnReadOrientationModel \
+            -I {input} \
+            -O {output}"
+
+
+rule GetPileupSummaries:
+    input:
+        "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_BQSR_merge.bam"
+    output:
+        "/data1/scratch/pamesl/projet_cbf/data/contamination/{sample}_pileups.table"
+    params:
+        intervals_list=config["intervals_list"]
+    shell:
+        "gatk GetPileupSummaries \
+            -I {input} \
+            -V common_biallelic.vcf.gz \
+            -L {params.intervals_list} \
+            -O {output}"
