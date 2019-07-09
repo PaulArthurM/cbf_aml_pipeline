@@ -28,6 +28,7 @@ BQSR_BAM = []
 NORMALS = []
 VARIANT_CALLING = []
 TARGETS = []
+MERGE = []
 
 for SAMPLE in SAMPLES:
     tumour_1 = SAMPLES[SAMPLE]["D"][0]
