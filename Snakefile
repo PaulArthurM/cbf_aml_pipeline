@@ -150,22 +150,23 @@ rule variant_calling_Mutect2:
 
 rule variant_calling_Mutect2:
     input:
-        tumour="/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_{lane_2}_D_BQSR_merge.bam",
-        normal="/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_{lane_2}_G_BQSR_merge.bam",
+        tumour="/data1/scratch/pamesl/projet_cbf/data/bam/{tumour}_D_BQSR_merge.bam",
+        normal="/data1/scratch/pamesl/projet_cbf/data/bam/{normal}_G_BQSR_merge.bam",
         pon=config['PON_VCF']
     output:
-        "/data1/scratch/pamesl/projet_cbf/data/vcf/{}_{}_mutect2.vcf"
+        "/data1/scratch/pamesl/projet_cbf/data/vcf/{tumour}_vs_{normal}_mutect2.vcf"
     params:
-        reference=config["REFERENCE"]
+        reference=config["REFERENCE"],
+        germline_resource=config["germline_resource"]
     shell:
         "gatk Mutect2 \
             -R {params.reference} \
             -I {input.tumour}} \
             -I {input.normal} \
             -normal {input.normal} \
-            --germline-resource af-only-gnomad.vcf.gz \
+            --germline-resource {params.germline_resource} \
             --panel-of-normals {input.pon} \
-            -O {normal_1}_{normal_2}_vs_{tumour_1}_and_{tumour_2}.vcf.gz"
+            -O {wildcards.tumour}_vs_{wildcards.normal}.vcf.gz"
 
 
 # Merge multiple sorted alignment files, producing a single sorted output file
@@ -177,8 +178,8 @@ rule merge_sam_files:
         "/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_{lane_2}_{type}_BQSR_merge.bam"
     shell:
         "gatk MergeSamFiles \
-            I={lane_1} \
-            I={lane_2} \
+            I={input.lane_1} \
+            I={input.lane_2} \
             O={output}"
 
 
