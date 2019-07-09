@@ -39,7 +39,7 @@ for SAMPLE in SAMPLES:
     pairs = [tumour_1, tumour_2, normal_1, normal_2]
     VARIANT_CALLING.append(return_vcf_name(pairs))
     for TYPE in SAMPLES[SAMPLE]:
-        MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_{lane_2}_{type}_BQSR_merge.bam".format(lane_1=SAMPLES[SAMPLE][TYPE][0], lane_2=SAMPLES[SAMPLE][TYPE][1], type=TYPE))
+        MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_and_{lane_2}_from_{type}_BQSR_merge.bam".format(lane_1=SAMPLES[SAMPLE][TYPE][0], lane_2=SAMPLES[SAMPLE][TYPE][1], type=TYPE))
         for LANE in SAMPLES[SAMPLE][TYPE]:
             sample_name = LANE #get_sample_name(LANE)
             bai_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}.bai"
