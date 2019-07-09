@@ -39,7 +39,7 @@ for SAMPLE in SAMPLES:
     pairs = [tumour_1, tumour_2, normal_1, normal_2]
     VARIANT_CALLING.append(return_vcf_name(pairs))
     for TYPE in SAMPLES[SAMPLE]:
-        MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_and_{lane_2}_from_{type}_BQSR_merge.bam".format(lane_1=SAMPLES[SAMPLE][TYPE][0], lane_2=SAMPLES[SAMPLE][TYPE][1], type=TYPE))
+        #MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_and_{lane_2}_from_{type}_BQSR_merge.bam".format(lane_1=SAMPLES[SAMPLE][TYPE][0], lane_2=SAMPLES[SAMPLE][TYPE][1], type=TYPE))
         for LANE in SAMPLES[SAMPLE][TYPE]:
             sample_name = LANE #get_sample_name(LANE)
             bai_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}.bai"
@@ -50,16 +50,16 @@ for SAMPLE in SAMPLES:
     #NORMALS.append()
 
 #TARGETS.extend(expand("/data1/scratch/pamesl/projet_cbf/data/vcf/{sample}_single_sample.vcf.gz", sample=NORMALS_SAMPLES))
-TARGETS.append(config["PON_VCF"])
-TARGETS.append(config["db_GDBI"])
-TARGETS.append(config["VCF_MAP"])
+#TARGETS.append(config["PON_VCF"])
+#TARGETS.append(config["db_GDBI"])
+#TARGETS.append(config["VCF_MAP"])
 
 
 
-TARGETS.extend(MERGE)
-TARGETS.extend(BQSR_BAM)
+#TARGETS.extend(MERGE)
+#TARGETS.extend(BQSR_BAM)
 TARGETS.extend(VARIANT_CALLING)
-print(TARGETS)
+
 rule all:
     input: TARGETS
 
