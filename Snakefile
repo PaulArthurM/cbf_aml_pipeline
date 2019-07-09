@@ -43,7 +43,6 @@ for SAMPLE in SAMPLES:
         for LANE in SAMPLES[SAMPLE][TYPE]:
             sample_name = LANE #get_sample_name(LANE)
             bai_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}.bai"
-            #ALL_BAI.append(bai_file.format(sample_name=sample_name)) #  Useless for the moment
             bqsr_file = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample_name}_BQSR.bam"
             bqsr_table = "/data1/scratch/pamesl/projet_cbf/data/bam/recal_data_{sample_name}.table"
             BQSR_BAM.append(bqsr_table.format(sample_name=sample_name))
@@ -56,7 +55,7 @@ TARGETS.append(config["db_GDBI"])
 TARGETS.append(config["VCF_MAP"])
 
 
-TARGETS.extend(ALL_BAI)
+
 TARGETS.extend(MERGE)
 TARGETS.extend(BQSR_BAM)
 TARGETS.extend(VARIANT_CALLING)
