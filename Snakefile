@@ -30,6 +30,7 @@ VARIANT_CALLING = []
 TARGETS = []
 MERGE = []
 
+
 for SAMPLE in SAMPLES:
     tumour_1 = SAMPLES[SAMPLE]["D"][0]
     tumour_2 = SAMPLES[SAMPLE]["D"][1]
@@ -123,36 +124,25 @@ rule apply_BQSR:
             --bqsr-recal-file {input.table} \
             -O {output}"
 
-"""
-rule variant_calling_Mutect2:
+
+# Merge multiple sorted alignment files, producing a single sorted output file
+rule merge_sam_files:
     input:
-        tumour_bam_1="/data1/scratch/pamesl/projet_cbf/data/bam/{tumour_1}_BQSR.bam",
-        tumour_bam_2="/data1/scratch/pamesl/projet_cbf/data/bam/{tumour_2}_BQSR.bam",
-        normal_bam_1="/data1/scratch/pamesl/projet_cbf/data/bam/{normal_1}_BQSR.bam",
-        normal_bam_2="/data1/scratch/pamesl/projet_cbf/data/bam/{normal_2}_BQSR.bam",
-        pon=config['PON_VCF']
+        lane_1="/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_BQSR.bam",
+        lane_2="/data1/scratch/pamesl/projet_cbf/data/bam/{lane_2}_BQSR.bam"
     output:
-        "/data1/scratch/pamesl/projet_cbf/data/vcf/{normal_1}_and{normal_2}_vs_{tumour_1}_and_{tumour_2}_mutect2.vcf"
-    params:
-        reference=config["REFERENCE"]
+        "/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_and_{lane_2}_from_{type}_BQSR_merge.bam"
     shell:
-        "gatk Mutect2 \
-            -R {params.reference} \
-            -I {input.tumour_bam_1}} \
-            -I {input.tumour_bam_2} \
-            -I {input.normal_bam_1} \
-            -I {input.normal_bam_2} \
-            -normal {normal_1} \
-            -normal {normal_2} \
-            --germline-resource af-only-gnomad.vcf.gz \
-            --panel-of-normals {input.pon} \
-            -O {normal_1}_{normal_2}_vs_{tumour_1}_and_{tumour_2}.vcf.gz"
-"""
+        "gatk MergeSamFiles \
+            I={input.lane_1} \
+            I={input.lane_2} \
+            O={output}"
+
 
 rule variant_calling_Mutect2:
     input:
-        tumour="/data1/scratch/pamesl/projet_cbf/data/bam/{tumour}_D_BQSR_merge.bam",
-        normal="/data1/scratch/pamesl/projet_cbf/data/bam/{normal}_G_BQSR_merge.bam",
+        tumour="/data1/scratch/pamesl/projet_cbf/data/bam/{tumour}_from_D_BQSR_merge.bam",
+        normal="/data1/scratch/pamesl/projet_cbf/data/bam/{normal}_from_G_BQSR_merge.bam",
         pon=config['PON_VCF']
     output:
         "/data1/scratch/pamesl/projet_cbf/data/vcf/{tumour}_vs_{normal}_mutect2.vcf"
@@ -168,20 +158,6 @@ rule variant_calling_Mutect2:
             --germline-resource {params.germline_resource} \
             --panel-of-normals {input.pon} \
             -O {wildcards.tumour}_vs_{wildcards.normal}.vcf.gz"
-
-
-# Merge multiple sorted alignment files, producing a single sorted output file
-rule merge_sam_files:
-    input:
-        lane_1="/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_BQSR.bam",
-        lane_2="/data1/scratch/pamesl/projet_cbf/data/bam/{lane_2}_BQSR.bam"
-    output:
-        "/data1/scratch/pamesl/projet_cbf/data/bam/{lane_1}_{lane_2}_{type}_BQSR_merge.bam"
-    shell:
-        "gatk MergeSamFiles \
-            I={input.lane_1} \
-            I={input.lane_2} \
-            O={output}"
 
 
 rule create_vcf_for_normal:
