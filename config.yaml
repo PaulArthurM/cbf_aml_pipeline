@@ -12,3 +12,7 @@ PON_VCF: "/data1/scratch/pamesl/projet_cbf/data/vcf/SJCBF_panel_of_normals.vcf.g
 
 #  DataBase GenomicsDBImport
 db_GDBI: "/data1/scratch/pamesl/projet_cbf/data/GenomicsDBImport"
+
+
+#  Mutect2
+germline_resource: "/data1/scratch/pamesl/projet_cbf/data/GnomAD/af-only-gnomad.raw.sites.hg19.vcf.gz"
