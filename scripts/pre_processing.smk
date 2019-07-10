@@ -112,6 +112,6 @@ rule samtools_index:
     input:
         "/data1/scratch/pamesl/projet_cbf/data/bam/{merged_samples}_marked_duplicates_BQSR_merge.bam"
     output:
-        "/data1/scratch/pamesl/projet_cbf/data/bam/{merged_samples}_marked_duplicates_BQSR_merge.bam"
+        "/data1/scratch/pamesl/projet_cbf/data/bam/{merged_samples}_marked_duplicates_BQSR_merge.bai"
     shell:
         "samtools index -b {input} {output}"
