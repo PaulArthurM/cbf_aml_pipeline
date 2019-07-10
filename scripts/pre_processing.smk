@@ -92,7 +92,7 @@ rule apply_BQSR:
             --bqsr-recal-file {input.table} \
             -O {output}"
 
-"SJCBF016_D-C0DG1ACXX.5"
+
 # Merge multiple sorted alignment files, producing a single sorted output file
 rule merge_sam_files:
     input:
