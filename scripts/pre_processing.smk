@@ -87,7 +87,7 @@ rule apply_BQSR:
         "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_marked_duplicates_BQSR.bam"
     shell:
         "gatk ApplyBQSR \
-            -R {reference} \
+            -R {params.reference} \
             -I {input.bam} \
             --bqsr-recal-file {input.table} \
             -O {output}"
