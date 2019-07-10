@@ -7,7 +7,7 @@
 #$ -q short.q
 #$ -l h_rt=01:00:00
 #$ -pe thread 1
-#$ -l h_vmem=2.75G
+#$ -l h_vmem=5G
 
 echo "JOB NAME: $JOB_NAME"
 echo "JOB ID: $JOB_ID"
@@ -20,7 +20,7 @@ echo "NSLOTS: $NSLOTS"
 echo Start at:`date`
 
 conda activate smk_env
-snakemake -s scripts/pre_processing.smk -n 
+snakemake -s scripts/pre_processing.smk
 conda deactivate
 
 echo End at:`date`
