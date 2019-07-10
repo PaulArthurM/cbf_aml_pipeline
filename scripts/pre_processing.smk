@@ -15,6 +15,13 @@ SAMPLES = CONFIG_JSON['samples']
 def get_sample_name(sample):
     return re.match("(.+?)\.bam$", sample).group(1)
 
+
+def get_id(sample):
+    return re.match("-(\w+)\.", sample).group(1)
+
+def get_lane(sample):
+    return re.match("\.(\d+)$", sample).group(1)
+
 TARGETS = []
 
 BQSR_BAM = []
@@ -23,8 +30,10 @@ MERGE = []
 
 for SAMPLE in SAMPLES:
     for TYPE in SAMPLES[SAMPLE]:
-        for LANE in SAMPLES[SAMPLE][TYPE]:
-            MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}_marked_duplicates_BQSR_merge.bai".format(sample=SAMPLE, type=TYPE))
+        LANES = SAMPLES[SAMPLE][TYPE]
+        MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam".format(sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
+
+
 
 
 TARGETS.extend(MERGE)
@@ -90,7 +99,7 @@ rule merge_sam_files:
         lane_1="/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_1}_marked_duplicates_BQSR.bam",
         lane_2="/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_2}_marked_duplicates_BQSR.bam"
     output:
-        "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}_marked_duplicates_BQSR_merge.bam"
+        "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam"
     shell:
         "gatk MergeSamFiles \
             I={input.lane_1} \
@@ -101,8 +110,8 @@ rule merge_sam_files:
 # Rule for create index from BAM file with samtools index
 rule samtools_index:
     input:
-        "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}_marked_duplicates_BQSR_merge.bam"
+        "/data1/scratch/pamesl/projet_cbf/data/bam/{merged_samples}_marked_duplicates_BQSR_merge.bam"
     output:
-        "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}_marked_duplicates_BQSR_merge.bai"
+        "/data1/scratch/pamesl/projet_cbf/data/bam/{merged_samples}_marked_duplicates_BQSR_merge.bam"
     shell:
         "samtools index -b {input} {output}"
