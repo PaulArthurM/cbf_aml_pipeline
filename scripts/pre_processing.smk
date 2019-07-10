@@ -26,6 +26,10 @@ for SAMPLE in SAMPLES:
         for LANE in SAMPLES[SAMPLE][TYPE]:
             MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}_marked_duplicates_BQSR_merge.bai".format(sample=SAMPLE, type=TYPE))
 
+
+TARGETS.extend(MERGE)
+
+
 rule all:
     input: TARGETS
 
