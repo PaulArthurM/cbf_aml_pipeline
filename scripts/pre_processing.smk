@@ -54,7 +54,7 @@ rule mark_duplicates:
         "java -jar picard.jar MarkDuplicates \
             I={input} \
             O={output.marked_bam} \
-            M={output.metrics_txt} &&"
+            M={output.metrics_txt}"
 
 
 # Generates recalibration table for Base Quality Score Recalibration (BQSR)
