@@ -70,7 +70,7 @@ rule base_recalibrator:
     shell:
         "gatk BaseRecalibrator \
             -I {input} \
-            -R {reference} \
+            -R {params.reference} \
             --known-sites /data1/scratch/pamesl/projet_cbf/data/dbSNP/All_20180423.vcf.gz \
             --known-sites /data1/scratch/pamesl/projet_cbf/data/mills_1000G/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf.gz \
             -O {output}"
