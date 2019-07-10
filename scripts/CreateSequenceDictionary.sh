@@ -20,7 +20,7 @@ echo "NSLOTS: $NSLOTS"
 echo Start at:`date`
 
 conda activate gatk4_4.1.2.0_env
-gatk CreateSequenceDictionary -R ${1} -O ${2}.dict
+gatk CreateSequenceDictionary -R ${1} -O ${2}
 conda deactivate
 
 echo End at:`date`
