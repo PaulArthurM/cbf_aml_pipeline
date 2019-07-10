@@ -17,10 +17,10 @@ def get_sample_name(sample):
 
 
 def get_id(sample):
-    return re.match("-(\w+)\.", sample).group(1)
+    return re.search("-(\w+)\.", sample).group(1)
 
 def get_lane(sample):
-    return re.match("\.(\d+)$", sample).group(1)
+    return re.search("\.(\d+)$", sample).group(1)
 
 TARGETS = []
 
