@@ -21,8 +21,8 @@ echo Start at:`date`
 
 conda activate gatk4_4.1.2.0_env
 gatk ValidateSamFile \
-  I=${1} \
-  MODE=SUMMARY
+  -I ${1} \
+  -MODE SUMMARY
 conda deactivate
 
 echo End at:`date`
