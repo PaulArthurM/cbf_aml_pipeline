@@ -20,7 +20,7 @@ echo "NSLOTS: $NSLOTS"
 echo Start at:`date`
 
 conda activate smk_env
-snakemake -s scripts/pre_processing.smk --unlock
+snakemake -s scripts/pre_processing.smk
 conda deactivate
 
 echo End at:`date`
