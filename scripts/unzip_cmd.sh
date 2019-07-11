@@ -19,6 +19,6 @@ echo "NSLOTS: $NSLOTS"
 
 echo Start at:`date`
 
-gzip -g ${1}
+gzip -d ${1}
 
 echo End at:`date`
