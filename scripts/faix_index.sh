@@ -20,7 +20,7 @@ echo "NSLOTS: $NSLOTS"
 echo Start at:`date`
 
 conda activate samtools_env
-samtools faidx ${1}
+bgzip -c ${1} | samtools faidx
 conda deactivate
 
 echo End at:`date`
