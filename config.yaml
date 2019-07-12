@@ -1,7 +1,7 @@
 SAMPLES: "/data2/home/pamesl/cbf_aml_pipeline/samples.json"
 
 #  Reference Genome
-REFERENCE: "/data1/scratch/pamesl/projet_cbf/data/hg19_data/reference_hg19/ucsc_hg19.fasta.gz"
+REFERENCE: "/data1/scratch/pamesl/projet_cbf/data/hg19_data/reference_hg19/ucsc_hg19.fasta"
 
 #  Panel of Normales parameters:
 VCF_MAP: "/data1/scratch/pamesl/projet_cbf/data/map/sample_vcf.map"
