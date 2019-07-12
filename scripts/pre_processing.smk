@@ -72,7 +72,7 @@ rule base_recalibrator:
         "gatk BaseRecalibrator \
             -I {input} \
             -R {params.reference} \
-            --known-sites /data1/scratch/pamesl/projet_cbf/data/dbSNP/All_20180423.vcf.gz \
+            --known-sites /data1/scratch/pamesl/projet_cbf/data/dbSNP/dbsnp_138.b37.vcf \
             --known-sites /data1/scratch/pamesl/projet_cbf/data/mills_1000G/Mills_and_1000G_gold_standard.indels.b37.vcf \
             -O {output}"
 
