@@ -72,8 +72,8 @@ rule base_recalibrator:
         "gatk BaseRecalibrator \
             -I {input} \
             -R {params.reference} \
-            --known-sites /data1/scratch/pamesl/projet_cbf/data/dbSNP/dbsnp_138.hg19.vcf.gz \
-            --known-sites /data1/scratch/pamesl/projet_cbf/data/mills_1000G/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf \
+            --known-sites /data1/scratch/pamesl/projet_cbf/data/dbSNP/dbsnp_138.b37.vcf.gz \
+            --known-sites /data1/scratch/pamesl/projet_cbf/data/mills_1000G/Mills_and_1000G_gold_standard.indels.b37.vcf.gz \
             -O {output}"
 
 
