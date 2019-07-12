@@ -21,7 +21,9 @@ echo Start at:`date`
 
 conda activate gatk4_4.1.2.0_env
 gatk ValidateVariants \
-  -V ${1}
+  -V ${1} \
+  -R ${2} \
+  -gvcf
 conda deactivate
 
 echo End at:`date`
