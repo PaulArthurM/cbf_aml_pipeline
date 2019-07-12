@@ -64,11 +64,13 @@ rule base_recalibrator:
     output:
         "/data1/scratch/pamesl/projet_cbf/data/bam/recal_data_{sample}.table"
     params:
-        reference=config["REFERENCE"]
+        reference=config["REFERENCE"],
+        intervals_list=config["intervals_list"]
     shell:
         "gatk BaseRecalibrator \
             -I {input} \
             -R {params.reference} \
+            -L {params.intervals_list} \
             --known-sites /data1/scratch/pamesl/projet_cbf/data/dbSNP/dbsnp_138.hg19.vcf.gz \
             --known-sites /data1/scratch/pamesl/projet_cbf/data/mills_1000G/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf \
             -O {output}"
