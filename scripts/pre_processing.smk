@@ -71,6 +71,7 @@ rule base_recalibrator:
             -I {input} \
             -R {params.reference} \
             -L {params.intervals_list} \
+            --sequence-dictionary  /data1/scratch/pamesl/projet_cbf/data/hg19_data/reference_hg19/ucsc_hg19.dict \
             --known-sites /data1/scratch/pamesl/projet_cbf/data/dbSNP/dbsnp_138.hg19.vcf.gz \
             --known-sites /data1/scratch/pamesl/projet_cbf/data/mills_1000G/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf \
             -O {output}"
