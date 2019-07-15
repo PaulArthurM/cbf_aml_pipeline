@@ -48,7 +48,7 @@ rule mark_duplicates:
     input:
         "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}.bam"
     output:
-        marked_bam="/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_marked_duplicates.bam",
+        marked_bam=temp("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_marked_duplicates.bam",)
         metrics_txt="/data1/scratch/pamesl/projet_cbf/data/metrics/{sample}_marked_dup_metrics.txt"
     shell:
         "gatk MarkDuplicates \
@@ -64,7 +64,7 @@ rule base_recalibrator:
     input:
         "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_marked_duplicates.bam"
     output:
-        "/data1/scratch/pamesl/projet_cbf/data/bam/recal_data_{sample}.table"
+        temp("/data1/scratch/pamesl/projet_cbf/data/bam/recal_data_{sample}.table")
     params:
         reference=config["REFERENCE"],
         intervals_list=config["intervals_list"]
@@ -85,7 +85,7 @@ rule apply_BQSR:
     params:
         reference=config["REFERENCE"]
     output:
-        "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_marked_duplicates_BQSR.bam"
+        temp("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_marked_duplicates_BQSR.bam")
     shell:
         "gatk ApplyBQSR \
             -R {params.reference} \
