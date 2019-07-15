@@ -48,7 +48,7 @@ rule mark_duplicates:
     input:
         "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}.bam"
     output:
-        marked_bam=temp("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_marked_duplicates.bam",)
+        marked_bam=temp("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_marked_duplicates.bam"),
         metrics_txt="/data1/scratch/pamesl/projet_cbf/data/metrics/{sample}_marked_dup_metrics.txt"
     shell:
         "gatk MarkDuplicates \
