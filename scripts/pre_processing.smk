@@ -32,7 +32,7 @@ for SAMPLE in SAMPLES:
     for TYPE in SAMPLES[SAMPLE]:
         LANES = SAMPLES[SAMPLE][TYPE]
         MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam".format(sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
-
+        MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bai".format(sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
 
 
 
