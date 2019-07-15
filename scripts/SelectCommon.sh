@@ -19,6 +19,8 @@ echo "NSLOTS: $NSLOTS"
 
 echo Start at:`date`
 
+conda activate gatk4_4.1.2.0_env
 gatk SelectVariants -V ${1} -L 1 --select "AF > 0.05" -O ${2}
+conda deactivate
 
 echo End at:`date`
