@@ -1,6 +1,6 @@
 #!/bin/bash
 #$ -S /bin/bash
-#$ -N unzip
+#$ -N SelectCommon
 #$ -cwd
 #$ -o /data1/scratch/pamesl/projet_cbf/stdoe_sge
 #$ -e /data1/scratch/pamesl/projet_cbf/stdoe_sge
