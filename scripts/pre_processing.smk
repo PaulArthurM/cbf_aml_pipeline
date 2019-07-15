@@ -103,9 +103,9 @@ rule merge_sam_files:
         "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam"
     shell:
         "gatk MergeSamFiles \
-            I={input.lane_1} \
-            I={input.lane_2} \
-            O={output}"
+            -I {input.lane_1} \
+            -I {input.lane_2} \
+            -O {output}"
 
 
 # Rule for create index from BAM file with samtools index
