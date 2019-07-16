@@ -6,8 +6,8 @@
 #$ -e /data1/scratch/pamesl/projet_cbf/stdoe_sge
 #$ -q short.q
 #$ -l h_rt=01:00:00
-#$ -pe thread 8
-#$ -l h_vmem=22G
+#$ -pe thread 6
+#$ -l h_vmem=16.5G
 
 echo "JOB NAME: $JOB_NAME"
 echo "JOB ID: $JOB_ID"
