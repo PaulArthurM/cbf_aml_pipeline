@@ -55,6 +55,7 @@ def request_germline_file(sample):
     if sample.sample_type == "G":
         cmd = "java -jar /data1/scratch/pamesl/app/EGA_download_client_2.2.2/EgaDemoClient.jar -p {email} {password} -rf {egaf_id} -re abc -label {label}"
         cmd = cmd.format(email=sys.argv[2], password=sys.argv[3], egaf_id=sample.egaf_id, label="label_"+sample.egaf_id)
+        print(cmd)
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         process.wait()
         print(process.returncode)
@@ -64,6 +65,7 @@ def download_germline_file(sample):
     if sample.sample_type == "G":
         cmd = "java -jar /data1/scratch/pamesl/app/EGA_download_client_2.2.2/EgaDemoClient.jar -p {email} {password} -dr {label} -path /data1/scratch/pamesl/projet_cbf/data/bam"
         cmd = cmd.format(email=sys.argv[2], password=sys.argv[3], label="label_"+sample.egaf_id)
+        print(cmd)
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         process.wait()
         print(process.returncode)
@@ -73,6 +75,7 @@ def decrypt_file(sample):
     if sample.sample_type == "G":
         cmd = "java -jar /data1/scratch/pamesl/app/EGA_download_client_2.2.2/EgaDemoClient.jar -p {email} {password} -dc /data1/scratch/pamesl/projet_cbf/data/bam/{bam} -dck abc"
         cmd = cmd.format(email=sys.argv[2], password=sys.argv[3], bam=sample.bam_file_name)
+        print(cmd)
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         process.wait()
         print(process.returncode)
