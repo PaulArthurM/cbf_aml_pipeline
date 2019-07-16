@@ -1,6 +1,9 @@
 import sys
 import re
 import subprocess
+import os.path
+
+
 
 class Sample():
     def __init__(self, string):
@@ -91,6 +94,7 @@ for objet in objets:
 
 n = 0
 for objet in objets:
+    #if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name)
     request_germline_file(objet)
     download_germline_file(objet)
     #decrypt_file(objet)
