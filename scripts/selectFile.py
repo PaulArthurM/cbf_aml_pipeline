@@ -123,21 +123,22 @@ for objet in objets:
         json_file["samples"][objet.sample_name] = {"D":[], "G":[]}
     json_file["samples"][objet.sample_name][objet.sample_type].append(objet.file_prefix)
 
-write_json(json_file)
+#write_json(json_file)
 
-if 0:
+if 1:
     n = 0
     for objet in objets:
         print(objet.bam_file_name)
-        if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name):
-            print("File already exist.")
+        if len(json_file["samples"][objet.sample_name][objet.sample_type]) == 2:
+            if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name):
+                print("File already exist.")
 
-        else:
-            request_germline_file(objet)
-            if not os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name+".cip"):
-                download_germline_file(objet)
-                decrypt_file(objet)
+            else:
+                request_germline_file(objet)
+                if not os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name+".cip"):
+                    download_germline_file(objet)
+                    decrypt_file(objet)
 
-        n += 1
-        if n ==4:
-            break
+            n += 1
+            if n ==6:
+                break
