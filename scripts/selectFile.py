@@ -44,7 +44,6 @@ class Sample():
         self.file_prefix = get_file_prefix(string)
         self.egaf_id = get_EGAF(string)
 
-ega = "/data1/scratch/pamesl/app/EGA_download_client_2.2.2/"
 
 def open_file(file_path):
     file = open(file_path, 'r')
@@ -93,7 +92,7 @@ def download_germline_file(sample):
 
 def decrypt_file(sample):
     if sample.sample_type == "G":
-        cmd = "java -jar /data1/scratch/pamesl/projet_cbf/data/bam/EgaDemoClient.jar -p {email} {password} -dc /home/puissant/Downloads/EGA_download_client_2.2.2/{bam}.cip -dck abc"
+        cmd = "java -jar /data1/scratch/pamesl/projet_cbf/data/bam/EgaDemoClient.jar -p {email} {password} -dc /data1/scratch/pamesl/projet_cbf/data/bam/{bam}.cip -dck abc"
         cmd = cmd.format(email=sys.argv[2], password=sys.argv[3], bam=sample.bam_file_name)
         print(cmd)
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
