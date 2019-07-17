@@ -141,5 +141,5 @@ if 1:
                     decrypt_file(objet)
 
             n += 1
-            if n ==6:
+            if n == 10:
                 break
