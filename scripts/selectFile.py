@@ -4,6 +4,9 @@ import subprocess
 import os.path
 from os import listdir
 from os.path import isfile, join
+import json
+
+
 
 class Sample():
     def __init__(self, string):
@@ -100,6 +103,11 @@ def decrypt_file(sample):
         print(process.returncode)
 
 
+def write_json(dictionary):
+    with open('data.json', 'w') as fp:
+        json.dump(dictionary, fp)
+
+
 
 objets = []
 lines = open_file(sys.argv[1])
@@ -115,19 +123,21 @@ for objet in objets:
         json["samples"][objet.sample_name] = {"D":[], "G":[]}
     json["samples"][objet.sample_name][objet.sample_type].append(objet.file_prefix)
 
+write_json(json)
 
-n = 0
-for objet in objets:
-    print(objet.bam_file_name)
-    if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name):
-        print("File already exist.")
+if 0:
+    n = 0
+    for objet in objets:
+        print(objet.bam_file_name)
+        if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name):
+            print("File already exist.")
 
-    else:
-        request_germline_file(objet)
-        if not os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name+".cip"):
-            download_germline_file(objet)
-            decrypt_file(objet)
+        else:
+            request_germline_file(objet)
+            if not os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name+".cip"):
+                download_germline_file(objet)
+                decrypt_file(objet)
 
-    n += 1
-    if n ==4:
-        break
+        n += 1
+        if n ==4:
+            break
