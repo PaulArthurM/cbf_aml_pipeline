@@ -128,6 +128,7 @@ for objet in objets:
 if 1:
     n = 0
     for objet in objets:
+        print("\n\n")
         print(objet.bam_file_name)
         if len(json_file["samples"][objet.sample_name][objet.sample_type]) == 2:
             if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name):
