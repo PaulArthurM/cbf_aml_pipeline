@@ -117,13 +117,13 @@ for line in lines:
         objets.append(sample)
 
 
-json = {"samples":{}}
+json_file = {"samples":{}}
 for objet in objets:
-    if objet.sample_name not in json["samples"]:
-        json["samples"][objet.sample_name] = {"D":[], "G":[]}
-    json["samples"][objet.sample_name][objet.sample_type].append(objet.file_prefix)
+    if objet.sample_name not in json_file["samples"]:
+        json_file["samples"][objet.sample_name] = {"D":[], "G":[]}
+    json_file["samples"][objet.sample_name][objet.sample_type].append(objet.file_prefix)
 
-write_json(json)
+write_json(json_file)
 
 if 0:
     n = 0
