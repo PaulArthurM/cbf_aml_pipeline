@@ -19,6 +19,6 @@ echo "NSLOTS: $NSLOTS"
 
 echo Start at:`date`
 
-python3 python3 ~/cbf_aml_pipeline/scripts/selectFile.py /data1/scratch/pamesl/projet_cbf/Sample_File_SJCBF.map ${1} ${2}
+python3 ~/cbf_aml_pipeline/scripts/selectFile.py /data1/scratch/pamesl/projet_cbf/Sample_File_SJCBF.map ${1} ${2}
 
 echo End at:`date`
