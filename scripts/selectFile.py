@@ -104,7 +104,7 @@ def decrypt_file(sample):
 
 
 def write_json(dictionary):
-    with open('data.json', 'w') as fp:
+    with open('/data2/home/pamesl/cbf_aml_pipeline/samples.json', 'w') as fp:
         json.dump(dictionary, fp)
 
 
