@@ -124,7 +124,7 @@ for objet in objets:
 
 #write_json(json_file)
 
-if 1:
+if 1 and (len(sys.argv >= 5)):
     n = 0
     for objet in objets:
         print("\n\n")
@@ -140,5 +140,5 @@ if 1:
                     decrypt_file(objet)
 
             n += 1
-            if n == 10:
+            if n == sys.argv[4]:
                 break
