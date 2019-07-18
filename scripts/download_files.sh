@@ -19,8 +19,8 @@ echo "NSLOTS: $NSLOTS"
 
 echo Start at:`date`
 
-module load java/1.8.0_74
+conda activate java_env
 python3 ~/cbf_aml_pipeline/scripts/selectFile.py /data1/scratch/pamesl/projet_cbf/Sample_File_SJCBF.map ${1} ${2}
-module unload java/1.8.0_74
+conda deactivate
 
 echo End at:`date`
