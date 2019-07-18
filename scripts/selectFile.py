@@ -108,6 +108,20 @@ def write_json(dictionary):
         json.dump(dictionary, fp)
 
 
+def load_java():
+    cmd = "module load java/1.8.0_74"
+    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    process.wait()
+    print(process.returncode)
+
+
+def unload_java():
+    cmd = "module unload java/1.8.0_74"
+    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    process.wait()
+    print(process.returncode)
+
+
 
 objets = []
 lines = open_file(sys.argv[1])
@@ -127,6 +141,7 @@ for objet in objets:
 
 if 1:
     n = 0
+    load_java()
     for objet in objets:
         print("\n\n")
         print(objet.bam_file_name)
@@ -143,3 +158,4 @@ if 1:
             n += 1
             if n == 10:
                 break
+    unload_java()
