@@ -45,11 +45,9 @@ for SAMPLE in SAMPLES:
 
 
 TARGETS.extend(MERGE)
-for TARGET in TARGETS:
-    print(TARGET)
 
-#rule all:
-    #input: #TARGETS
+rule all:
+    input: TARGETS
 
 
 # Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
