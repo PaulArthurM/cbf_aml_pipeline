@@ -20,7 +20,7 @@ echo "NSLOTS: $NSLOTS"
 echo Start at:`date`
 
 conda activate java_python3_env
-python3 ~/cbf_aml_pipeline/scripts/selectFile.py /data1/scratch/pamesl/projet_cbf/Sample_File_SJCBF.map ${1} ${2}
+python3 ~/cbf_aml_pipeline/scripts/selectFile.py /data1/scratch/pamesl/projet_cbf/Sample_File_SJCBF.map ${1} ${2} ${3}
 conda deactivate
 
 echo End at:`date`

@@ -104,8 +104,11 @@ def decrypt_file(sample):
 
 
 def write_json(dictionary):
-    with open('/data2/home/pamesl/cbf_aml_pipeline/samples.json', 'w') as fp:
-        json.dump(dictionary, fp)
+    if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name):
+        print("File a json file already exist.")
+    else:
+        with open('/data2/home/pamesl/cbf_aml_pipeline/samples.json', 'w') as fp:
+            json.dump(dictionary, fp)
 
 
 objets = []
