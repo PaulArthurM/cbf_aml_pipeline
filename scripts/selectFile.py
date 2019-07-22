@@ -127,7 +127,7 @@ for objet in objets:
 
 #write_json(json_file)
 
-if 1 and (len(sys.argv >= 5)):
+if 1 and (len(sys.argv) >= 5):
     n = 0
     for objet in objets:
         print("\n\n")
