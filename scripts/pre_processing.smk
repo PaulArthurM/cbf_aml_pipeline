@@ -45,7 +45,8 @@ for SAMPLE in SAMPLES:
 
 
 TARGETS.extend(MERGE)
-print(TARGETS)
+for TARGET in TARGETS:
+    print(TARGET)
 
 #rule all:
     #input: #TARGETS
