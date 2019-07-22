@@ -84,7 +84,7 @@ def request_germline_file(sample):
 
 def download_germline_file(sample):
     if sample.sample_type == "G":
-        cmd = "java -jar /data1/scratch/pamesl/projet_cbf/data/bam/EgaDemoClient.jar -p {email} {password} -dr {label}"
+        cmd = "java -jar /data1/scratch/pamesl/projet_cbf/data/bam/EgaDemoClient.jar -p {email} {password} -dr {label} -nt 7"
         cmd = cmd.format(email=sys.argv[2], password=sys.argv[3], label="label_"+sample.egaf_id)
         print(cmd)
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
