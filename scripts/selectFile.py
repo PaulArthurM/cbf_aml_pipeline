@@ -127,8 +127,8 @@ for objet in objets:
 
 #write_json(json_file)
 
-if 1 and (len(sys.argv) >= 5):
-    n = 0
+if (len(sys.argv) >= 5):
+    #n = 0
     for objet in objets:
         print("\n\n")
         print(objet.bam_file_name)
@@ -141,7 +141,6 @@ if 1 and (len(sys.argv) >= 5):
                 if not os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name+".cip"):
                     download_germline_file(objet)
                     decrypt_file(objet)
-
-            n += 1
-            if n == sys.argv[4]:
-                break
+                    #n += 1
+            #if n == sys.argv[4]:
+                #break
