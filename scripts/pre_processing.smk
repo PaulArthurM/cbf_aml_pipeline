@@ -1,7 +1,12 @@
 # A Snakefile for a pre-processing of paired normal/tumour samples.
 
+
 import json
 import re
+import os.path
+from os import listdir
+from os.path import isfile, join
+
 
 # Configuration file
 configfile: "config.yaml"
@@ -29,18 +34,21 @@ MERGE = []
 
 
 for SAMPLE in SAMPLES:
-    for TYPE in SAMPLES[SAMPLE]:
-        LANES = SAMPLES[SAMPLE][TYPE]
-        MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam".format(sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
-        MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bai".format(sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
+    file_1 = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane}.bam".format(sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane=get_lane(LANES[0]))
+    file_2 = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane}.bam".format(sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane=get_lane(LANES[1]))
+    if (os.path.isfile(file_1)) and (os.path.isfile(file_2)):
+        for TYPE in SAMPLES[SAMPLE]:
+            LANES = SAMPLES[SAMPLE][TYPE]
+            MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam".format(sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
+            MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bai".format(sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
 
 
 
 TARGETS.extend(MERGE)
+print(TARGETS)
 
-
-rule all:
-    input: TARGETS
+#rule all:
+    #input: #TARGETS
 
 
 # Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
