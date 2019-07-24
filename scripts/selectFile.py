@@ -112,15 +112,11 @@ def write_json(dictionary):
             json.dump(dictionary, fp)
 
 
-def check_merge(sample):
+def check_merge(sample, files):
     file_prefix = sample.file_prefix
-    path = '/data1/scratch/pamesl/projet_cbf/data/bam/'
-    files = [f for f in glob.glob(path + "*merge.bam", recursive=False)]
     for f in files:
         m = re.search(file_prefix, f)
         if m:
-            print(f)
-            print("\n")
             return True
 
 
@@ -132,9 +128,6 @@ for line in lines:
         sample = Sample(line)
         objets.append(sample)
 
-for objet in objets:
-    check_merge(objet)
-
 if 0:
     json_file = {"samples":{}}
     for objet in objets:
@@ -144,22 +137,28 @@ if 0:
 
 #write_json(json_file)
 
+
+path = '/data1/scratch/pamesl/projet_cbf/data/bam/'
+files = [f for f in glob.glob(path + "*merge.bam", recursive=False)]
 print("Start!")
-if (len(sys.argv) == 5) and (0):
+if (len(sys.argv) == 5) and (1):
     #n = 0
     for objet in objets:
         print("\n\n")
         print(objet.bam_file_name)
-        if len(json_file["samples"][objet.sample_name][objet.sample_type]) == 2:
-            if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name):
-                print("File already exist.")
+        if not check_merge(objet, files):
+            if len(json_file["samples"][objet.sample_name][objet.sample_type]) == 2:
+                if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name):
+                    print("File already exist.")
 
-            else:
-                request_germline_file(objet)
-                if not os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name+".cip"):
-                    download_germline_file(objet)
-                    decrypt_file(objet)
-                    #n += 1
-            #if n == sys.argv[4]:
-                #break
+                else:
+                    print("Sample {sample} is being processed".format(sample=objet.file_prefix))
+                    #request_germline_file(objet)
+                    if not os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name+".cip"):
+                        print("Sample {sample} is being downloaded".format(sample=objet.file_prefix))
+                        #download_germline_file(objet)
+                        #decrypt_file(objet)
+                        #n += 1
+                #if n == sys.argv[4]:
+                    #break
 print("End")
