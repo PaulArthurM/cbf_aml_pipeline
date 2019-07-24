@@ -5,7 +5,7 @@
 #$ -o /data1/scratch/pamesl/projet_cbf/stdoe_sge
 #$ -e /data1/scratch/pamesl/projet_cbf/stdoe_sge
 #$ -q short.q
-#$ -l h_rt=24:00:00
+#$ -l h_rt=48:00:00
 #$ -pe thread 6
 #$ -l h_vmem=16.5G
 
@@ -20,7 +20,7 @@ echo "NSLOTS: $NSLOTS"
 echo Start at:`date`
 
 conda activate smk_env
-snakemake -s scripts/pre_processing.smk -j 6
+snakemake -s scripts/pre_processing.smk
 conda deactivate
 
 echo End at:`date`
