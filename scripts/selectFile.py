@@ -115,9 +115,11 @@ def write_json(dictionary):
 def check_merge(sample):
     file_prefix = sample.file_prefix
     path = '/data1/scratch/pamesl/projet_cbf/data/bam/'
-    files = [f for f in glob.glob(path + "*merge.bam", recursive=False) if file_prefix in f]
+    files = [f for f in glob.glob(path + "*merge.bam", recursive=False)]
     for f in files:
-        print(f)
+        m = re.search(file_prefix, f)
+        if m:
+            print(f)
 
 
 
