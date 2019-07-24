@@ -114,14 +114,14 @@ def write_json(dictionary):
 
 def check_merge(sample, files):
     file_prefix = sample.file_prefix
-    if sample.file_prefix == "G":
+    if sample.sample_type == "G":
         for f in files:
             m = re.search(file_prefix, f)
             if m:
                 return True
     else:
         print("Not a germline file.")
-        return False
+        return True
 
 
 objets = []
