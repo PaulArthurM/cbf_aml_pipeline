@@ -5,6 +5,7 @@ import os.path
 from os import listdir
 from os.path import isfile, join
 import json
+import glob
 
 
 
@@ -30,7 +31,7 @@ class Sample():
 
 
         def get_file_prefix(string):
-            m = re.search("(SJCBF[0-9]+_[DG]-\w+.[0-9])", string)
+            m = re.search("(SJCBF[0-9]+_[DG]-\w+\.[0-9])", string)
             if m:
                 return m.group(1)
 
@@ -111,6 +112,16 @@ def write_json(dictionary):
             json.dump(dictionary, fp)
 
 
+def check_merge(sample):
+    print("Enter")
+    file_prefix = sample.file_prefix
+    path = '/data1/scratch/pamesl/projet_cbf/data/bam/'
+    files = [f.split('/')[6] for f in glob.glob(path + "*.bam", recursive=False) if file_prefix in f]
+    for f in files:
+        print(f)
+
+
+
 objets = []
 lines = open_file(sys.argv[1])
 for line in lines:
@@ -118,17 +129,20 @@ for line in lines:
         sample = Sample(line)
         objets.append(sample)
 
-
-json_file = {"samples":{}}
 for objet in objets:
-    if objet.sample_name not in json_file["samples"]:
-        json_file["samples"][objet.sample_name] = {"D":[], "G":[]}
-    json_file["samples"][objet.sample_name][objet.sample_type].append(objet.file_prefix)
+    check_merge(objet)
+
+if 0:
+    json_file = {"samples":{}}
+    for objet in objets:
+        if objet.sample_name not in json_file["samples"]:
+            json_file["samples"][objet.sample_name] = {"D":[], "G":[]}
+        json_file["samples"][objet.sample_name][objet.sample_type].append(objet.file_prefix)
 
 #write_json(json_file)
 
 print("Start!")
-if (len(sys.argv) == 5):
+if (len(sys.argv) == 5) and (0):
     #n = 0
     for objet in objets:
         print("\n\n")
@@ -145,3 +159,4 @@ if (len(sys.argv) == 5):
                     #n += 1
             #if n == sys.argv[4]:
                 #break
+print("End")
