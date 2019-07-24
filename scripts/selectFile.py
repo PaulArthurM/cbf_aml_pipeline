@@ -116,7 +116,7 @@ def check_merge(sample):
     print("Enter")
     file_prefix = sample.file_prefix
     path = '/data1/scratch/pamesl/projet_cbf/data/bam/'
-    files = [f.split('/')[6] for f in glob.glob(path + "*.bam", recursive=False) if file_prefix in f]
+    files = [f for f in glob.glob(path + "*.bam", recursive=False) if file_prefix in f]
     for f in files:
         print(f)
 
