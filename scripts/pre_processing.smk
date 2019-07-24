@@ -57,6 +57,8 @@ rule mark_duplicates:
     output:
         marked_bam=temp("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_marked_duplicates.bam"),
         metrics_txt="/data1/scratch/pamesl/projet_cbf/data/metrics/{sample}_marked_dup_metrics.txt"
+    conda:
+        "../envs/gatk4.yaml"
     shell:
         "gatk MarkDuplicates \
             -I {input} \
@@ -75,6 +77,8 @@ rule base_recalibrator:
     params:
         reference=config["REFERENCE"],
         intervals_list=config["intervals_list"]
+    conda:
+        "../envs/gatk4.yaml"
     shell:
         "gatk BaseRecalibrator \
             -I {input} \
@@ -93,6 +97,8 @@ rule apply_BQSR:
         reference=config["REFERENCE"]
     output:
         temp("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_marked_duplicates_BQSR.bam")
+    conda:
+        "../envs/gatk4.yaml"
     shell:
         "gatk ApplyBQSR \
             -R {params.reference} \
@@ -108,6 +114,8 @@ rule merge_sam_files:
         lane_2="/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_2}_marked_duplicates_BQSR.bam"
     output:
         "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam"
+    conda:
+        "../envs/gatk4.yaml"
     shell:
         "gatk MergeSamFiles \
             -I {input.lane_1} \
