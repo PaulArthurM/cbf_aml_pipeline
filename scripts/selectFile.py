@@ -128,7 +128,7 @@ for line in lines:
         sample = Sample(line)
         objets.append(sample)
 
-if 0:
+if 1:
     json_file = {"samples":{}}
     for objet in objets:
         if objet.sample_name not in json_file["samples"]:
