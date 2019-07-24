@@ -120,6 +120,8 @@ def check_merge(sample):
         m = re.search(file_prefix, f)
         if m:
             print(f)
+            print("\n")
+            return True
 
 
 
