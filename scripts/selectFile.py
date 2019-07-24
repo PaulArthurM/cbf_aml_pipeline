@@ -121,7 +121,7 @@ def check_merge(sample, files):
                 return True
     else:
         print("Not a germline file.")
-        return False
+        return True
 
 
 objets = []
