@@ -118,6 +118,7 @@ def check_merge(sample, files):
         for f in files:
             m = re.search(file_prefix, f)
             if m:
+                print("A merged file already exist for this sample.")
                 return True
     else:
         print("Not a germline file.")
