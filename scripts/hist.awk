@@ -1,4 +1,7 @@
 #!/bin/awk -f
+# https://stackoverflow.com/questions/39614454/creating-histograms-in-bash
+# By Riccardo Petraglia
+
 
 BEGIN{
     bin_width=0.1;
