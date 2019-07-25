@@ -129,5 +129,7 @@ rule samtools_index:
         "/data1/scratch/pamesl/projet_cbf/data/bam/{merged_samples}_marked_duplicates_BQSR_merge.bam"
     output:
         "/data1/scratch/pamesl/projet_cbf/data/bam/{merged_samples}_marked_duplicates_BQSR_merge.bai"
+    conda:
+        "../envs/samtools.yaml"
     shell:
         "samtools index -b {input} {output}"
