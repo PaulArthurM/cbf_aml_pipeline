@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/bin/awk
 
 BEGIN{
     bin_width=0.1;
