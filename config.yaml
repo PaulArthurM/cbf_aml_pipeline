@@ -2,18 +2,18 @@ PROJECT_DIR: "/data1/scratch/pamesl/projet_cbf/"
 SAMPLES: "/data1/scratch/pamesl/projet_cbf/data/bam/data.json"
 
 #  Reference Genome
-REFERENCE: "/data1/scratch/pamesl/projet_cbf/data/b37_data/GRCh37-lite.fa"
+REFERENCE: "/home/data/pameslin/cbf_aml_pipeline/data/b37_data/GRCh37-lite.fa"
 
 #  Panel of Normales parameters:
-VCF_MAP: "/data1/scratch/pamesl/projet_cbf/data/map/sample_vcf.map"
+VCF_MAP: "/home/data/pameslin/cbf_aml_pipeline/map/sample_vcf.map"
 reader_threads: 1
 batch_size: 50
-intervals_list: "/data1/scratch/pamesl/projet_cbf/data/hg19_data/hg19_intervals.list"
-PON_VCF: "/data1/scratch/pamesl/projet_cbf/data/vcf/SJCBF_panel_of_normals.vcf.gz"
+intervals_list: "/home/data/pameslin/cbf_aml_pipeline/data/hg19_data/hg19_intervals.list"
+PON_VCF: "/home/data/pameslin/cbf_aml_pipeline/data/vcf/SJCBF_panel_of_normals.vcf.gz"
 
 #  DataBase GenomicsDBImport
 db_GDBI: "/data1/scratch/pamesl/projet_cbf/data/GenomicsDBImport"
 
 
 #  Mutect2
-germline_resource: "/data1/scratch/pamesl/projet_cbf/data/GnomAD/af-only-gnomad.raw.sites.hg19.vcf.gz"
+germline_resource: "/home/data/pameslin/cbf_aml_pipeline/data/GnomAD/af-only-gnomad.raw.sites.hg19.vcf.gz"
