@@ -36,11 +36,11 @@ MERGE = []
 for SAMPLE in SAMPLES:
     for TYPE in SAMPLES[SAMPLE]:
         LANES = SAMPLES[SAMPLE][TYPE]
-        file_1 = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane}.bam".format(sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane=get_lane(LANES[0]))
-        file_2 = "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane}.bam".format(sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane=get_lane(LANES[1]))
+        file_1 = "{project_dir}data/bam/{sample}_{type}-{id}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane=get_lane(LANES[0]))
+        file_2 = "{project_dir}data/bam/{sample}_{type}-{id}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane=get_lane(LANES[1]))
         if (os.path.isfile(file_1)) and (os.path.isfile(file_2)):
-            MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam".format(sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
-            MERGE.append("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bai".format(sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
+            MERGE.append("{project_dir}data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
+            MERGE.append("{project_dir}data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bai".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
 
 
 
@@ -53,10 +53,10 @@ rule all:
 # Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
 rule mark_duplicates:
     input:
-        "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}.bam"
+        config["PROJECT_DIR"] + "data/bam/{sample}.bam"
     output:
-        marked_bam=temp("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_marked_duplicates.bam"),
-        metrics_txt="/data1/scratch/pamesl/projet_cbf/data/metrics/{sample}_marked_dup_metrics.txt"
+        marked_bam = temp(config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates.bam"),
+        metrics_txt = config["PROJECT_DIR"] + "data/metrics/{sample}_marked_dup_metrics.txt"
     conda:
         "../envs/gatk4.yaml"
     shell:
@@ -71,9 +71,9 @@ rule mark_duplicates:
 #--sequence-dictionary  /data1/scratch/pamesl/projet_cbf/data/hg19_data/reference_hg19/ucsc_hg19.dict \
 rule base_recalibrator:
     input:
-        "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_marked_duplicates.bam"
+        config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates.bam"
     output:
-        temp("/data1/scratch/pamesl/projet_cbf/data/bam/recal_data_{sample}.table")
+        temp(config["PROJECT_DIR"] + "data/bam/recal_data_{sample}.table")
     params:
         reference=config["REFERENCE"],
         intervals_list=config["intervals_list"]
@@ -91,12 +91,12 @@ rule base_recalibrator:
 # Apply base quality score recalibration
 rule apply_BQSR:
     input:
-        table="/data1/scratch/pamesl/projet_cbf/data/bam/recal_data_{sample}.table",
-        bam="/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_marked_duplicates.bam"
+        table = config["PROJECT_DIR"] + "data/bam/recal_data_{sample}.table",
+        bam = config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates.bam"
     params:
         reference=config["REFERENCE"]
     output:
-        temp("/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_marked_duplicates_BQSR.bam")
+        temp(config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates_BQSR.bam")
     conda:
         "../envs/gatk4.yaml"
     shell:
@@ -110,10 +110,10 @@ rule apply_BQSR:
 # Merge multiple sorted alignment files, producing a single sorted output file
 rule merge_sam_files:
     input:
-        lane_1="/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_1}_marked_duplicates_BQSR.bam",
-        lane_2="/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_2}_marked_duplicates_BQSR.bam"
+        lane_1 = config["PROJECT_DIR"] + "data/bam/{sample}_{type}-{id}.{lane_1}_marked_duplicates_BQSR.bam",
+        lane_2 = config["PROJECT_DIR"] + "data/bam/{sample}_{type}-{id}.{lane_2}_marked_duplicates_BQSR.bam"
     output:
-        "/data1/scratch/pamesl/projet_cbf/data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam"
+        config["PROJECT_DIR"] + "data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam"
     conda:
         "../envs/gatk4.yaml"
     shell:
@@ -126,9 +126,9 @@ rule merge_sam_files:
 # Rule for create index from BAM file with samtools index
 rule samtools_index:
     input:
-        "/data1/scratch/pamesl/projet_cbf/data/bam/{merged_samples}_marked_duplicates_BQSR_merge.bam"
+        config["PROJECT_DIR"] + "data/bam/{merged_samples}_marked_duplicates_BQSR_merge.bam"
     output:
-        "/data1/scratch/pamesl/projet_cbf/data/bam/{merged_samples}_marked_duplicates_BQSR_merge.bai"
+        config["PROJECT_DIR"] + "data/bam/{merged_samples}_marked_duplicates_BQSR_merge.bai"
     conda:
         "../envs/samtools.yaml"
     shell:
