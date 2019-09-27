@@ -8,7 +8,6 @@ import json
 import glob
 
 
-
 class Sample():
     def __init__(self, string):
 
@@ -139,14 +138,12 @@ if 1:
             json_file["samples"][objet.sample_name] = {"D":[], "G":[]}
         json_file["samples"][objet.sample_name][objet.sample_type].append(objet.file_prefix)
 
-#write_json(json_file)
 
 
 path = '/data1/scratch/pamesl/projet_cbf/data/bam/'
 files = [f for f in glob.glob(path + "*merge.bam", recursive=False)]
 print("Start!")
 if (len(sys.argv) == 5):
-    #n = 0
     for objet in objets:
         print("\n\n")
         print(objet.bam_file_name)
@@ -162,7 +159,4 @@ if (len(sys.argv) == 5):
                         print("Sample {sample} is being downloaded".format(sample=objet.file_prefix))
                         download_germline_file(objet)
                         decrypt_file(objet)
-                        #n += 1
-                #if n == sys.argv[4]:
-                    #break
 print("End")
