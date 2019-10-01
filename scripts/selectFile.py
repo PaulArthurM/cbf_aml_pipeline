@@ -145,6 +145,7 @@ files = [f for f in glob.glob(path + "*merge.bam", recursive=False)]
 print("Start!")
 if (len(sys.argv) == 5):
     for objet in objets:
+        time.sleep(5)
         print("\n\n")
         print(objet.bam_file_name)
         if not check_merge(objet, files):
