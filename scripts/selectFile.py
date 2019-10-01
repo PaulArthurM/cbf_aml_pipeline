@@ -152,7 +152,7 @@ if 1:
 path = '/data1/scratch/pamesl/projet_cbf/data/bam/'
 files = [f for f in glob.glob(path + "*merge.bam", recursive=False)]
 print("Start processing!")
-if (len(sys.argv) == 5):
+if (len(sys.argv) == 2):
     for objet in objets:
         print("\n\n")
         print(objet.bam_file_name)
