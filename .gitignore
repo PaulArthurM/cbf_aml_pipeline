@@ -2,3 +2,4 @@ data/bam/*.bam
 data/bam
 stdoe_sge/
 data/trash
+CREDENTIALS_FILE
