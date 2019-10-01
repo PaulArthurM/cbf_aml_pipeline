@@ -125,6 +125,14 @@ def check_merge(sample, files):
         return True
 
 
+def download_file_pyega3(sample):
+    saveto="/data1/scratch/pamesl/projet_cbf/data/bam/{bam_file_name}".format(bam_file_name=bam_file_name)
+    cmd = "python pyega3/pyega3.py -cf CREDENTIALS_FILE fetch {egaf_id} --saveto
+{saveto}".format(egaf_id=sample.egaf_id,
+saveto=saveto)
+    print(cmd) 
+
+
 objets = []
 lines = open_file(sys.argv[1])
 for line in lines:
@@ -155,10 +163,12 @@ if (len(sys.argv) == 5):
                     print("File already exist.")
 
                 else:
-                    print("Sample {sample} is being requested.".format(sample=objet.file_prefix))
-                    request_germline_file(objet)
-                    if not os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name+".cip"):
-                        print("Sample {sample} is being downloaded".format(sample=objet.file_prefix))
-                        download_germline_file(objet)
-                        decrypt_file(objet)
+                    print("Sample {sample} is being downloaded.".format(sample=objet.file_prefix))
+                    download_file_pyega3(objet)
+                    #print("Sample {sample} is being requested.".format(sample=objet.file_prefix))
+                    #request_germline_file(objet)
+                    #if not os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name+".cip"):
+                        #print("Sample {sample} is being downloaded".format(sample=objet.file_prefix))
+                        #download_germline_file(objet)
+                        #decrypt_file(objet)
 print("End processing!")
