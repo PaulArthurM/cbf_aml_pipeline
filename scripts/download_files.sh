@@ -6,8 +6,8 @@
 #$ -e /data1/scratch/pamesl/projet_cbf/stdoe_sge
 #$ -q short.q
 #$ -l h_rt=24:00:00
-#$ -pe thread 6
-#$ -l h_vmem=16.5G
+#$ -pe thread 4
+#$ -l h_vmem=2.75G
 
 echo "JOB NAME: $JOB_NAME"
 echo "JOB ID: $JOB_ID"
@@ -20,7 +20,7 @@ echo "NSLOTS: $NSLOTS"
 echo Start at:`date`
 
 conda activate java_python3_env
-python3 ~/cbf_aml_pipeline/scripts/selectFile.py /data1/scratch/pamesl/projet_cbf/Sample_File_SJCBF.map ${1} ${2} ${3}
+python3 /data1/scratch/pamesl/projet_cbf/scripts/selectFile.py /data1/scratch/pamesl/projet_cbf/Sample_File_SJCBF.map ${1} ${2} ${3}
 conda deactivate
 
 echo End at:`date`

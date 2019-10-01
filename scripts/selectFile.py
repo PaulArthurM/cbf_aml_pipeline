@@ -113,10 +113,10 @@ def write_json(dictionary):
 
 
 def check_merge(sample, files):
-    file_prefix = sample.file_prefix
+    sample_name = sample.sample_name
     if sample.sample_type == "G":
         for f in files:
-            m = re.search(file_prefix, f)
+            m = re.search(sample_name, f)
             if m:
                 print("A merged file already exist for this sample.")
                 return True
@@ -143,13 +143,13 @@ if 1:
 
 path = '/data1/scratch/pamesl/projet_cbf/data/bam/'
 files = [f for f in glob.glob(path + "*merge.bam", recursive=False)]
-print("Start!")
+print("Start processing!")
 if (len(sys.argv) == 5):
     for objet in objets:
-        time.sleep(5)
         print("\n\n")
         print(objet.bam_file_name)
         if not check_merge(objet, files):
+            time.sleep(5)
             if len(json_file["samples"][objet.sample_name][objet.sample_type]) == 2:
                 if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name):
                     print("File already exist.")
@@ -161,4 +161,4 @@ if (len(sys.argv) == 5):
                         print("Sample {sample} is being downloaded".format(sample=objet.file_prefix))
                         download_germline_file(objet)
                         decrypt_file(objet)
-print("End")
+print("End processing!")
