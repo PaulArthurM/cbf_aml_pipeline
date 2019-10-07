@@ -24,6 +24,7 @@ def get_sample_name(sample):
 def get_id(sample):
     return re.search("-(\w+)\.", sample).group(1)
 
+
 def get_lane(sample):
     return re.search("\.(\d+)$", sample).group(1)
 
@@ -38,10 +39,16 @@ for SAMPLE in SAMPLES:
         LANES = SAMPLES[SAMPLE][TYPE]
         file_1 = "{project_dir}data/bam/{sample}_{type}-{id}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane=get_lane(LANES[0]))
         file_2 = "{project_dir}data/bam/{sample}_{type}-{id}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane=get_lane(LANES[1]))
-        if (os.path.isfile(file_1)) and (os.path.isfile(file_2)):
-            MERGE.append("{project_dir}data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
-            MERGE.append("{project_dir}data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bai".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
-
+        if (len(LANES == 2)):
+            if (os.path.isfile(file_1)) and (os.path.isfile(file_2)):
+                MERGE.append("{project_dir}data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
+                MERGE.append("{project_dir}data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bai".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
+        elif (len(LANES == 3)):
+            file_3 = "{project_dir}data/bam/{sample}_{type}-{id}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane=get_lane(LANES[2]))
+            if (os.path.isfile(file_1)) and (os.path.isfile(file_2)) and (os.path.isfile(file_3)):
+                MERGE.append("{project_dir}data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}.{lane_3}_marked_duplicates_BQSR_merge.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
+                MERGE.append("{project_dir}data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}.{lane_3}_marked_duplicates_BQSR_merge.bai".format(project_dir=config["PROJECT_DIR"],
+sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1]), lane_3=get_lane(LANES[2])))
 
 
 TARGETS.extend(MERGE)
@@ -108,7 +115,7 @@ rule apply_BQSR:
 
 
 # Merge multiple sorted alignment files, producing a single sorted output file
-rule merge_sam_files:
+rule merge_sam_two_files:
     input:
         lane_1 = config["PROJECT_DIR"] + "data/bam/{sample}_{type}-{id}.{lane_1}_marked_duplicates_BQSR.bam",
         lane_2 = config["PROJECT_DIR"] + "data/bam/{sample}_{type}-{id}.{lane_2}_marked_duplicates_BQSR.bam"
@@ -120,6 +127,24 @@ rule merge_sam_files:
         "gatk MergeSamFiles \
             -I {input.lane_1} \
             -I {input.lane_2} \
+            -O {output}"
+
+
+# Merge multiple sorted alignment files, producing a single sorted output file
+rule merge_sam_three_files:
+    input:
+        lane_1 = config["PROJECT_DIR"] + "data/bam/{sample}_{type}-{id}.{lane_1}_marked_duplicates_BQSR.bam",
+        lane_2 = config["PROJECT_DIR"] + "data/bam/{sample}_{type}-{id}.{lane_2}_marked_duplicates_BQSR.bam",
+        lane_3 = config["PROJECT_DIR"] + "data/bam/{sample}_{type}-{id}.{lane_3}_marked_duplicates_BQSR.bam"
+    output:
+        config["PROJECT_DIR"] + "data/bam/{sample}_{type}-{id}.{lane_1}.{lane_2}.{lane_3}_marked_duplicates_BQSR_merge.bam"
+    conda:
+        "../envs/gatk4.yaml"
+    shell:
+        "gatk MergeSamFiles \
+            -I {input.lane_1} \
+            -I {input.lane_2} \
+            -i {input.lane_3} \
             -O {output}"
 
 
