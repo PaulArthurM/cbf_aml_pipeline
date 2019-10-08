@@ -127,8 +127,11 @@ def check_merge(sample, files):
 
 def download_file_pyega3(sample):
     saveto="/data1/scratch/pamesl/projet_cbf/data/bam/{bam_file_name}".format(bam_file_name=sample.bam_file_name)
-    cmd = "python pyega3/pyega3.py -cf CREDENTIALS_FILE fetch {egaf_id} --saveto {saveto}".format(egaf_id=sample.egaf_id, saveto=saveto)
+    cmd = "pyega3 -c 4 -cf CREDENTIALS_FILE fetch {egaf_id} --saveto {saveto}".format(egaf_id=sample.egaf_id, saveto=saveto)
     print(cmd) 
+    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    process.wait()
+    print(process.returncode)
 
 
 objets = []
@@ -155,7 +158,7 @@ if (len(sys.argv) == 2):
         print("\n\n")
         print(objet.bam_file_name)
         if not check_merge(objet, files):
-            if len(json_file["samples"][objet.sample_name][objet.sample_type]) == 2:
+            if len(json_file["samples"][objet.sample_name][objet.sample_type]) == 3:
                 if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name):
                     print("File already exist.")
 
@@ -163,7 +166,7 @@ if (len(sys.argv) == 2):
                     time.sleep(5)
                     print("Sample {sample} is being downloaded.".format(sample=objet.file_prefix))
                     download_file_pyega3(objet)
-                    break
+                    #break
                     #print("Sample {sample} is being requested.".format(sample=objet.file_prefix))
                     #request_germline_file(objet)
                     #if not os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name+".cip"):

@@ -2,7 +2,7 @@ PROJECT_DIR: "/data1/scratch/pamesl/projet_cbf/"
 SAMPLES: "/data1/scratch/pamesl/projet_cbf/data/bam/data.json"
 
 #  Reference Genome
-REFERENCE: "/home/data/pameslin/cbf_aml_pipeline/data/b37_data/GRCh37-lite.fa"
+REFERENCE: "/data1/scratch/pamesl/projet_cbf/data/b37_data/GRCh37-lite.fa"
 
 #  Panel of Normales parameters:
 VCF_MAP: "/home/data/pameslin/cbf_aml_pipeline/map/sample_vcf.map"
