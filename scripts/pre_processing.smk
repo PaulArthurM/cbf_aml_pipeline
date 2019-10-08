@@ -30,9 +30,10 @@ def get_lane(sample):
 
 TARGETS = []
 
-BQSR_BAM = []
-MERGE = []
-
+MERGE_BAM = []
+MERGE_BAI = []
+FASTQC = []
+VCF = []
 
 for SAMPLE in SAMPLES:
     for TYPE in SAMPLES[SAMPLE]:
@@ -41,18 +42,23 @@ for SAMPLE in SAMPLES:
             file_1 = "{project_dir}data/bam/{sample}_{type}-{id}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane=get_lane(LANES[0]))
             file_2 = "{project_dir}data/bam/{sample}_{type}-{id}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[1]), lane=get_lane(LANES[1]))
             if (len(LANES)==2):
-                if 1:#(os.path.isfile(file_1)) and (os.path.isfile(file_2)):
-                    MERGE.append("{project_dir}data/bam/{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
-                    MERGE.append("{project_dir}data/bam/{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bai".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
+                MERGE_BAM.append("{project_dir}data/bam/{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
+                MERGE_BAI.append("{project_dir}data/bam/{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bai".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
+                FASTQC.append("{project_dir}data/bam/{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge_fastqc.html".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
+                VCF.append("{project_dir}data/bam/{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge_for_pon.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
             elif (len(LANES)==3):
                 file_3 = "{project_dir}data/bam/{sample}_{type}-{id}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[2]), lane=get_lane(LANES[2]))
-                if 1: #(os.path.isfile(file_1)) and (os.path.isfile(file_2)) and (os.path.isfile(file_3)):
-                    MERGE.append("{project_dir}data/bam/{sample}_{type}.{lane_1}.{lane_2}.{lane_3}_marked_duplicates_BQSR_merge.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1]), lane_3=get_lane(LANES[2])))
-                    MERGE.append("{project_dir}data/bam/{sample}_{type}.{lane_1}.{lane_2}.{lane_3}_marked_duplicates_BQSR_merge.bai".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1]), lane_3=get_lane(LANES[2])))
-
+                MERGE_BAM.append("{project_dir}data/bam/{sample}_{type}.{lane_1}.{lane_2}.{lane_3}_marked_duplicates_BQSR_merge.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1]), lane_3=get_lane(LANES[2])))
+                MERGE_BAI.append("{project_dir}data/bam/{sample}_{type}.{lane_1}.{lane_2}.{lane_3}_marked_duplicates_BQSR_merge.bai".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1]), lane_3=get_lane(LANES[2])))
+                FASTQC.append("{project_dir}data/bam/{sample}_{type}.{lane_1}.{lane_2}.{lane_3}_marked_duplicates_BQSR_merge_fastqc.html".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1]), lane_3=get_lane(LANES[2])))
+                VCF.append("{project_dir}data/bam/{sample}_{type}.{lane_1}.{lane_2}.{lane_3}_marked_duplicates_BQSR_merge_for_pon.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1]), lane_3=get_lane(LANES[2])))
 
 #print(MERGE)
-TARGETS.extend(MERGE)
+TARGETS.extend(MERGE_BAM)
+TARGETS.extend(MERGE_BAI)
+TARGETS.extend(FASTQC)
+TARGETS.extend(config["PON_VCF"])
+TARGETS.extend(VCF)
 
 rule all:
     input: TARGETS
@@ -72,7 +78,7 @@ rule mark_duplicates:
             -I {input} \
             -O {output.marked_bam} \
             -M {output.metrics_txt}"
-
+"{project_dir}data/bam/{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge_fastqc.html".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1]))
 
 # Generates recalibration table for Base Quality Score Recalibration (BQSR)
 #-L {params.intervals_list} \
@@ -83,7 +89,7 @@ rule base_recalibrator:
     output:
         temp(config["PROJECT_DIR"] + "data/bam/recal_data_{sample}.table")
     params:
-        reference=config["REFERENCE"],
+        reference=config["reference_GRCh37-lite"],
         intervals_list=config["intervals_list"]
     conda:
         "../envs/gatk4.yaml"
@@ -102,7 +108,7 @@ rule apply_BQSR:
         table = config["PROJECT_DIR"] + "data/bam/recal_data_{sample}.table",
         bam = config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates.bam"
     params:
-        reference=config["REFERENCE"]
+        reference=config["reference_GRCh37-lite"]
     output:
         temp(config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates_BQSR.bam")
     conda:
@@ -159,3 +165,70 @@ rule samtools_index:
         "../envs/samtools.yaml"
     shell:
         "samtools index -b {input} {output}"
+
+rule fastqc:
+    input:
+        config["PROJECT_DIR"] + "data/bam/{merged_samples}_marked_duplicates_BQSR_merge.bam"
+    output:
+        config["PROJECT_DIR"] + "data/bam/{merged_samples}_marked_duplicates_BQSR_merge_fastqc.html"
+    params:
+        config["FASTQC"]["DIR"]
+    conda:
+        "../envs/fastqc.yaml"
+    shell:
+        "fastqc {input} -o {params}"
+
+
+rule Mutect2_tumour_only:
+    input:
+        config["PROJECT_DIR"] + "data/bam/{sample}_G.{lane}_marked_duplicates_BQSR_merge.bam"
+    output:
+        config["PROJECT_DIR"] + "data/bam/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.gz"
+    params:
+        ref=config["reference_GRCh37-lite"],
+        gnomad=config["mutect2"]["gnomad"]["file"],
+        intervals=config["intervals_list"]
+    conda:
+        "../envs/gatk4.yaml"
+    shell:
+        " gatk Mutect2 \
+        -R {params.ref} \
+        -I {input} \
+        -max-mnp-distance 0 \
+        -L {params.intervals} \
+        -O {output}"
+
+
+rule GenomicsDB:
+    input:
+        VCF
+    output:
+        db=directory(config["db_GDBI"])
+    params:
+        ref=config["reference_GRCh37-lite"],
+        inputString = lambda wildcards, input: " -V ".join(input),
+        intervals=config["intervals_list"]
+    conda:
+        "../envs/gatk4.yaml"
+    shell:
+        "gatk GenomicsDBImport \
+        -R {params.ref} \
+        -L {params.intervals} \
+        --genomicsdb-workspace-path {output} \
+        {params.inputString}"
+
+
+rule CreateSomaticPanelOfNormals:
+    input:
+        directory(config["db_GDBI"])
+    output:
+        config["PON_VCF"]
+    params:
+        ref=config["reference_GRCh37-lite"]
+    conda:
+        "../envs/gatk4.yaml"
+    shell:
+        "gatk CreateSomaticPanelOfNormals \
+        -R {params.ref} \
+        -V {input} \
+        -O {output}"
