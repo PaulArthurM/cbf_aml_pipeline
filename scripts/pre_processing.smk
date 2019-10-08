@@ -203,7 +203,8 @@ rule GenomicsDB:
     input:
         VCF
     output:
-        db=directory(config["db_GDBI"])
+        db=directory(config["db_GDBI"]),
+        test="genomicsdb.txt"
     params:
         ref=config["reference_GRCh37-lite"],
         inputString = lambda wildcards, input: " -V ".join(input),
@@ -214,8 +215,8 @@ rule GenomicsDB:
         "gatk GenomicsDBImport \
         -R {params.ref} \
         -L {params.intervals} \
-        --genomicsdb-workspace-path {output} \
-        {params.inputString}"
+        --genomicsdb-workspace-path {output.db} \
+        {params.inputString} $$ touch {output.test}"
 
 
 rule CreateSomaticPanelOfNormals:
