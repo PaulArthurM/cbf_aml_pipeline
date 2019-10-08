@@ -220,15 +220,16 @@ rule GenomicsDB:
 
 rule CreateSomaticPanelOfNormals:
     input:
-        directory(config["db_GDBI"])
+        VCF
     output:
         config["PON_VCF"]
     params:
-        ref=config["reference_GRCh37-lite"]
+        ref=config["reference_GRCh37-lite"],
+        db=config["db_GDBI"]
     conda:
         "../envs/gatk4.yaml"
     shell:
         "gatk CreateSomaticPanelOfNormals \
         -R {params.ref} \
-        -V {input} \
+        -V {params.db} \
         -O {output}"
