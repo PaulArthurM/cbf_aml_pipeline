@@ -97,7 +97,7 @@ rule mark_duplicates:
         name="mark_duplicates_spark_{sample}_{type}.{lane}",
         nthread=1
     shell:
-        "gatk MarkDuplicatesSpark \
+        "gatk MarkDuplicates \
             -I {input} \
             -O {output.marked_bam} \
             -M {output.metrics_txt}"
