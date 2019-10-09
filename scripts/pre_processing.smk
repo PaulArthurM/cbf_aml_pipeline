@@ -128,9 +128,7 @@ rule mark_duplicates:
 #         --conf 'spark.executor.cores={params.nthread}'"
 
 
-Generates recalibration table for Base Quality Score Recalibration (BQSR)
--L {params.intervals_list} \
---sequence-dictionary  /data1/scratch/pamesl/projet_cbf/data/hg19_data/reference_hg19/ucsc_hg19.dict \
+#Generates recalibration table for Base Quality Score Recalibration (BQSR)
 rule base_recalibrator:
     input:
         config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates.bam"
@@ -150,7 +148,7 @@ rule base_recalibrator:
             -O {output}"
 
 
-Apply base quality score recalibration
+#Apply base quality score recalibration
 rule apply_BQSR:
     input:
         table = config["PROJECT_DIR"] + "data/bam/recal_data_{sample}.table",
