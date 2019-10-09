@@ -64,28 +64,8 @@ rule all:
     input: TARGETS
 
 
-# Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
-rule mark_duplicates_spark:
-    input:
-        config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lane}.bam"
-    output:
-        marked_bam = temp(config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lane}_marked_duplicates.bam"),
-        metrics_txt = config["PROJECT_DIR"] + "data/metrics/{sample}_{type}.{lane}_marked_dup_metrics.txt"
-    conda:
-        "../envs/gatk4.yaml"
-    params:
-        name="mark_duplicates_spark_{sample}_{type}.{lane}",
-        nthread=config["mark_duplicates_spark"]["nthread"]
-    shell:
-        "gatk MarkDuplicatesSpark \
-            -I {input} \
-            -O {output.marked_bam} \
-            -M {output.metrics_txt} \
-            --conf 'spark.executor.cores={params.nthread}'"
-
-
 # # Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
-# rule mark_duplicates:
+# rule mark_duplicates_spark:
 #     input:
 #         config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lane}.bam"
 #     output:
@@ -95,12 +75,32 @@ rule mark_duplicates_spark:
 #         "../envs/gatk4.yaml"
 #     params:
 #         name="mark_duplicates_spark_{sample}_{type}.{lane}",
-#         nthread=1
+#         nthread=config["mark_duplicates"]["spark"]["nthread"]
 #     shell:
-#         "gatk MarkDuplicates \
+#         "gatk MarkDuplicatesSpark \
 #             -I {input} \
 #             -O {output.marked_bam} \
-#             -M {output.metrics_txt}"
+#             -M {output.metrics_txt} \
+#             --conf 'spark.executor.cores={params.nthread}'"
+
+
+# Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
+rule mark_duplicates:
+    input:
+        config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lane}.bam"
+    output:
+        marked_bam = temp(config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lane}_marked_duplicates.bam"),
+        metrics_txt = config["PROJECT_DIR"] + "data/metrics/{sample}_{type}.{lane}_marked_dup_metrics.txt"
+    conda:
+        "../envs/gatk4.yaml"
+    params:
+        name="mark_duplicates_spark_{sample}_{type}.{lane}",
+        nthread=config["mark_duplicates"]["classic"]["nthread"]
+    shell:
+        "gatk MarkDuplicates \
+            -I {input} \
+            -O {output.marked_bam} \
+            -M {output.metrics_txt}"
 
 
 rule BQSRPipelineSpark:
@@ -114,7 +114,7 @@ rule BQSRPipelineSpark:
         dbsnp_138=config["known-sites"]["dbsnp_138"],
         mills_1000G=config["known-sites"]["mills_1000G"],
         name="BQSRPipelineSpark_{sample}",
-        nthread=10
+        nthread=config["BQSRPipelineSpark"]["nthread"]
     conda:
         "../envs/gatk4.yaml"
     shell:
@@ -180,7 +180,7 @@ rule merge_sam_two_files:
         "../envs/gatk4.yaml"
     params:
         name="merge_{sample}_{type}.{lane_1}.{lane_2}",
-        nthread=1
+        nthread=config["MergeSamFiles"]["nthread"]
     shell:
         "gatk MergeSamFiles \
             -I {input.lane_1} \
@@ -200,7 +200,7 @@ rule merge_sam_three_files:
         "../envs/gatk4.yaml"
     params:
         name="merge_{sample}_{type}.{lane_1}.{lane_2}.{lane_3}",
-        nthread=1
+        nthread=config["MergeSamFiles"]["nthread"]
     shell:
         "gatk MergeSamFiles \
             -I {input.lane_1} \
@@ -219,7 +219,7 @@ rule samtools_index:
         "../envs/samtools.yaml"
     params:
         name="index_{merged_samples}",
-        nthread=1
+        nthread=config["samtools"]["nthread"]
     shell:
         "samtools index -b {input} {output}"
 
@@ -249,7 +249,7 @@ rule Mutect2_tumour_only:
         gnomad=config["mutect2"]["gnomad"]["file"],
         intervals=config["intervals_list"],
         name="Mutect2_tumour_only_{sample}_G.{lane}",
-        nthread=10
+        nthread=config["mutect2"]["nthread"]
     conda:
         "../envs/gatk4.yaml"
     shell:

@@ -23,8 +23,21 @@ known-sites:
 
 #  Mutect2
 mutect2:
+  nthread: 10
   gnomad:
     file: "/data1/scratch/pamesl/projet_cbf/data/GnomAD/af-only-gnomad.raw.sites.b37.vcf"
 
-mark_duplicates_spark:
-  nthread: 40
+mark_duplicates:
+  spark:
+    nthread: 40
+  classic:
+    nthread: 10
+
+BQSRPipelineSpark:
+  nthread: 10
+
+MergeSamFiles:
+  nthread: 5
+
+samtools:
+  nthread: 5
