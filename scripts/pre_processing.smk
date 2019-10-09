@@ -75,13 +75,33 @@ rule mark_duplicates_spark:
         "../envs/gatk4.yaml"
     params:
         name="mark_duplicates_spark_{sample}_{type}.{lane}",
-        nthread=10
+        nthread=config["mark_duplicates_spark"]["nthread"]
     shell:
         "gatk MarkDuplicatesSpark \
             -I {input} \
             -O {output.marked_bam} \
             -M {output.metrics_txt} \
             --conf 'spark.executor.cores={params.nthread}'"
+
+
+# # Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
+# rule mark_duplicates:
+#     input:
+#         config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lane}.bam"
+#     output:
+#         marked_bam = temp(config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lane}_marked_duplicates.bam"),
+#         metrics_txt = config["PROJECT_DIR"] + "data/metrics/{sample}_{type}.{lane}_marked_dup_metrics.txt"
+#     conda:
+#         "../envs/gatk4.yaml"
+#     params:
+#         name="mark_duplicates_spark_{sample}_{type}.{lane}",
+#         nthread=1
+#     shell:
+#         "gatk MarkDuplicatesSpark \
+#             -I {input} \
+#             -O {output.marked_bam} \
+#             -M {output.metrics_txt}"
+
 
 rule BQSRPipelineSpark:
     input:
