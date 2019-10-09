@@ -27,4 +27,4 @@ mutect2:
     file: "/data1/scratch/pamesl/projet_cbf/data/GnomAD/af-only-gnomad.raw.sites.b37.vcf"
 
 mark_duplicates_spark:
-  nthread: 20
+  nthread: 40
