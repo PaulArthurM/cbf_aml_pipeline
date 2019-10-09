@@ -136,7 +136,9 @@ rule base_recalibrator:
         temp(config["PROJECT_DIR"] + "data/bam/recal_data_{sample}.table")
     params:
         reference=config["reference_GRCh37-lite"],
-        intervals_list=config["intervals_list"]
+        intervals_list=config["intervals_list"],
+        name="base_recalibrator_{sample}",
+        nthread=5
     conda:
         "../envs/gatk4.yaml"
     shell:
@@ -154,7 +156,9 @@ rule apply_BQSR:
         table = config["PROJECT_DIR"] + "data/bam/recal_data_{sample}.table",
         bam = config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates.bam"
     params:
-        reference=config["reference_GRCh37-lite"]
+        reference=config["reference_GRCh37-lite"],
+        name="apply_BQSR_{sample}",
+        nthread=5
     output:
         temp(config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates_BQSR.bam")
     conda:
