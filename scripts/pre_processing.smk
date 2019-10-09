@@ -94,7 +94,7 @@ rule mark_duplicates:
     conda:
         "../envs/gatk4.yaml"
     params:
-        name="mark_duplicates_spark_{sample}_{type}.{lane}",
+        name="mark_duplicates_{sample}_{type}.{lane}",
         nthread=config["mark_duplicates"]["classic"]["nthread"]
     shell:
         "gatk MarkDuplicates \
@@ -103,70 +103,70 @@ rule mark_duplicates:
             -M {output.metrics_txt}"
 
 
-rule BQSRPipelineSpark:
-    input:
-        config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates.bam"
-    output:
-        temp(config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates_BQSR.bam")
-    params:
-        reference=config["reference_GRCh37-lite"],
-        intervals_list=config["intervals_list"],
-        dbsnp_138=config["known-sites"]["dbsnp_138"],
-        mills_1000G=config["known-sites"]["mills_1000G"],
-        name="BQSRPipelineSpark_{sample}",
-        nthread=config["BQSRPipelineSpark"]["nthread"]
-    conda:
-        "../envs/gatk4.yaml"
-    shell:
-        "gatk BQSRPipelineSpark \
-        -R {params.reference} \
-        -I {input} \
-        --known-sites {params.dbsnp_138} \
-        --known-sites {params.mills_1000G} \
-        -L {params.intervals_list} \
-        -O {output} \
-        --conf 'spark.executor.cores={params.nthread}'"
-
-
-# Generates recalibration table for Base Quality Score Recalibration (BQSR)
-#-L {params.intervals_list} \
-#--sequence-dictionary  /data1/scratch/pamesl/projet_cbf/data/hg19_data/reference_hg19/ucsc_hg19.dict \
-# rule base_recalibrator:
+# rule BQSRPipelineSpark:
 #     input:
 #         config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates.bam"
 #     output:
-#         temp(config["PROJECT_DIR"] + "data/bam/recal_data_{sample}.table")
+#         temp(config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates_BQSR.bam")
 #     params:
 #         reference=config["reference_GRCh37-lite"],
-#         intervals_list=config["intervals_list"]
+#         intervals_list=config["intervals_list"],
+#         dbsnp_138=config["known-sites"]["dbsnp_138"],
+#         mills_1000G=config["known-sites"]["mills_1000G"],
+#         name="BQSRPipelineSpark_{sample}",
+#         nthread=config["BQSRPipelineSpark"]["nthread"]
 #     conda:
 #         "../envs/gatk4.yaml"
 #     shell:
-#         "gatk BaseRecalibrator \
-#             -I {input} \
-#             -R {params.reference} \
-#             --known-sites /data1/scratch/pamesl/projet_cbf/data/dbSNP/dbsnp_138.b37.vcf \
-#             --known-sites /data1/scratch/pamesl/projet_cbf/data/mills_1000G/Mills_and_1000G_gold_standard.indels.b37.vcf \
-#             -O {output}"
+#         "gatk BQSRPipelineSpark \
+#         -R {params.reference} \
+#         -I {input} \
+#         --known-sites {params.dbsnp_138} \
+#         --known-sites {params.mills_1000G} \
+#         -L {params.intervals_list} \
+#         -O {output} \
+#         --conf 'spark.executor.cores={params.nthread}'"
 
 
-# Apply base quality score recalibration
-# rule apply_BQSR:
-#     input:
-#         table = config["PROJECT_DIR"] + "data/bam/recal_data_{sample}.table",
-#         bam = config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates.bam"
-#     params:
-#         reference=config["reference_GRCh37-lite"]
-#     output:
-#         temp(config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates_BQSR.bam")
-#     conda:
-#         "../envs/gatk4.yaml"
-#     shell:
-#         "gatk ApplyBQSR \
-#             -R {params.reference} \
-#             -I {input.bam} \
-#             --bqsr-recal-file {input.table} \
-#             -O {output}"
+Generates recalibration table for Base Quality Score Recalibration (BQSR)
+-L {params.intervals_list} \
+--sequence-dictionary  /data1/scratch/pamesl/projet_cbf/data/hg19_data/reference_hg19/ucsc_hg19.dict \
+rule base_recalibrator:
+    input:
+        config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates.bam"
+    output:
+        temp(config["PROJECT_DIR"] + "data/bam/recal_data_{sample}.table")
+    params:
+        reference=config["reference_GRCh37-lite"],
+        intervals_list=config["intervals_list"]
+    conda:
+        "../envs/gatk4.yaml"
+    shell:
+        "gatk BaseRecalibrator \
+            -I {input} \
+            -R {params.reference} \
+            --known-sites /data1/scratch/pamesl/projet_cbf/data/dbSNP/dbsnp_138.b37.vcf \
+            --known-sites /data1/scratch/pamesl/projet_cbf/data/mills_1000G/Mills_and_1000G_gold_standard.indels.b37.vcf \
+            -O {output}"
+
+
+Apply base quality score recalibration
+rule apply_BQSR:
+    input:
+        table = config["PROJECT_DIR"] + "data/bam/recal_data_{sample}.table",
+        bam = config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates.bam"
+    params:
+        reference=config["reference_GRCh37-lite"]
+    output:
+        temp(config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates_BQSR.bam")
+    conda:
+        "../envs/gatk4.yaml"
+    shell:
+        "gatk ApplyBQSR \
+            -R {params.reference} \
+            -I {input.bam} \
+            --bqsr-recal-file {input.table} \
+            -O {output}"
 
 
 # Merge multiple sorted alignment files, producing a single sorted output file
