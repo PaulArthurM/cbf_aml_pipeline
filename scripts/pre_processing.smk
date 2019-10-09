@@ -75,7 +75,7 @@ rule mark_duplicates_spark:
         "../envs/gatk4.yaml"
     params:
         name="mark_duplicates_spark_{sample}_{type}.{lane}",
-        nthread=5
+        nthread=10
     shell:
         "gatk MarkDuplicatesSpark \
             -I {input} \
@@ -94,7 +94,7 @@ rule BQSRPipelineSpark:
         dbsnp_138=config["known-sites"]["dbsnp_138"],
         mills_1000G=config["known-sites"]["mills_1000G"],
         name="BQSRPipelineSpark_{sample}",
-        nthread=5
+        nthread=10
     conda:
         "../envs/gatk4.yaml"
     shell:
@@ -104,7 +104,8 @@ rule BQSRPipelineSpark:
         --known-sites {params.dbsnp_138} \
         --known-sites {params.mills_1000G} \
         -L {params.intervals_list} \
-        -O {output}"
+        -O {output} \
+        --conf 'spark.executor.cores={params.nthread}'"
 
 
 # Generates recalibration table for Base Quality Score Recalibration (BQSR)
