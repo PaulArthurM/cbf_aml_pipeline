@@ -56,7 +56,7 @@ for SAMPLE in SAMPLES:
 #print(MERGE)
 TARGETS.extend(MERGE_BAM)
 TARGETS.extend(MERGE_BAI)
-TARGETS.extend(FASTQC)
+#TARGETS.extend(FASTQC)
 TARGETS.extend([config["PON_VCF"]])
 TARGETS.extend(VCF)
 
@@ -230,7 +230,7 @@ rule Mutect2_tumour_only:
         gnomad=config["mutect2"]["gnomad"]["file"],
         intervals=config["intervals_list"],
         name="Mutect2_tumour_only_{sample}_G.{lane}",
-        nthread=1
+        nthread=10
     conda:
         "../envs/gatk4.yaml"
     shell:
