@@ -82,8 +82,6 @@ rule mark_duplicates_spark:
             -O {output.marked_bam} \
             -M {output.metrics_txt} \
             --conf 'spark.executor.cores={params.nthread}'"
-"{project_dir}data/bam/{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge_fastqc.html".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1]))
-
 
 rule BQSRPipelineSpark:
     input:
@@ -224,7 +222,7 @@ rule Mutect2_tumour_only:
     input:
         config["PROJECT_DIR"] + "data/bam/{sample}_G.{lane}_marked_duplicates_BQSR_merge.bam"
     output:
-        config["PROJECT_DIR"] + "data/bam/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.gz"
+        config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.gz"
     params:
         ref=config["reference_GRCh37-lite"],
         gnomad=config["mutect2"]["gnomad"]["file"],
