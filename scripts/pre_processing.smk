@@ -74,7 +74,7 @@ rule mark_duplicates_spark:
     conda:
         "../envs/gatk4.yaml"
     params:
-        name="{sample}_{type}.{lane}",
+        name="mark_duplicates_spark_{sample}_{type}.{lane}",
         nthread=5
     shell:
         "gatk MarkDuplicatesSpark \
@@ -95,7 +95,7 @@ rule BQSRPipelineSpark:
         intervals_list=config["intervals_list"],
         dbsnp_138=config["known-sites"]["dbsnp_138"],
         mills_1000G=config["known-sites"]["mills_1000G"],
-        name="{sample}",
+        name="BQSRPipelineSpark_{sample}",
         nthread=5
     conda:
         "../envs/gatk4.yaml"
@@ -160,7 +160,7 @@ rule merge_sam_two_files:
     conda:
         "../envs/gatk4.yaml"
     params:
-        name="{sample}_{type}.{lane_1}.{lane_2}",
+        name="merge_{sample}_{type}.{lane_1}.{lane_2}",
         nthread=1
     shell:
         "gatk MergeSamFiles \
@@ -180,7 +180,7 @@ rule merge_sam_three_files:
     conda:
         "../envs/gatk4.yaml"
     params:
-        name="{sample}_{type}.{lane_1}.{lane_2}.{lane_3}",
+        name="merge_{sample}_{type}.{lane_1}.{lane_2}.{lane_3}",
         nthread=1
     shell:
         "gatk MergeSamFiles \
@@ -199,7 +199,7 @@ rule samtools_index:
     conda:
         "../envs/samtools.yaml"
     params:
-        name="{merged_samples}",
+        name="index_{merged_samples}",
         nthread=1
     shell:
         "samtools index -b {input} {output}"
@@ -212,7 +212,7 @@ rule fastqc:
         config["PROJECT_DIR"] + "data/bam/{merged_samples}_marked_duplicates_BQSR_merge_fastqc.html"
     params:
         dir=config["FASTQC"]["DIR"],
-        name="{merged_samples}",
+        name="fastq_{merged_samples}",
         nthread=1
     conda:
         "../envs/fastqc.yaml"
@@ -229,7 +229,7 @@ rule Mutect2_tumour_only:
         ref=config["reference_GRCh37-lite"],
         gnomad=config["mutect2"]["gnomad"]["file"],
         intervals=config["intervals_list"],
-        name="{sample}_G.{lane}",
+        name="Mutect2_tumour_only_{sample}_G.{lane}",
         nthread=1
     conda:
         "../envs/gatk4.yaml"
