@@ -99,7 +99,7 @@ rule BQSRPipelineSpark:
         nthread=5
     conda:
         "../envs/gatk4.yaml"
-    sell:
+    shell:
         "gatk BQSRPipelineSpark \
         -R {params.reference} \
         -I {input} \
