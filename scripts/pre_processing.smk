@@ -283,7 +283,7 @@ rule GenomicsDB:
         -R {params.ref} \
         -L {params.intervals} \
         --genomicsdb-workspace-path {output.db} \
-        - V {params.inputString} && touch {output.test}"
+        -V {params.inputString} && touch {output.test}"
 
 
 rule CreateSomaticPanelOfNormals:
