@@ -275,7 +275,7 @@ rule GenomicsDB:
         inputString = lambda wildcards, input: " -V ".join(input),
         intervals=config["intervals_list"],
         name="GenomicsDB",
-        nthread=1
+        nthread=20
     conda:
         "../envs/gatk4.yaml"
     shell:
