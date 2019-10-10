@@ -321,5 +321,6 @@ rule IndexFeatureFile:
         name="IndexFeatureFile_{sample}_G.{lane}",
         nthread=1
     conda:
+        "../envs/gatk4.yaml"
     shell:
         "gunzip {input.vcf_gz} && gatk IndexFeatureFile -F {params.vcf}"
