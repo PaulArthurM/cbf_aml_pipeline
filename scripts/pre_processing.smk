@@ -243,7 +243,8 @@ rule fastqc:
 
 rule Mutect2_tumour_only:
     input:
-        config["PROJECT_DIR"] + "data/bam/{sample}_G.{lane}_marked_duplicates_BQSR_merge.bam"
+        bam=config["PROJECT_DIR"] + "data/bam/{sample}_G.{lane}_marked_duplicates_BQSR_merge.bam"
+        bai=config["PROJECT_DIR"] + "data/bam/{sample}_G.{lane}_marked_duplicates_BQSR_merge.bai"
     output:
         config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.gz"
     params:
@@ -257,7 +258,7 @@ rule Mutect2_tumour_only:
     shell:
         " gatk Mutect2 \
         -R {params.ref} \
-        -I {input} \
+        -I {input.bam} \
         -max-mnp-distance 0 \
         -L {params.intervals} \
         -O {output}"
