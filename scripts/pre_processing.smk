@@ -293,6 +293,7 @@ rule GenomicsDB:
 rule CreateSomaticPanelOfNormals:
     input:
         VCF,
+        VCF_IDX,
         test="genomicsdb.txt"
     output:
         config["PON_VCF"]
