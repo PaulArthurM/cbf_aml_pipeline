@@ -34,6 +34,7 @@ MERGE_BAM = []
 MERGE_BAI = []
 FASTQC = []
 VCF = []
+VCF_IDX = []
 
 for SAMPLE in SAMPLES:
     for TYPE in SAMPLES[SAMPLE]:
