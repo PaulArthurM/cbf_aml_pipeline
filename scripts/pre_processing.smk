@@ -332,7 +332,7 @@ rule IndexFeatureFile:
         vcf_idx = config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.idx"
     params:
         name="IndexFeatureFile_{sample}_G.{lane}",
-        nthread=1
+        nthread=5
     conda:
         "../envs/gatk4.yaml"
     shell:
