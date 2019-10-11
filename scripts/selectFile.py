@@ -40,7 +40,7 @@ class Sample():
             m = re.search("(EGAF.+$)", string)
             if m:
                 return m.group(1)
-
+re.search(sample_name, f)
 
         self.sample_name = get_sample_name(string)
         self.sample_type = get_sample_type(string)
@@ -116,8 +116,9 @@ def check_merge(sample, files, type):
     sample_name = sample.sample_name
     if sample.sample_type == type:
         for f in files:
-            m = re.search(sample_name, f)
-            if m:
+            m  = re.search(sample_name, f)
+            m2 = re.search(type, f)
+            if m and m2:
                 print("A merged file already exist for this sample.")
                 return True
     else:
