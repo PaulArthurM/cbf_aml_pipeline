@@ -121,7 +121,7 @@ def check_merge(sample, files, type):
                 print("A merged file already exist for this sample.")
                 return True
     else:
-        print("Not a germline file.")
+        print("Not a requested file.")
         return True
 
 
