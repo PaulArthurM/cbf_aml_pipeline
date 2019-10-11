@@ -336,4 +336,4 @@ rule IndexFeatureFile:
     conda:
         "../envs/gatk4.yaml"
     shell:
-        "gatk IndexFeatureFile -F {params.vcf}"
+        "gatk IndexFeatureFile -F {input.vcf}"
