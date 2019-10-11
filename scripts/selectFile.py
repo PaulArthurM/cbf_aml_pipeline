@@ -140,7 +140,7 @@ if __name__== '__main__':
     parser.add_argument('-m', default='/data1/scratch/pamesl/projet_cbf/Sample_File_SJCBF.map', type=str, help="Metadata file")
     parser.add_argument('-e', default='SJCBF', type=str, help="Experience")
     parser.add_argument('-j', default=True, type=bool, help="Create JSON")
-    parser.add_argument('-p', default='/data1/scratch/pamesl/projet_cbf/data/bam/', type=bool, help="Path to bams")
+    parser.add_argument('-p', default='/data1/scratch/pamesl/projet_cbf/data/bam/', type=str, help="Path to bams")
 
 
     args = parser.parse_args()
