@@ -268,7 +268,7 @@ rule Mutect2_tumour_only:
 
 rule GenomicsDB:
     input:
-        VCF,
+        #VCF,
         VCF_IDX
     output:
         db=directory(config["db_GDBI"]),
@@ -292,8 +292,8 @@ rule GenomicsDB:
 
 rule CreateSomaticPanelOfNormals:
     input:
-        VCF,
-        VCF_IDX,
+        #VCF,
+        VCF_IDX#,
         test="genomicsdb.txt"
     output:
         config["PON_VCF"]
