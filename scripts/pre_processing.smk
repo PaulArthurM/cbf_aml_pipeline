@@ -248,7 +248,7 @@ rule Mutect2_tumour_only:
         bam=config["PROJECT_DIR"] + "data/bam/{sample}_G.{lane}_marked_duplicates_BQSR_merge.bam",
         bai=config["PROJECT_DIR"] + "data/bam/{sample}_G.{lane}_marked_duplicates_BQSR_merge.bai"
     output:
-        config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.gz"
+        temp(config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.gz")
     params:
         ref=config["reference_GRCh37-lite"],
         gnomad=config["mutect2"]["gnomad"]["file"],
