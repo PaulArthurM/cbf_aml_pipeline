@@ -40,7 +40,6 @@ class Sample():
             m = re.search("(EGAF.+$)", string)
             if m:
                 return m.group(1)
-re.search(sample_name, f)
 
         self.sample_name = get_sample_name(string)
         self.sample_type = get_sample_type(string)
