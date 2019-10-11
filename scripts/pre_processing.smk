@@ -60,7 +60,7 @@ TARGETS.extend(MERGE_BAM)
 TARGETS.extend(MERGE_BAI)
 #TARGETS.extend(FASTQC)
 TARGETS.extend([config["PON_VCF"]])
-TARGETS.extend(VCF)
+#TARGETS.extend(VCF)
 
 rule all:
     input: TARGETS
