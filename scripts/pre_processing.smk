@@ -312,16 +312,28 @@ rule CreateSomaticPanelOfNormals:
 
 
 
-rule IndexFeatureFile:
+rule unzip_gz:
     input:
         vcf_gz = config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.gz"
     output:
+        vcf = config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf"
+    params:
+        name="gunzip_{sample}_G.{lane}",
+        nthread=1
+    shell:
+        "gunzip {input.vcf_gz}"
+
+
+
+rule IndexFeatureFile:
+    input:
+        vcf = config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf"
+    output:
         vcf_idx = config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.idx"
     params:
-        vcf = config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf",
         name="IndexFeatureFile_{sample}_G.{lane}",
         nthread=1
     conda:
         "../envs/gatk4.yaml"
     shell:
-        "gunzip {input.vcf_gz} && gatk IndexFeatureFile -F {params.vcf}"
+        "gatk IndexFeatureFile -F {params.vcf}"
