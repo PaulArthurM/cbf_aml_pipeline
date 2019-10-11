@@ -7,7 +7,7 @@ from os import listdir
 from os.path import isfile, join
 import json
 import glob
-
+import argparse
 
 class Sample():
     def __init__(self, string):
@@ -128,49 +128,49 @@ def check_merge(sample, files):
 def download_file_pyega3(sample):
     saveto="/data1/scratch/pamesl/projet_cbf/data/bam/{bam_file_name}".format(bam_file_name=sample.bam_file_name)
     cmd = "pyega3 -c 4 -cf CREDENTIALS_FILE fetch {egaf_id} --saveto {saveto}".format(egaf_id=sample.egaf_id, saveto=saveto)
-    print(cmd) 
+    print(cmd)
     process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     process.wait()
     print(process.returncode)
 
 
-objets = []
-lines = open_file(sys.argv[1])
-for line in lines:
-    if "SJCBF" in line:
-        sample = Sample(line)
-        objets.append(sample)
+if __name__== '__main__':
 
-if 1:
-    json_file = {"samples":{}}
-    for objet in objets:
-        if objet.sample_name not in json_file["samples"]:
-            json_file["samples"][objet.sample_name] = {"D":[], "G":[]}
-        json_file["samples"][objet.sample_name][objet.sample_type].append(objet.file_prefix)
+    parser = argparse.ArgumentParser(description='Downloading files from EGA and create proper JSON file.')
+    parser.add_argument('-m', default='/data1/scratch/pamesl/projet_cbf/Sample_File_SJCBF.map', type=str, help="Metadata file")
+    parser.add_argument('-e', default='SJCBF', type=str, help="Experience")
+    parser.add_argument('-j', default=True, type=bool, help="Create JSON")
+    parser.add_argument('-p', default='/data1/scratch/pamesl/projet_cbf/data/bam/', type=bool, help="Path to bams")
 
 
+    args = parser.parse_args()
 
-path = '/data1/scratch/pamesl/projet_cbf/data/bam/'
-files = [f for f in glob.glob(path + "*merge.bam", recursive=False)]
-print("Start processing!")
-if (len(sys.argv) == 2):
+
+    objets = []
+    lines = open_file(args.m)#open_file(sys.argv[1])
+    for line in lines:
+        if args.e in line:
+            sample = Sample(line)
+            objets.append(sample)
+
+    if args.j:
+        json_file = {"samples":{}}
+        for objet in objets:
+            if objet.sample_name not in json_file["samples"]:
+                json_file["samples"][objet.sample_name] = {"D":[], "G":[]}
+                json_file["samples"][objet.sample_name][objet.sample_type].append(objet.file_prefix)
+
+
+
+    path = args.p
+    files = [f for f in glob.glob(path + "*merge.bam", recursive=False)]
     for objet in objets:
         print("\n\n")
         print(objet.bam_file_name)
         if not check_merge(objet, files):
-            if len(json_file["samples"][objet.sample_name][objet.sample_type]) == 3:
-                if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name):
-                    print("File already exist.")
-
-                else:
-                    time.sleep(5)
-                    print("Sample {sample} is being downloaded.".format(sample=objet.file_prefix))
-                    download_file_pyega3(objet)
-                    #break
-                    #print("Sample {sample} is being requested.".format(sample=objet.file_prefix))
-                    #request_germline_file(objet)
-                    #if not os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name+".cip"):
-                        #print("Sample {sample} is being downloaded".format(sample=objet.file_prefix))
-                        #download_germline_file(objet)
-                        #decrypt_file(objet)
-print("End processing!")
+            if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name):
+                print("File already exist.")
+            else:
+                time.sleep(5)
+                print("Sample {sample} is being downloaded.".format(sample=objet.file_prefix))
+                #download_file_pyega3(objet)
