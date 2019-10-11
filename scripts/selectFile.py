@@ -112,9 +112,9 @@ def write_json(dictionary):
             json.dump(dictionary, fp)
 
 
-def check_merge(sample, files):
+def check_merge(sample, files, type):
     sample_name = sample.sample_name
-    if sample.sample_type == "G":
+    if sample.sample_type == type:
         for f in files:
             m = re.search(sample_name, f)
             if m:
@@ -141,7 +141,8 @@ if __name__== '__main__':
     parser.add_argument('-e', default='SJCBF', type=str, help="Experience")
     parser.add_argument('-j', default=True, type=bool, help="Create JSON")
     parser.add_argument('-p', default='/data1/scratch/pamesl/projet_cbf/data/bam/', type=str, help="Path to bams")
-
+    parser.add_argument('-l', default=1, type=int, help="Number of files to download.")
+    parser.add_argument('-t', default=None, type=str, help="Type of files to download.", required=True)
 
     args = parser.parse_args()
 
@@ -164,13 +165,16 @@ if __name__== '__main__':
 
     path = args.p
     files = [f for f in glob.glob(path + "*merge.bam", recursive=False)]
+    limit = 0
     for objet in objets:
-        print("\n\n")
-        print(objet.bam_file_name)
-        if not check_merge(objet, files):
-            if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name):
-                print("File already exist.")
-            else:
-                time.sleep(5)
-                print("Sample {sample} is being downloaded.".format(sample=objet.file_prefix))
-                #download_file_pyega3(objet)
+        if limit < args.l:
+            print("\n\n")
+            print(objet.bam_file_name)
+            if not check_merge(objet, files, args.t):
+                if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name):
+                    print("File already exist.")
+                else:
+                    time.sleep(5)
+                    print("Sample {sample} is being downloaded.".format(sample=objet.file_prefix))
+                    #download_file_pyega3(objet)
+                    limit+=1
