@@ -307,7 +307,7 @@ rule CreateSomaticPanelOfNormals:
     shell:
         "gatk CreateSomaticPanelOfNormals \
         -R {params.ref} \
-        -V {params.db} \
+        -V gendb://{params.db} \
         -O {output}"
 
 
