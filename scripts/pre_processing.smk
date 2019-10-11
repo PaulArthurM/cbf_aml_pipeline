@@ -301,7 +301,7 @@ rule CreateSomaticPanelOfNormals:
         ref=config["reference_GRCh37-lite"],
         db=config["db_GDBI"],
         name="create_PON",
-        nthread=1
+        nthread=20
     conda:
         "../envs/gatk4.yaml"
     shell:
