@@ -19,6 +19,8 @@ echo "NSLOTS: $NSLOTS"
 
 echo Start at:`date`
 
+conda activate fastqc_env
 fastqc data/bam/SJCBF016_G.5.6_marked_duplicates_BQSR_merge.bam -o analysis/qualities/
+conda deactivate
 
 echo End at:`date`
