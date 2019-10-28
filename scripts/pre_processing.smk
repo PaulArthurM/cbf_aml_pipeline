@@ -236,7 +236,7 @@ rule fastqc:
     params:
         dir=config["FASTQC"]["DIR"],
         name="fastq_{merged_samples}",
-        nthread=20
+        nthread=4
     conda:
         "../envs/fastqc.yaml"
     shell:
