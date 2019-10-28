@@ -236,11 +236,11 @@ rule fastqc:
     params:
         dir=config["FASTQC"]["DIR"],
         name="fastq_{merged_samples}",
-        nthread=1
+        nthread=6
     conda:
         "../envs/fastqc.yaml"
     shell:
-        "fastqc {input} -o {params.dir}"
+        "fastqc {input} -t {params.nthread} -o {params.dir}"
 
 
 rule Mutect2_tumour_only:
