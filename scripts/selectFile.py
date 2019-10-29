@@ -164,7 +164,7 @@ if __name__== '__main__':
 
 
     path = args.p
-    files = [f for f in glob.glob(path + "*merge.bam", recursive=False)]
+    files = [f for f in glob.glob(path + "*merge.bam")]
     limit = 0
     for objet in objets:
         if limit < args.l:
