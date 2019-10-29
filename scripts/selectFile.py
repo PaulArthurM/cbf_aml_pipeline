@@ -142,8 +142,8 @@ def download_file_pyega3(sample):
 
 
 def check_two_file_forms(sample):
-    isFile_1 = os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name)
-    isFile_2 = os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.name_no_machine_id)
+    isFile_1 = os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+sample.bam_file_name)
+    isFile_2 = os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+sample.name_no_machine_id)
     if (isFile_1 or isFile_2):
         return True
     else:
