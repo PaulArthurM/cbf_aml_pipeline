@@ -41,11 +41,18 @@ class Sample():
             if m:
                 return m.group(1)
 
+
+        def get_name_no_machine_id(string):
+            m = re.search("(SJCBF[0-9]+_[DG])-[A-Za-z0-9]+(\.[0-9]\.bam)\.cip", string)
+            if m:
+                return m.group(1) + m.group(2)
+
         self.sample_name = get_sample_name(string)
         self.sample_type = get_sample_type(string)
         self.bam_file_name = get_bam_file_name(string)
         self.file_prefix = get_file_prefix(string)
         self.egaf_id = get_EGAF(string)
+        self.name_no_machine_id = get_name_no_machine_id(string)
 
 
 def open_file(file_path):
@@ -134,6 +141,15 @@ def download_file_pyega3(sample):
     print(process.returncode)
 
 
+def check_two_file_forms(sample):
+    isFile_1 = os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name)
+    isFile_2 = os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.name_no_machine_id)
+    if (isFile_1 or isFile_2):
+        return True
+    else:
+        return False
+
+
 def main(args):
     objets = []
     lines = open_file(args.m)#open_file(sys.argv[1])
@@ -159,12 +175,12 @@ def main(args):
             print("\n\n")
             print(objet.bam_file_name)
             if not check_merge(objet, files, args.t):
-                if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name):
+                if check_two_file_forms(objet):
                     print("File already exist.")
                 else:
                     time.sleep(5)
                     print("Sample {sample} is being downloaded.".format(sample=objet.file_prefix))
-                    download_file_pyega3(objet)
+                    #download_file_pyega3(objet)
                     limit+=1
 
 
