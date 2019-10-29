@@ -180,7 +180,7 @@ def main(args):
                 else:
                     time.sleep(5)
                     print("Sample {sample} is being downloaded.".format(sample=objet.file_prefix))
-                    #download_file_pyega3(objet)
+                    download_file_pyega3(objet)
                     limit+=1
 
 
