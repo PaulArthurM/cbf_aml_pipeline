@@ -134,19 +134,7 @@ def download_file_pyega3(sample):
     print(process.returncode)
 
 
-if __name__== '__main__':
-
-    parser = argparse.ArgumentParser(description='Downloading files from EGA and create proper JSON file.')
-    parser.add_argument('-m', default='/data1/scratch/pamesl/projet_cbf/Sample_File_SJCBF.map', type=str, help="Metadata file")
-    parser.add_argument('-e', default='SJCBF', type=str, help="Experience")
-    parser.add_argument('-j', default=True, type=bool, help="Create JSON")
-    parser.add_argument('-p', default='/data1/scratch/pamesl/projet_cbf/data/bam/', type=str, help="Path to bams")
-    parser.add_argument('-l', default=1, type=int, help="Number of files to download.")
-    parser.add_argument('-t', default=None, type=str, help="Type of files to download.", required=True)
-
-    args = parser.parse_args()
-
-
+def main(args):
     objets = []
     lines = open_file(args.m)#open_file(sys.argv[1])
     for line in lines:
@@ -160,7 +148,7 @@ if __name__== '__main__':
             if objet.sample_name not in json_file["samples"]:
                 json_file["samples"][objet.sample_name] = {"D":[], "G":[]}
                 json_file["samples"][objet.sample_name][objet.sample_type].append(objet.file_prefix)
-
+        write_json(json_file)
 
 
     path = args.p
@@ -178,3 +166,18 @@ if __name__== '__main__':
                     print("Sample {sample} is being downloaded.".format(sample=objet.file_prefix))
                     download_file_pyega3(objet)
                     limit+=1
+
+
+if __name__== '__main__':
+
+    parser = argparse.ArgumentParser(description='Downloading files from EGA and create proper JSON file.')
+    parser.add_argument('-m', default='/data1/scratch/pamesl/projet_cbf/Sample_File_SJCBF.map', type=str, help="Metadata file")
+    parser.add_argument('-e', default='SJCBF', type=str, help="Experience")
+    parser.add_argument('-j', default=True, type=bool, help="Create JSON")
+    parser.add_argument('-p', default='/data1/scratch/pamesl/projet_cbf/data/bam/', type=str, help="Path to bams")
+    parser.add_argument('-l', default=1, type=int, help="Number of files to download.")
+    parser.add_argument('-t', default=None, type=str, help="Type of files to download.", required=True)
+
+    args = parser.parse_args()
+
+    main(args)
