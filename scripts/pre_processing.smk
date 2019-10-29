@@ -38,7 +38,7 @@ VCF_IDX = []
 
 for SAMPLE in SAMPLES:
     for TYPE in SAMPLES[SAMPLE]:
-        if TYPE == 'G':
+        if TYPE == 'D':
             LANES = SAMPLES[SAMPLE][TYPE]
             file_1 = "{project_dir}data/bam/{sample}_{type}-{id}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[0]), lane=get_lane(LANES[0]))
             file_2 = "{project_dir}data/bam/{sample}_{type}-{id}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, id=get_id(LANES[1]), lane=get_lane(LANES[1]))
