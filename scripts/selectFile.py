@@ -103,7 +103,7 @@ def decrypt_file(sample):
         print(process.returncode)
 
 
-def write_json(dictionary):
+def write_json(dictionary, objets):
     if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+objet.bam_file_name):
         print("File a json file already exist.")
     else:
@@ -148,7 +148,7 @@ def main(args):
             if objet.sample_name not in json_file["samples"]:
                 json_file["samples"][objet.sample_name] = {"D":[], "G":[]}
                 json_file["samples"][objet.sample_name][objet.sample_type].append(objet.file_prefix)
-        write_json(json_file)
+        write_json(json_file, objets)
 
 
     path = args.p
