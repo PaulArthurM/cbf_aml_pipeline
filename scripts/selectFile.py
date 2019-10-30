@@ -151,8 +151,9 @@ def check_two_file_forms(sample):
 
 
 def main(args):
+    #objets = [Sample(line) for line in open_file(args.m) if args.e in line]
     objets = []
-    lines = open_file(args.m)#open_file(sys.argv[1])
+    lines = open_file(args.m)
     for line in lines:
         if args.e in line:
             sample = Sample(line)
@@ -182,6 +183,7 @@ def main(args):
                     print("Sample {sample} is being downloaded.".format(sample=objet.file_prefix))
                     download_file_pyega3(objet)
                     limit+=1
+        else: break
 
 
 if __name__== '__main__':
