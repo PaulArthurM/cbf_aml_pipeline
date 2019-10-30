@@ -35,6 +35,7 @@ MERGE_BAI = []
 FASTQC = []
 VCF = []
 VCF_IDX = []
+VCF_SOMATIC = []
 
 for SAMPLE in SAMPLES:
     for TYPE in SAMPLES[SAMPLE]:
@@ -42,14 +43,15 @@ for SAMPLE in SAMPLES:
             LANES = SAMPLES[SAMPLE][TYPE]
             file_1 = "{project_dir}data/bam/{sample}_{type}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane=get_lane(LANES[0]))
             file_2 = "{project_dir}data/bam/{sample}_{type}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane=get_lane(LANES[1]))
-            print(file_1)
-            print(file_2)
             if ( (len(LANES)==2) and (os.path.isfile(file_1)) and (os.path.isfile(file_2)) ):
                 MERGE_BAM.append("{project_dir}data/bam/{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
                 MERGE_BAI.append("{project_dir}data/bam/{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bai".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
                 FASTQC.append("{project_dir}{fastq_dir}{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge_fastqc.html".format(fastq_dir=config["FASTQC"]["DIR"], project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
                 VCF.append("{project_dir}data/vcf/{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge_for_pon.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
                 #VCF_IDX.append("{project_dir}data/vcf/{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge_for_pon.vcf.idx".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
+                vcf_somatic = "{project_dir}data/vcf/{sample}_somatic.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE)
+                if not vcf_somatic in VCF_SOMATIC:
+                    VCF_SOMATIC.append(vcf_somatic)
             elif (len(LANES)==3):
                 file_3 = "{project_dir}data/bam/{sample}_{type}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane=get_lane(LANES[2]))
                 if (os.path.isfile(file_3)):
@@ -58,6 +60,10 @@ for SAMPLE in SAMPLES:
                     FASTQC.append("{project_dir}{fastq_dir}{sample}_{type}.{lane_1}.{lane_2}.{lane_3}_marked_duplicates_BQSR_merge_fastqc.html".format(fastq_dir=config["FASTQC"]["DIR"], project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1]), lane_3=get_lane(LANES[2])))
                     VCF.append("{project_dir}data/vcf/{sample}_{type}.{lane_1}.{lane_2}.{lane_3}_marked_duplicates_BQSR_merge_for_pon.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1]), lane_3=get_lane(LANES[2])))
                     #VCF_IDX.append("{project_dir}data/vcf/{sample}_{type}.{lane_1}.{lane_2}.{lane_3}_marked_duplicates_BQSR_merge_for_pon.vcf.idx".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1]), lane_3=get_lane(LANES[2])))
+                    vcf_somatic = "{project_dir}data/vcf/{sample}_somatic.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE)
+                    if not vcf_somatic in VCF_SOMATIC:
+                        VCF_SOMATIC.append(vcf_somatic)
+
 #print(MERGE)
 TARGETS.extend(MERGE_BAM)
 TARGETS.extend(MERGE_BAI)
@@ -244,6 +250,31 @@ rule fastqc:
         "../envs/fastqc.yaml"
     shell:
         "fastqc {input} -t {params.nthread} -o {params.dir}"
+
+
+rule variant_calling_Mutect2:
+    input:
+        normal= config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bam",
+        tumour= config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bam"
+    output:
+        config["PROJECT_DIR"] + "data/vcf/{sample}_somatic.vcf.gz"
+    params:
+        ref=config["reference_GRCh37-lite"],
+        PON=config["PON_VCF"],
+        gnomad=config["mutect2"]["gnomad"]["file"],
+        name="Mutect2_somatic_{sample}",
+        nthread=config["mutect2"]["nthread"]
+    conda:
+        "../envs/gatk4.yaml"
+    shell:
+        "gatk Mutect2 \
+        -R {params.ref} \
+        -I {input.normal} \
+        -I {input.tumour} \
+        -normal {input.normal} \
+        --germline-resource {params.gnomad} \
+        --panel-of-normals {params.PON} \
+        -O {output}"
 
 
 rule Mutect2_tumour_only:
