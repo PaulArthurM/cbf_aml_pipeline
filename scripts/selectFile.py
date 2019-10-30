@@ -187,12 +187,12 @@ def main(args):
 if __name__== '__main__':
 
     parser = argparse.ArgumentParser(description='Downloading files from EGA and create proper JSON file.')
-    parser.add_argument('-m', default='/data1/scratch/pamesl/projet_cbf/Sample_File_SJCBF.map', type=str, help="Metadata file")
-    parser.add_argument('-e', default='SJCBF', type=str, help="Experience")
-    parser.add_argument('-j', default=True, type=bool, help="Create JSON")
-    parser.add_argument('-p', default='/data1/scratch/pamesl/projet_cbf/data/bam/', type=str, help="Path to bams")
-    parser.add_argument('-l', default=1, type=int, help="Number of files to download.")
-    parser.add_argument('-t', default=None, type=str, help="Type of files to download.", required=True)
+    parser.add_argument('-m', default='/data1/scratch/pamesl/projet_cbf/Sample_File_SJCBF.map', type=str, help="Metadata file.")
+    parser.add_argument('-e', default='SJCBF', type=str, help="Experience. Default: SJCBF.")
+    parser.add_argument('-j', default=True, type=bool, help="Create JSON. Default: True")
+    parser.add_argument('-p', default='/data1/scratch/pamesl/projet_cbf/data/bam/', type=str, help="Path to bam files repository.")
+    parser.add_argument('-l', default=1, type=int, help="Number of files to download. Default: 1.")
+    parser.add_argument('-t', default=None, type=str, help="Type of files to download. For exemple: 'D' or 'G'.", required=True)
 
     args = parser.parse_args()
 
