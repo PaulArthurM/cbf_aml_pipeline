@@ -133,7 +133,7 @@ def check_merge(sample, files, type):
 
 
 def download_file_pyega3(sample):
-    saveto="/data1/scratch/pamesl/projet_cbf/data/bam/{bam_file_name}".format(bam_file_name=sample.bam_file_name)
+    saveto="/data1/scratch/pamesl/projet_cbf/data/bam/{bam_file_name}".format(bam_file_name=sample.name_no_machine_id)
     cmd = "pyega3 -c 4 -cf CREDENTIALS_FILE fetch {egaf_id} --saveto {saveto}".format(egaf_id=sample.egaf_id, saveto=saveto)
     print(cmd)
     process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
