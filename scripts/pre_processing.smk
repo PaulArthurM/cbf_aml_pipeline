@@ -246,6 +246,31 @@ rule fastqc:
         "fastqc {input} -t {params.nthread} -o {params.dir}"
 
 
+rule variant_calling_Mutect2:
+    input:
+        normal= config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bam",
+        tumour= config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bam"
+    output:
+        config["PROJECT_DIR"] + "data/vcf/{sample}_somatic.vcf.gz"
+    params:
+        ref=config["reference_GRCh37-lite"],
+        PON=config["PON_VCF"],
+        gnomad=config["mutect2"]["gnomad"]["file"],
+        name="Mutect2_{sample}_G.{lane}",
+        nthread=config["mutect2"]["nthread"]
+    conda:
+        "../envs/gatk4.yaml"
+    shell:
+        "gatk Mutect2 \
+        -R {params.ref} \
+        -I {input.normal} \
+        -I {input.tumour} \
+        -normal {input.normal} \
+        --germline-resource {params.gnomad} \
+        --panel-of-normals {params.PON} \
+        -O {output}"
+
+
 rule Mutect2_tumour_only:
     input:
         bam=config["PROJECT_DIR"] + "data/bam/{sample}_G.{lane}_marked_duplicates_BQSR_merge.bam",
