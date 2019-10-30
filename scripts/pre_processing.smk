@@ -39,7 +39,7 @@ VCF_SOMATIC = []
 
 for SAMPLE in SAMPLES:
     for TYPE in SAMPLES[SAMPLE]:
-        if TYPE == 'D':
+        if True: #if TYPE == 'D':
             LANES = SAMPLES[SAMPLE][TYPE]
             file_1 = "{project_dir}data/bam/{sample}_{type}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane=get_lane(LANES[0]))
             file_2 = "{project_dir}data/bam/{sample}_{type}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane=get_lane(LANES[1]))
@@ -49,7 +49,7 @@ for SAMPLE in SAMPLES:
                 FASTQC.append("{project_dir}{fastq_dir}{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge_fastqc.html".format(fastq_dir=config["FASTQC"]["DIR"], project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
                 VCF.append("{project_dir}data/vcf/{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge_for_pon.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
                 #VCF_IDX.append("{project_dir}data/vcf/{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge_for_pon.vcf.idx".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
-                vcf_somatic = "{project_dir}data/vcf/{sample}_somatic.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE)
+                vcf_somatic = "{project_dir}data/vcf/{sample}_{lanes_normal}-{lanes_tumour}_somatic.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, lanes_normal=".".join([get_lane(SAMPLES[SAMPLE]['G'][0]), get_lane(SAMPLES[SAMPLE]['G'][1])]), lanes_tumour=".".join([get_lane(SAMPLES[SAMPLE]['D'][0]), get_lane(SAMPLES[SAMPLE]['D'][1])]))
                 if not vcf_somatic in VCF_SOMATIC:
                     VCF_SOMATIC.append(vcf_somatic)
             elif (len(LANES)==3):
@@ -60,7 +60,7 @@ for SAMPLE in SAMPLES:
                     FASTQC.append("{project_dir}{fastq_dir}{sample}_{type}.{lane_1}.{lane_2}.{lane_3}_marked_duplicates_BQSR_merge_fastqc.html".format(fastq_dir=config["FASTQC"]["DIR"], project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1]), lane_3=get_lane(LANES[2])))
                     VCF.append("{project_dir}data/vcf/{sample}_{type}.{lane_1}.{lane_2}.{lane_3}_marked_duplicates_BQSR_merge_for_pon.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1]), lane_3=get_lane(LANES[2])))
                     #VCF_IDX.append("{project_dir}data/vcf/{sample}_{type}.{lane_1}.{lane_2}.{lane_3}_marked_duplicates_BQSR_merge_for_pon.vcf.idx".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1]), lane_3=get_lane(LANES[2])))
-                    vcf_somatic = "{project_dir}data/vcf/{sample}_somatic.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE)
+                    vcf_somatic = "{project_dir}data/vcf/{sample}_{lanes_normal}-{lanes_tumour}_somatic.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, lanes_normal=".".join([get_lane(SAMPLES[SAMPLE]['G'][0]), get_lane(SAMPLES[SAMPLE]['G'][1]), get_lane(SAMPLES[SAMPLE]['G'][2])]), lanes_tumour=".".join([get_lane(SAMPLES[SAMPLE]['D'][0]), get_lane(SAMPLES[SAMPLE]['D'][1]), get_lane(SAMPLES[SAMPLE]['D'][2])]))
                     if not vcf_somatic in VCF_SOMATIC:
                         VCF_SOMATIC.append(vcf_somatic)
 
@@ -258,7 +258,7 @@ rule variant_calling_Mutect2:
         normal= config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bam",
         tumour= config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bam"
     output:
-        config["PROJECT_DIR"] + "data/vcf/{sample}_somatic.vcf.gz"
+        config["PROJECT_DIR"] + "data/vcf/{sample}_{lanes_normal}-{lanes_tumour}_somatic.vcf.gz"
     params:
         ref=config["reference_GRCh37-lite"],
         PON=config["PON_VCF"],
