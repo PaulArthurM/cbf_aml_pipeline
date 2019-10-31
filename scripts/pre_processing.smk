@@ -142,15 +142,7 @@ rule mark_duplicates:
 
 #Generates recalibration table for Base Quality Score Recalibration (BQSR)
 rule base_recalibrator:
-    input:_SOMATIC.append(vcf_somatic)
-
-#print(MERGE)
-TARGETS.extend(MERGE_BAM)
-TARGETS.extend(MERGE_BAI)
-TARGETS.extend(FASTQC)
-TARGETS.extend(VCF_SOMATIC)
-#TARGETS.extend([config["PON_VCF"]])
-#TARGETS.extend(VCF)
+    input:
         config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates.bam"
     output:
         temp(config["PROJECT_DIR"] + "data/bam/recal_data_{sample}.table")
