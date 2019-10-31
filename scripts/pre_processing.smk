@@ -272,7 +272,7 @@ rule variant_calling_Mutect2:
         -R {params.ref} \
         -I {input.normal} \
         -I {input.tumour} \
-        -normal {wildcards.sample}_G.{wildcards.lanes_normal}_marked_duplicates_BQSR_merge \
+        -normal {wildcards.sample}_G_FREQEXCAP \
         --germline-resource {params.gnomad} \
         --panel-of-normals {params.PON} \
         -O {output}"
