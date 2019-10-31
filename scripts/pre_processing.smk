@@ -142,7 +142,15 @@ rule mark_duplicates:
 
 #Generates recalibration table for Base Quality Score Recalibration (BQSR)
 rule base_recalibrator:
-    input:
+    input:_SOMATIC.append(vcf_somatic)
+
+#print(MERGE)
+TARGETS.extend(MERGE_BAM)
+TARGETS.extend(MERGE_BAI)
+TARGETS.extend(FASTQC)
+TARGETS.extend(VCF_SOMATIC)
+#TARGETS.extend([config["PON_VCF"]])
+#TARGETS.extend(VCF)
         config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates.bam"
     output:
         temp(config["PROJECT_DIR"] + "data/bam/recal_data_{sample}.table")
@@ -272,7 +280,7 @@ rule variant_calling_Mutect2:
         -R {params.ref} \
         -I {input.normal} \
         -I {input.tumour} \
-        -normal {input.normal} \
+        -normal {wildcards.sample}_G.{wildcards.lanes_normal}_marked_duplicates_BQSR_merge \
         --germline-resource {params.gnomad} \
         --panel-of-normals {params.PON} \
         -O {output}"
