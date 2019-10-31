@@ -20,7 +20,7 @@ echo "NSLOTS: $NSLOTS"
 echo Start at:`date`
 
 conda activate gatk4_4.1.2.0_env
-gatk SelectVariants -V /data1/scratch/pamesl/projet_cbf/data/GnomAD/af-only-gnomad.raw.sites.b37.vcf -L /data1/scratch/pamesl/projet_cbf/data/b37_data/Broad.human.exome.b37.interval_list --select "AF > 0.05" -O /data1/scratch/pamesl/projet_cbf/data/vcf/variants_for_contamination.vcf
+gatk SelectVariants -V /data1/scratch/pamesl/projet_cbf/data/GnomAD/af-only-gnomad.raw.sites.b37.vcf --select "AF > 0.05" -O /data1/scratch/pamesl/projet_cbf/data/vcf/variants_for_contamination.vcf
 conda deactivate
 
 echo End at:`date`
