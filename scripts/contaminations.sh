@@ -1,12 +1,12 @@
 #!/bin/bash
 #$ -S /bin/bash
-#$ -N samtools_index
+#$ -N contaminationVCF
 #$ -cwd
 #$ -o /data1/scratch/pamesl/projet_cbf/stdoe_sge
 #$ -e /data1/scratch/pamesl/projet_cbf/stdoe_sge
 #$ -q short.q
 #$ -l h_rt=01:00:00
-#$ -pe thread 1
+#$ -pe thread 8
 #$ -l h_vmem=2.75G
 
 echo "JOB NAME: $JOB_NAME"
