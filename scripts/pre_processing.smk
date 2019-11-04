@@ -468,7 +468,8 @@ rule FilterMutectCalls:
     input:
         vcf=config["PROJECT_DIR"] + "data/vcf/{sample}_{normal_lanes}-{tumour_lanes}_somatic.vcf.gz",
         contamination_table=config["PROJECT_DIR"] + "data/pileups/contamination/{sample}_{normal_lanes}-{tumour_lanes}.contamination.table",
-        segmentation=config["PROJECT_DIR"] + "data/pileups/segmentation/{sample}_{normal_lanes}-{tumour_lanes}.tumour_segmentation.tsv"
+        segmentation=config["PROJECT_DIR"] + "data/pileups/segmentation/{sample}_{normal_lanes}-{tumour_lanes}.tumour_segmentation.tsv",
+        orientation=config["PROJECT_DIR"] + "data/f1r2/{sample}_{lanes_normal}-{lanes_tumour}_read-orientation-model.tar.gz"
     output:
         config["PROJECT_DIR"] + "data/vcf/filtered/{sample}_{normal_lanes}-{tumour_lanes}_somatic_filtered.vcf.gz"
     params:
@@ -483,4 +484,5 @@ rule FilterMutectCalls:
         -V {input.vcf} \
         --contamination-table {input.contamination_table} \
         --tumor-segmentation {input.segmentation} \
+        --orientation-bias-artifact-priors {input.orientation} \
         -O {output}"
