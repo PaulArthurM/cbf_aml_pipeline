@@ -80,7 +80,6 @@ TARGETS.extend(VCF_FILERED)
 #TARGETS.extend([config["PON_VCF"]])
 #TARGETS.extend(VCF)
 
-print(TARGETS)
 
 rule all:
     input: TARGETS
