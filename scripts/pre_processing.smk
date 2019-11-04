@@ -72,9 +72,9 @@ for SAMPLE in SAMPLES:
                         VCF_FILERED.append(vcf_filtered)
 
 #print(MERGE)
-TARGETS.extend(MERGE_BAM)
-TARGETS.extend(MERGE_BAI)
-TARGETS.extend(FASTQC)
+#TARGETS.extend(MERGE_BAM)
+#TARGETS.extend(MERGE_BAI)
+#TARGETS.extend(FASTQC)
 TARGETS.extend(VCF_SOMATIC)
 TARGETS.extend(VCF_FILERED)
 #TARGETS.extend([config["PON_VCF"]])
