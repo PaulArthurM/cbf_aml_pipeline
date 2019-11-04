@@ -417,8 +417,8 @@ rule Calculate_Contamination:
         tumour=config["PROJECT_DIR"] + "data/pileups/{sample}_D.{tumour_lanes}_pileups.table",
         matched=config["PROJECT_DIR"] + "data/pileups/{sample}_G.{normal_lanes}_pileups.table"
     output:
-        contamination_table=config["PROJECT_DIR"] + "data/pileups/contamination/{sample}_{normal_lanes}.{tumour_lanes}.contamination.table",
-        segmentation=config["PROJECT_DIR"] + "data/pileups/segmentation/{sample}_{normal_lanes}.{tumour_lanes}.tumour_segmentation.tsv"
+        contamination_table=config["PROJECT_DIR"] + "data/pileups/contamination/{sample}_{normal_lanes}-{tumour_lanes}.contamination.table",
+        segmentation=config["PROJECT_DIR"] + "data/pileups/segmentation/{sample}_{normal_lanes}-{tumour_lanes}.tumour_segmentation.tsv"
     params:
         name="CalculateContamination_{sample}",
         nthread=5
@@ -468,8 +468,8 @@ rule GetPileupSummaries:
 rule FilterMutectCalls:
     input:
         vcf=config["PROJECT_DIR"] + "data/vcf/{sample}_{normal_lanes}-{tumour_lanes}_somatic.vcf.gz",
-        contamination_table=config["PROJECT_DIR"] + "data/pileups/contamination/{sample}_{normal_lanes}.{tumour_lanes}.contamination.table",
-        segmentation=config["PROJECT_DIR"] + "data/pileups/segmentation/{sample}_{normal_lanes}.{tumour_lanes}.tumour_segmentation.tsv"
+        contamination_table=config["PROJECT_DIR"] + "data/pileups/contamination/{sample}_{normal_lanes}-{tumour_lanes}.contamination.table",
+        segmentation=config["PROJECT_DIR"] + "data/pileups/segmentation/{sample}_{normal_lanes}-{tumour_lanes}.tumour_segmentation.tsv"
     output:
         config["PROJECT_DIR"] + "data/vcf/filtered/{sample}_{normal_lanes}-{tumour_lanes}_somatic_filtered.vcf.gz"
     params:
