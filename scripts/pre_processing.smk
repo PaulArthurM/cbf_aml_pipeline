@@ -269,6 +269,8 @@ rule variant_calling_Mutect2:
     output:
         vcf_gz = config["PROJECT_DIR"] + "data/vcf/{sample}_{lanes_normal}-{lanes_tumour}_somatic.vcf.gz",
         f1r2_gz = config["PROJECT_DIR"] + "data/f1r2/{sample}_{lanes_normal}-{lanes_tumour}_f1r2.tar.gz"
+    wildcard_constraints:
+        lanes_tumour="\.[0-9]\.[0-9]"
     params:
         ref=config["reference_GRCh37-lite"],
         PON=config["PON_VCF"],
