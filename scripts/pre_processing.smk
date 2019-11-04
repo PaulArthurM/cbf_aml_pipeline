@@ -290,7 +290,7 @@ rule variant_calling_Mutect2:
         -normal {wildcards.sample}_G_FREQEXCAP \
         --germline-resource {params.gnomad} \
         --panel-of-normals {params.PON} \
-        --f1r2-tar-gz {output.f1r2} \
+        --f1r2-tar-gz {output.f1r2_gz} \
         -O {output.vcf_gz}"
 
 
