@@ -395,6 +395,8 @@ rule Calculate_Contamination_GetPileupSummaries:
         config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lanes}_marked_duplicates_BQSR_merge.bam"
     output:
         config["PROJECT_DIR"] + "data/pileups/{sample}_{type}.{lanes}_pileups.table"
+    wildcard_constraints:
+        lanes="[0-9]\.[0-9]",
     params:
         gnomad=config["mutect2"]["gnomad"]["file"],
         name="GetPileupSummaries_{sample}_{type}.{lanes}",
