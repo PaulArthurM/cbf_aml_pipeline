@@ -464,7 +464,7 @@ rule FilterMutectCalls:
         contamination_table=config["PROJECT_DIR"] + "data/pileups/contamination/{sample}_{tumour_lanes}.{normal_lanes}.contamination.table",
         segmentation=config["PROJECT_DIR"] + "data/pileups/segmentation/{sample}_{tumour_lanes}.{normal_lanes}.tumour_segmentation.tsv"
     output:
-        config["PROJECT_DIR"] + "data/vcf/filtered/{sample}_{lanes_normal}-{lanes_tumour}_somatic_filtered.vcf.gz"
+        config["PROJECT_DIR"] + "data/vcf/filtered/{sample}_{normal_lanes}-{tumour_lanes}_somatic_filtered.vcf.gz"
     params:
         reference=config["reference_GRCh37-lite"],
         name="FilterMutectCalls_{sample}",
