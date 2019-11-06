@@ -41,3 +41,6 @@ MergeSamFiles:
 
 samtools:
   nthread: 5
+
+FilterMutectCalls:
+  nthread: 10

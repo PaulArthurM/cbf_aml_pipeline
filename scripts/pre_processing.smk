@@ -477,7 +477,7 @@ rule FilterMutectCalls:
     params:
         reference=config["reference_GRCh37-lite"],
         name="FilterMutectCalls_{sample}",
-        thread=5
+        thread=config["FilterMutectCalls"]["nthread"]
     conda:
         "../envs/gatk4.yaml"
     shell:
