@@ -402,7 +402,7 @@ rule Calculate_Contamination_GetPileupSummaries:
     params:
         gnomad=config["mutect2"]["gnomad"]["file"],
         name="GetPileupSummaries_{sample}_{type}.{lanes}",
-        nthread=5
+        nthread=10
     conda:
         "../envs/gatk4.yaml"
     shell:
