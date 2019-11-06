@@ -277,7 +277,7 @@ rule variant_calling_Mutect2:
     params:
         ref=config["reference_GRCh37-lite"],
         PON=config["PON_VCF"],
-        gnomad=config["mutect2"]["gnomad"]["file"],
+        gnomad=config["mutect2"]["gnomad"]["files"]["raw"],
         intervals=config["intervals_list"],
         name="Mutect2_somatic_{sample}",
         nthread=config["mutect2"]["nthread"]
@@ -304,7 +304,7 @@ rule Mutect2_tumour_only:
         temp(config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.gz")
     params:
         ref=config["reference_GRCh37-lite"],
-        gnomad=config["mutect2"]["gnomad"]["file"],
+        gnomad=config["mutect2"]["gnomad"]["files"]["raw"],
         intervals=config["intervals_list"],
         name="Mutect2_tumour_only_{sample}_G.{lane}",
         nthread=config["mutect2"]["nthread"]
@@ -400,7 +400,7 @@ rule Calculate_Contamination_GetPileupSummaries:
     wildcard_constraints:
         lanes="[0-9]\.[0-9]",
     params:
-        gnomad=config["mutect2"]["gnomad"]["file"],
+        gnomad=config["mutect2"]["gnomad"]["files"]["biallelic"],
         name="GetPileupSummaries_{sample}_{type}.{lanes}",
         nthread=10
     conda:
@@ -454,7 +454,7 @@ rule GetPileupSummaries:
     output:
         config["PROJECT_DIR"] + "data/f1r2/pileups/{sample}_D.{lanes}_getpileupsummaries.table"
     params:
-        gnomad=config["mutect2"]["gnomad"]["file"],
+        gnomad=config["mutect2"]["gnomad"]["files"]["biallelic"],
         name="GetPileupSummaries_{sample}",
         nthread=5
     conda: "../envs/gatk4.yaml"
