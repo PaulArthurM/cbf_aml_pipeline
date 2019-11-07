@@ -74,8 +74,8 @@ for SAMPLE in SAMPLES:
                         VCF_FILERED.append(vcf_filtered)
 
 #print(MERGE)
-#TARGETS.extend(MERGE_BAM)
-#TARGETS.extend(MERGE_BAI)
+TARGETS.extend(MERGE_BAM)
+TARGETS.extend(MERGE_BAI)
 TARGETS.extend(FASTQC)
 TARGETS.extend(VCF_SOMATIC)
 TARGETS.extend(VCF_FILERED)
@@ -266,8 +266,10 @@ rule fastqc:
 
 rule variant_calling_Mutect2:
     input:
-        normal= config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bam",
-        tumour= config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bam"
+        normal_bam = config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bam",
+        tumour_bam = config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bam",
+	normal_bai = config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bai",
+	tumour_bai = config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bai"
     output:
         vcf_gz = config["PROJECT_DIR"] + "data/vcf/{sample}_{lanes_normal}-{lanes_tumour}_somatic.vcf.gz",
         f1r2_gz = config["PROJECT_DIR"] + "data/f1r2/{sample}_{lanes_normal}-{lanes_tumour}_f1r2.tar.gz"
@@ -277,7 +279,7 @@ rule variant_calling_Mutect2:
     params:
         ref=config["reference_GRCh37-lite"],
         PON=config["PON_VCF"],
-        gnomad=config["mutect2"]["gnomad"]["file"],
+        gnomad=config["mutect2"]["gnomad"]["files"]["raw"],
         intervals=config["intervals_list"],
         name="Mutect2_somatic_{sample}",
         nthread=config["mutect2"]["nthread"]
@@ -287,8 +289,8 @@ rule variant_calling_Mutect2:
         "gatk Mutect2 \
         -R {params.ref} \
         -L {params.intervals} \
-        -I {input.normal} \
-        -I {input.tumour} \
+        -I {input.normal_bam} \
+        -I {input.tumour_bam} \
         -normal {wildcards.sample}_G_FREQEXCAP \
         --germline-resource {params.gnomad} \
         --panel-of-normals {params.PON} \
@@ -304,7 +306,7 @@ rule Mutect2_tumour_only:
         temp(config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.gz")
     params:
         ref=config["reference_GRCh37-lite"],
-        gnomad=config["mutect2"]["gnomad"]["file"],
+        gnomad=config["mutect2"]["gnomad"]["files"]["raw"],
         intervals=config["intervals_list"],
         name="Mutect2_tumour_only_{sample}_G.{lane}",
         nthread=config["mutect2"]["nthread"]
@@ -394,22 +396,24 @@ rule IndexFeatureFile:
 
 rule Calculate_Contamination_GetPileupSummaries:
     input:
-        config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lanes}_marked_duplicates_BQSR_merge.bam"
+        bam=config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lanes}_marked_duplicates_BQSR_merge.bam",
+	bai=config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lanes}_marked_duplicates_BQSR_merge.bai"
     output:
         config["PROJECT_DIR"] + "data/pileups/{sample}_{type}.{lanes}_pileups.table"
     wildcard_constraints:
         lanes="[0-9]\.[0-9]",
     params:
-        gnomad=config["mutect2"]["gnomad"]["file"],
+        gnomad=config["mutect2"]["gnomad"]["files"]["biallelic"],
+	intervals=config["intervals_list"],
         name="GetPileupSummaries_{sample}_{type}.{lanes}",
         nthread=10
     conda:
         "../envs/gatk4.yaml"
     shell:
         " gatk GetPileupSummaries \
-            -I {input} \
+            -I {input.bam} \
             -V {params.gnomad} \
-            -L {params.gnomad} \
+            -L {params.intervals} \
             -O {output}"
 
 
@@ -450,19 +454,21 @@ rule LearnReadOrientationModel:
 
 rule GetPileupSummaries:
     input:
-        config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes}_marked_duplicates_BQSR_merge.bam",
+        bam=config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes}_marked_duplicates_BQSR_merge.bam",
+	bai=config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes}_marked_duplicates_BQSR_merge.bai"
     output:
         config["PROJECT_DIR"] + "data/f1r2/pileups/{sample}_D.{lanes}_getpileupsummaries.table"
     params:
-        gnomad=config["mutect2"]["gnomad"]["file"],
+        gnomad=config["mutect2"]["gnomad"]["files"]["biallelic"],
+	intervals=config["intervals_list"], 
         name="GetPileupSummaries_{sample}",
         nthread=5
     conda: "../envs/gatk4.yaml"
     shell:
         "gatk GetPileupSummaries \
-            -I {input} \
+            -I {input.bam} \
             -V {params.gnomad}  \
-            -L {params.gnomad} \
+            -L {params.intervals} \
             -O {output}"
 
 
@@ -477,7 +483,7 @@ rule FilterMutectCalls:
     params:
         reference=config["reference_GRCh37-lite"],
         name="FilterMutectCalls_{sample}",
-        thread=config["FilterMutectCalls"]["nthread"]
+        nthread=config["FilterMutectCalls"]["nthread"]
     conda:
         "../envs/gatk4.yaml"
     shell:
