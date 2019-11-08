@@ -86,6 +86,6 @@ rule all:
 
 
 include: "rules/preprocessing.smk"
-include: "rules/variantcalling.smk"
+include: "rules/variantCalling.smk"
 include: "rules/panelsOfNormals.smk"
 include: "rules/utils.smk"
