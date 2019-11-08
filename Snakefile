@@ -60,7 +60,7 @@ for SAMPLE in SAMPLES:
                 if not vcf_filtered in VCF_FILERED:
                     VCF_FILERED.append(vcf_filtered)
                 if not vcf_annotated in VCF_ANNOTATED:
-                    VCF_ANNOTATED.append(vcf_annotated)
+                    #VCF_ANNOTATED.append(vcf_annotated)
                     VCF_ANNOTATED.append(pass_vcf)
             elif (len(LANES)==3):
                 file_3 = "{project_dir}data/bam/{sample}_{type}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane=get_lane(LANES[2]))
@@ -79,7 +79,7 @@ for SAMPLE in SAMPLES:
                     if not vcf_filtered in VCF_FILERED:
                         VCF_FILERED.append(vcf_filtered)
                     if not vcf_annotated in VCF_ANNOTATED:
-                        VCF_ANNOTATED.append(vcf_annotated)
+                        #VCF_ANNOTATED.append(vcf_annotated)
                         VCF_ANNOTATED.append(pass_vcf)
 #print(MERGE)
 TARGETS.extend(MERGE_BAM)
