@@ -17,5 +17,5 @@ rule annotate:
         --ref-version b37 \
         --data-sources-path {params.data_sources} \
         --output {output} \
-        --allow-hg19-gencode-b37-contig-matching \
+        --allow-hg19-gencode-b37-contig-matching true \
         --output-file-format VCF"
