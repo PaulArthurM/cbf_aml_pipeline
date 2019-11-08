@@ -40,4 +40,4 @@ rule annovar:
         --buildver hg19 \
         --remove \
         --vcfinput \
-        -out {wildcards.path}/vcf/annotated/{wildcards.ample}_{wildcards.normal_lanes}-{wildcards.tumour_lanes}"
+        -out {params.path}/vcf/annotated/{wildcards.sample}_{wildcards.normal_lanes}-{wildcards.tumour_lanes}"
