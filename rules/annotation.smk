@@ -31,7 +31,7 @@ rule annovar:
         name="Annovar_annotate_{sample}",
         nthread=4
     shell:
-        "perl annovar/table_annovar.pl \
+        "perl /data1/scratch/pamesl/projet_cbf/annovar/table_annovar.pl \
         {input} \
         humandb \
         -protocol refGene \
