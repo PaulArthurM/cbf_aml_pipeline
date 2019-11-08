@@ -9,7 +9,7 @@ rule annotate:
         name="Funcotator_annotate_{sample}",
         nthread=4
     conda:
-
+        "../envs/gatk4.yaml"
     shell:
         "./gatk Funcotator \
         --variant {input} \
