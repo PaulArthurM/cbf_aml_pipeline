@@ -293,7 +293,7 @@ rule variant_calling_Mutect2:
         --germline-resource {params.gnomad} \
         --panel-of-normals {params.PON} \
         --f1r2-tar-gz {output.f1r2_gz} \
-	--independent-mates \
+	    --independent-mates \
         -O {output.vcf_gz}"
 
 
@@ -459,7 +459,7 @@ rule GetPileupSummaries:
         config["PROJECT_DIR"] + "data/f1r2/pileups/{sample}_D.{lanes}_getpileupsummaries.table"
     params:
         gnomad=config["mutect2"]["gnomad"]["files"]["biallelic"],
-	intervals=config["intervals_list"], 
+	intervals=config["intervals_list"],
         name="GetPileupSummaries_{sample}",
         nthread=5
     conda: "../envs/gatk4.yaml"
