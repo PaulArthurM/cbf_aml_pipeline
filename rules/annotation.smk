@@ -23,7 +23,7 @@ rule annotate:
 
 rule annovar:
     input:
-        config["PROJECT_DIR"] + "data/vcf/filtered/{sample}_{normal_lanes}-{tumour_lanes}_somatic_filtered_pass.vcf.gz"
+        config["PROJECT_DIR"] + "data/vcf/filtered/{sample}_{normal_lanes}-{tumour_lanes}_somatic_filtered_pass.vcf"
     output:
         config["PROJECT_DIR"] + "data/vcf/annotated/{sample}_{normal_lanes}-{tumour_lanes}.avinput"
     params:
