@@ -99,5 +99,5 @@ rule all:
 include: "rules/preprocessing.smk"
 include: "rules/variantCalling.smk"
 include: "rules/panelsOfNormals.smk"
-#include: "rules/annotation.smk"
+include: "rules/annotation.smk"
 include: "rules/utils.smk"
