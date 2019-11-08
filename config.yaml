@@ -33,6 +33,9 @@ CalculateContamination:
         GetPileupSummaries:
                 exac: "/data1/scratch/pamesl/projet_cbf/data/exac/small_exac_common_3_b37.vcf.gz"
 
+funcotator:
+      directory:  "/data1/scratch/pamesl/projet_cbf/funcotator_dataSources.v1.6.20190124g"
+
 mark_duplicates:
   spark:
     nthread: 40
