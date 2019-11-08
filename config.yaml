@@ -29,6 +29,10 @@ mutect2:
         raw: "/data1/scratch/pamesl/projet_cbf/data/GnomAD/af-only-gnomad.raw.sites.b37.vcf"
         biallelic: "/data1/scratch/pamesl/projet_cbf/data/GnomAD/af-only-gnomad.biallelic.sites.b37.vcf"
 
+CalculateContamination:
+        GetPileupSummaries:
+                exac: "/data1/scratch/pamesl/projet_cbf/data/exac/small_exac_common_3_b37.vcf.gz"
+
 mark_duplicates:
   spark:
     nthread: 40
