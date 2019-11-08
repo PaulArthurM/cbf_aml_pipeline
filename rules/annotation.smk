@@ -11,7 +11,7 @@ rule annotate:
     conda:
         "../envs/gatk4.yaml"
     shell:
-        "./gatk Funcotator \
+        "gatk Funcotator \
         --variant {input} \
         --reference {params.reference} \
         --ref-version hg19 \
