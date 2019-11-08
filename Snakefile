@@ -53,14 +53,14 @@ for SAMPLE in SAMPLES:
                 #VCF_IDX.append("{project_dir}data/vcf/{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge_for_pon.vcf.idx".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1])))
                 vcf_somatic = "{project_dir}data/vcf/{sample}_{lanes_normal}-{lanes_tumour}_somatic.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, lanes_normal=".".join([get_lane(SAMPLES[SAMPLE]['G'][0]), get_lane(SAMPLES[SAMPLE]['G'][1])]), lanes_tumour=".".join([get_lane(SAMPLES[SAMPLE]['D'][0]), get_lane(SAMPLES[SAMPLE]['D'][1])]))
                 vcf_filtered = "{project_dir}data/vcf/filtered/{sample}_{lanes_normal}-{lanes_tumour}_somatic_filtered.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, lanes_normal=".".join([get_lane(SAMPLES[SAMPLE]['G'][0]), get_lane(SAMPLES[SAMPLE]['G'][1])]), lanes_tumour=".".join([get_lane(SAMPLES[SAMPLE]['D'][0]), get_lane(SAMPLES[SAMPLE]['D'][1])]))
-                vcf_annotated = "{project_dir}data/vcf/annotated/{sample}_{lanes_normal}-{lanes_tumour}_variants.funcotated.vcf".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, lanes_normal=".".join([get_lane(SAMPLES[SAMPLE]['G'][0]), get_lane(SAMPLES[SAMPLE]['G'][1])]), lanes_tumour=".".join([get_lane(SAMPLES[SAMPLE]['D'][0]), get_lane(SAMPLES[SAMPLE]['D'][1])]))
+                vcf_annotated = "{project_dir}data/vcf/annotated/{sample}_{lanes_normal}-{lanes_tumour}.avinput".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, lanes_normal=".".join([get_lane(SAMPLES[SAMPLE]['G'][0]), get_lane(SAMPLES[SAMPLE]['G'][1])]), lanes_tumour=".".join([get_lane(SAMPLES[SAMPLE]['D'][0]), get_lane(SAMPLES[SAMPLE]['D'][1])]))
                 pass_vcf="{project_dir}data/vcf/filtered/{sample}_{lanes_normal}-{lanes_tumour}_somatic_filtered_pass.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, lanes_normal=".".join([get_lane(SAMPLES[SAMPLE]['G'][0]), get_lane(SAMPLES[SAMPLE]['G'][1])]), lanes_tumour=".".join([get_lane(SAMPLES[SAMPLE]['D'][0]), get_lane(SAMPLES[SAMPLE]['D'][1])]))
                 if not vcf_somatic in VCF_SOMATIC:
                     VCF_SOMATIC.append(vcf_somatic)
                 if not vcf_filtered in VCF_FILERED:
                     VCF_FILERED.append(vcf_filtered)
                 if not vcf_annotated in VCF_ANNOTATED:
-                    #VCF_ANNOTATED.append(vcf_annotated)
+                    VCF_ANNOTATED.append(vcf_annotated)
                     VCF_ANNOTATED.append(pass_vcf)
             elif (len(LANES)==3):
                 file_3 = "{project_dir}data/bam/{sample}_{type}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane=get_lane(LANES[2]))
@@ -72,14 +72,14 @@ for SAMPLE in SAMPLES:
                     #VCF_IDX.append("{project_dir}data/vcf/{sample}_{type}.{lane_1}.{lane_2}.{lane_3}_marked_duplicates_BQSR_merge_for_pon.vcf.idx".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane_1=get_lane(LANES[0]), lane_2=get_lane(LANES[1]), lane_3=get_lane(LANES[2])))
                     vcf_somatic = "{project_dir}data/vcf/{sample}_{lanes_normal}-{lanes_tumour}_somatic.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, lanes_normal=".".join([get_lane(SAMPLES[SAMPLE]['G'][0]), get_lane(SAMPLES[SAMPLE]['G'][1]), get_lane(SAMPLES[SAMPLE]['G'][2])]), lanes_tumour=".".join([get_lane(SAMPLES[SAMPLE]['D'][0]), get_lane(SAMPLES[SAMPLE]['D'][1]), get_lane(SAMPLES[SAMPLE]['D'][2])]))
                     vcf_filtered = "{project_dir}data/vcf/filtered/{sample}_{lanes_normal}-{lanes_tumour}_somatic_filtered.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, lanes_normal=".".join([get_lane(SAMPLES[SAMPLE]['G'][0]), get_lane(SAMPLES[SAMPLE]['G'][1]), get_lane(SAMPLES[SAMPLE]['G'][2])]), lanes_tumour=".".join([get_lane(SAMPLES[SAMPLE]['D'][0]), get_lane(SAMPLES[SAMPLE]['D'][1]), get_lane(SAMPLES[SAMPLE]['D'][2])]))
-                    vcf_annotated = "{project_dir}data/vcf/filtered/{sample}_{lanes_normal}-{lanes_tumour}_somatic_filtered.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, lanes_normal=".".join([get_lane(SAMPLES[SAMPLE]['G'][0]), get_lane(SAMPLES[SAMPLE]['G'][1]), get_lane(SAMPLES[SAMPLE]['G'][2])]), lanes_tumour=".".join([get_lane(SAMPLES[SAMPLE]['D'][0]), get_lane(SAMPLES[SAMPLE]['D'][1]), get_lane(SAMPLES[SAMPLE]['D'][2])]))
+                    vcf_annotated = "{project_dir}data/vcf/annotated/{sample}_{lanes_normal}-{lanes_tumour}.avinput".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, lanes_normal=".".join([get_lane(SAMPLES[SAMPLE]['G'][0]), get_lane(SAMPLES[SAMPLE]['G'][1]), get_lane(SAMPLES[SAMPLE]['G'][2])]), lanes_tumour=".".join([get_lane(SAMPLES[SAMPLE]['D'][0]), get_lane(SAMPLES[SAMPLE]['D'][1]), get_lane(SAMPLES[SAMPLE]['D'][2])]))
                     pass_vcf="{project_dir}data/vcf/filtered/{sample}_{lanes_normal}-{lanes_tumour}_somatic_filtered.vcf.gz".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, lanes_normal=".".join([get_lane(SAMPLES[SAMPLE]['G'][0]), get_lane(SAMPLES[SAMPLE]['G'][1]), get_lane(SAMPLES[SAMPLE]['G'][2])]), lanes_tumour=".".join([get_lane(SAMPLES[SAMPLE]['D'][0]), get_lane(SAMPLES[SAMPLE]['D'][1]), get_lane(SAMPLES[SAMPLE]['D'][2])]))
                     if not vcf_somatic in VCF_SOMATIC:
                         VCF_SOMATIC.append(vcf_somatic)
                     if not vcf_filtered in VCF_FILERED:
                         VCF_FILERED.append(vcf_filtered)
                     if not vcf_annotated in VCF_ANNOTATED:
-                        #VCF_ANNOTATED.append(vcf_annotated)
+                        VCF_ANNOTATED.append(vcf_annotated)
                         VCF_ANNOTATED.append(pass_vcf)
 #print(MERGE)
 TARGETS.extend(MERGE_BAM)
