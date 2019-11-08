@@ -132,3 +132,19 @@ rule FilterMutectCalls:
         --tumor-segmentation {input.segmentation} \
         --orientation-bias-artifact-priors {input.orientation} \
         -O {output}"
+
+
+rule keep_pass_variants:
+    input:
+        config["PROJECT_DIR"] + "data/vcf/filtered/{sample}_{normal_lanes}-{tumour_lanes}_somatic_filtered.vcf.gz"
+    output:
+        config["PROJECT_DIR"] + "data/vcf/filtered/{sample}_{normal_lanes}-{tumour_lanes}_somatic_filtered_pass.vcf.gz"
+    params:
+        name="keep_pass_variants_{sample}",
+        nthread=5
+    conda:
+        "../envs/samtools.yaml"
+    shell:
+        "bcftools view \
+        -f .,PASS \
+        {input} > {output}"
