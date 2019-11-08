@@ -27,7 +27,7 @@ rule annovar:
     output:
         config["PROJECT_DIR"] + "data/vcf/annotated/{sample}_{normal_lanes}-{tumour_lanes}.avinput"
     params:
-        path="/data1/scratch/pamesl/projet_cbf/data"
+        path="/data1/scratch/pamesl/projet_cbf/data",
         name="Annovar_annotate_{sample}",
         nthread=4
     shell:
