@@ -33,7 +33,7 @@ rule annovar:
     shell:
         "perl /data1/scratch/pamesl/projet_cbf/annovar/table_annovar.pl \
         {input} \
-        humandb \
+        /data1/scratch/pamesl/projet_cbf/annovar/humandb \
         -protocol refGene \
         -operation g \
         -nastring '.' \
