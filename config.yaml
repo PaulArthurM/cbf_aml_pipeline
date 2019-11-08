@@ -1,0 +1,52 @@
+PROJECT_DIR: "/data1/scratch/pamesl/projet_cbf/"
+SAMPLES: "/data1/scratch/pamesl/projet_cbf/data/bam/data.json"
+
+#  Reference Genome
+reference_GRCh37-lite: "/data1/scratch/pamesl/projet_cbf/data/b37_data/GRCh37-lite.fa"
+
+FASTQC:
+  DIR: "analysis/qualities/"
+
+#  Panel of Normales parameters:
+VCF_MAP: "/home/data/pameslin/cbf_aml_pipeline/map/sample_vcf.map"
+reader_threads: 1
+batch_size: 50
+intervals_list: "/data1/scratch/pamesl/projet_cbf/data/b37_data/Broad.human.exome.b37.interval_list"
+PON_VCF: "/data1/scratch/pamesl/projet_cbf/data/vcf/SJCBF_panel_of_normals.vcf.gz"
+
+#  DataBase GenomicsDBImport
+db_GDBI: "/data1/scratch/pamesl/projet_cbf/data/GenomicsDBImport"
+
+known-sites:
+  dbsnp_138: "/data1/scratch/pamesl/projet_cbf/data/dbSNP/dbsnp_138.b37.vcf"
+  mills_1000G: "/data1/scratch/pamesl/projet_cbf/data/mills_1000G/Mills_and_1000G_gold_standard.indels.b37.vcf"
+
+#  Mutect2
+mutect2:
+  nthread: 6
+  gnomad:
+    files:
+        raw: "/data1/scratch/pamesl/projet_cbf/data/GnomAD/af-only-gnomad.raw.sites.b37.vcf"
+        biallelic: "/data1/scratch/pamesl/projet_cbf/data/GnomAD/af-only-gnomad.biallelic.sites.b37.vcf"
+
+CalculateContamination:
+        GetPileupSummaries:
+                exac: "/data1/scratch/pamesl/projet_cbf/data/exac/small_exac_common_3_b37.vcf.gz"
+
+mark_duplicates:
+  spark:
+    nthread: 40
+  classic:
+    nthread: 10
+
+BQSRPipelineSpark:
+  nthread: 10
+
+MergeSamFiles:
+  nthread: 5
+
+samtools:
+  nthread: 5
+
+FilterMutectCalls:
+  nthread: 10
