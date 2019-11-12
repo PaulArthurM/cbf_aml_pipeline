@@ -1,15 +1,25 @@
+def get_mutect2_input(wildcards):
+    formats = ["bam", "bai"]
+    input = []
+    for format in formats:
+        input.append(config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.{format}".format(format = format, sample = wildcards.sample, lanes_normal = wildcards.lanes_normal))
+        input.append(config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.{format}".format(format = format, sample = wildcards.sample, lanes_tumour = wildcards.lanes_tumour))
+    return input
+
+
 rule variant_calling_Mutect2:
     input:
-        normal_bam = config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bam",
-        tumour_bam = config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bam",
-	    normal_bai = config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bai",
-	    tumour_bai = config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bai"
+        get_mutect2_input
+        # normal_bam = config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bam",
+        # tumour_bam = config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bam",
+	    # normal_bai = config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bai",
+	    # tumour_bai = config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bai"
     output:
         vcf_gz = config["PROJECT_DIR"] + "data/vcf/{sample}_{lanes_normal}-{lanes_tumour}_somatic.vcf.gz",
         f1r2_gz = config["PROJECT_DIR"] + "data/f1r2/{sample}_{lanes_normal}-{lanes_tumour}_f1r2.tar.gz"
-    wildcard_constraints:
-        lanes_tumour="[0-9]\.[0-9]",
-        lanes_normal="[0-9]\.[0-9]",
+    # wildcard_constraints:
+    #     lanes_tumour="[0-9]\.[0-9]",
+    #     lanes_normal="[0-9]\.[0-9]",
     params:
         ref=config["reference_GRCh37-lite"],
         PON=config["PON_VCF"],
