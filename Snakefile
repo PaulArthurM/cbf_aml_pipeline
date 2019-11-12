@@ -41,7 +41,7 @@ VCF_ANNOTATED = []
 
 for SAMPLE in SAMPLES:
     for TYPE in SAMPLES[SAMPLE]:
-        if TYPE == 'D':
+        if True: #if TYPE == 'D':
             LANES = SAMPLES[SAMPLE][TYPE]
             file_1 = "{project_dir}data/bam/{sample}_{type}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane=get_lane(LANES[0]))
             file_2 = "{project_dir}data/bam/{sample}_{type}.{lane}.bam".format(project_dir=config["PROJECT_DIR"], sample=SAMPLE, type=TYPE, lane=get_lane(LANES[1]))
@@ -82,12 +82,11 @@ for SAMPLE in SAMPLES:
                         VCF_ANNOTATED.append(vcf_annotated)
                         VCF_ANNOTATED.append(pass_vcf)
 #print(MERGE)
-TARGETS.extend(MERGE_BAM)
-print(MERGE_BAM)
-TARGETS.extend(MERGE_BAI)
+#TARGETS.extend(MERGE_BAM)
+#TARGETS.extend(MERGE_BAI)
 TARGETS.extend(FASTQC)
-TARGETS.extend(VCF_SOMATIC)
-TARGETS.extend(VCF_FILERED)
+#TARGETS.extend(VCF_SOMATIC)
+#TARGETS.extend(VCF_FILERED)
 TARGETS.extend(VCF_ANNOTATED)
 #TARGETS.extend([config["PON_VCF"]])
 #TARGETS.extend(VCF)
