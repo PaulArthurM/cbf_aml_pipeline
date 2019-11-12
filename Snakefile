@@ -91,7 +91,7 @@ for SAMPLE in SAMPLES:
                         VCF_ANNOTATED.append(pass_vcf)
 #print(MERGE)
 #TARGETS.extend(MERGE_BAM)
-#TARGETS.extend(MERGE_BAI)
+TARGETS.extend(MERGE_BAI)
 TARGETS.extend(FASTQC)
 #TARGETS.extend(VCF_SOMATIC)
 #TARGETS.extend(VCF_FILERED)

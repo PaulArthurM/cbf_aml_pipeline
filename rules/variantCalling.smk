@@ -1,16 +1,17 @@
-def get_mutect2_input(wildcards):
-    formats = ["bam", "bai"]
-    input = []
-    for format in formats:
-        input.append(config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.{format}".format(format = format, sample = wildcards.sample, lanes_normal = wildcards.lanes_normal))
-        input.append(config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.{format}".format(format = format, sample = wildcards.sample, lanes_tumour = wildcards.lanes_tumour))
-    return input
+def get_mutect2_input_normal(wildcards):
+
+    return config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bam".format(sample = wildcards.sample, lanes_normal = wildcards.lanes_normal)
+
+
+def get_mutect2_input_tumour(wildcards):
+    return config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.{format}".format(format = format, sample = wildcards.sample, lanes_tumour = wildcards.lanes_tumour)
+
 
 
 rule variant_calling_Mutect2:
     input:
-        normal_bam=get_mutect2_input[0],
-        tumour_bam=get_mutect2_input[1]
+        normal_bam=get_mutect2_input_normal,
+        tumour_bam=get_mutect2_input_tumour
         # normal_bam = config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bam",
         # tumour_bam = config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bam",
 	    # normal_bai = config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bai",
