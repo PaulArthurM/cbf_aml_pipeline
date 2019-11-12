@@ -91,6 +91,7 @@ TARGETS.extend(VCF_ANNOTATED)
 #TARGETS.extend([config["PON_VCF"]])
 #TARGETS.extend(VCF)
 
+print(TARGETS)
 
 rule all:
     input: TARGETS
