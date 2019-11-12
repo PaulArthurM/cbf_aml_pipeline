@@ -4,7 +4,7 @@ def get_mutect2_input_normal(wildcards):
 
 
 def get_mutect2_input_tumour(wildcards):
-    return config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.{format}".format(format = format, sample = wildcards.sample, lanes_tumour = wildcards.lanes_tumour)
+    return config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bam".format(sample = wildcards.sample, lanes_tumour = wildcards.lanes_tumour)
 
 
 
