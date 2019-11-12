@@ -9,7 +9,8 @@ def get_mutect2_input(wildcards):
 
 rule variant_calling_Mutect2:
     input:
-        get_mutect2_input
+        normal_bam=get_mutect2_input[0],
+        tumour_bam=get_mutect2_input[1]
         # normal_bam = config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bam",
         # tumour_bam = config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bam",
 	    # normal_bai = config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bai",
