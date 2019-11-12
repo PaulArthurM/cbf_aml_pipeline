@@ -30,10 +30,10 @@ def get_lane(sample):
 
 
 def get_tumour_lanes(sample):
-    return ".".join([lane for lane in get_lane(sample['D'])])
+    return ".".join([get_lane(lane) for lane in sample['D']])
 
 def get_normal_lanes(sample):
-    return ".".join([lane for lane in get_lane(sample['G'])])
+    return ".".join([get_lane(lane) for lane in sample['G']])
 
 TARGETS = []
 
