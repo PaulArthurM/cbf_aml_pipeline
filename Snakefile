@@ -29,11 +29,11 @@ def get_lane(sample):
     return re.search("\.(\d+)$", sample).group(1)
 
 
-def get_tumour_lanes(SAMPLE):
-    return ".".join([lane for lane in get_lane(SAMPLE['D'])])
+def get_tumour_lanes(sample):
+    return ".".join([lane for lane in get_lane(sample['D'])])
 
-def get_normal_lanes(SAMPLE):
-    return ".".join([lane for lane in get_lane(SAMPLE['G'])])
+def get_normal_lanes(sample):
+    return ".".join([lane for lane in get_lane(sample['G'])])
 
 TARGETS = []
 
