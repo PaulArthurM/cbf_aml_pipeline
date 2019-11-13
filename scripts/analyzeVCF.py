@@ -50,16 +50,16 @@ class Variant():
         self.sample = get_sample(vcf_file)
         self.chr = get_chr(line)
         self.pos = get_pos(line)
-        if isExonic(line):
-            self.ref = get_ref(line)
-            self.alt = get_alt(line)
-            self.geneName = get_geneName(line)
-            self.exonicFunc = get_exonicFunc(line)
-        else:
-            self.ref = "Not exonic"
-            self.alt = "Not exonic"
-            self.geneName = "Not exonic"
-            self.exonicFunc = "Not exonic"
+        # if isExonic(line):
+        self.ref = get_ref(line)
+        self.alt = get_alt(line)
+        self.geneName = get_geneName(line)
+        self.exonicFunc = get_exonicFunc(line)
+        # else:
+        #     self.ref = "Not exonic"
+        #     self.alt = "Not exonic"
+        #     self.geneName = "Not exonic"
+        #     self.exonicFunc = "Not exonic"
 
 
 def get_sample(vcf_file):
