@@ -78,7 +78,7 @@ def main(args):
     samples = []
     for vcf in vcfs:
         samples.append(readVCF(vcf))
-    showAllVariantsInfo(samples)
+    showAllSamplesInfo(samples)
 
 
 if __name__== '__main__':
