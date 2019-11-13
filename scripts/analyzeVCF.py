@@ -59,7 +59,7 @@ def open_file(file_path):
 
 def readVCF(vcf_file):
     lines = open_file(vcf_file)
-    return [Variant(line) for line in lines if line[0] != "#"]
+    return [Variant(line, vcf_file) for line in lines if line[0] != "#"]
 
 
 def showAllVariantsInfo(variants):
