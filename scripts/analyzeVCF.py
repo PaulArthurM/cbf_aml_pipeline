@@ -66,7 +66,7 @@ def readVCF(vcf_file):
 
 
 def showAllSamplesInfo(samples):
-    for sample in sampes.key():
+    for sample in samples.key():
         print(sample)
     # for variant in variants:
     #     txt = "\nSAMPLE: {sample}\n\tNAME: {geneName}\n\tFUNC:{exonicFunc}".format(sample=variant.sample, geneName=variant.geneName, exonicFunc=variant.exonicFunc)
