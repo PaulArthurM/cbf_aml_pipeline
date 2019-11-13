@@ -50,7 +50,10 @@ class Variant():
 
 
 def open_file(file_path):
-    file = open(file_path, 'r')
+    if file_path[-1] == "\n":
+        file = open(file_path[0:-1], 'r')
+    else:
+        file = open(file_path, 'r')
     return file.readlines()
 
 
