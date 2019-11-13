@@ -10,11 +10,22 @@ class Variant():
             if m:
                 return m.group(1)
 
+
+        def get_chr(line):
+            return line.split("\t")[0]
+
+
+        def get_pos(line):
+            return line.split("\t")[1]
+
+
         def get_ref(line):
             return line.split("\t")[2]
 
+
         def get_alt(line):
             return line.split("\t")[3]
+
 
         def isExonic(line):
             m = re.search("Func.refGene=exonic", line)
@@ -23,10 +34,12 @@ class Variant():
             else:
                 return False
 
+
         def get_geneName(line):
             m = re.search("Gene.refGene=([A-Za-z0-9]+);", line)
             if m:
                 return m.group(1)
+
 
         def get_exonicFunc(line):
             m = re.search("ExonicFunc.refGene=([a-zA-z0-9]+);", line)
@@ -35,6 +48,8 @@ class Variant():
 
 
         self.sample = get_sample(vcf_file)
+        self.chr = get_chr(line)
+        self.pos = get_pos(line)
         if isExonic(line):
             self.ref = get_ref(line)
             self.alt = get_alt(line)
