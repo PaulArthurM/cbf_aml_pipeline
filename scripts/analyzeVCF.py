@@ -84,7 +84,7 @@ def showAllSamplesInfo(samples):
     print('#SAMPLE\tCHROM\tPOS\tREF\tALT\tGENE_NAME\tFUNC\n')
     for sample in samples:
         for variant in samples[sample]:
-            txt = "{sample_name}\t{chr}\t{pos}\t{ref}\t{alt}{geneName}\t{exonicFunc}\n".format(sample_name=sample, geneName=variant.geneName, exonicFunc=variant.exonicFunc, chr=variant.chr, pos=variant.pos, ref=variant.ref, alt=variant.alt)
+            txt = "{sample_name}\t{chr}\t{pos}\t{ref}\t{alt}\t{geneName}\t{exonicFunc}\n".format(sample_name=sample, geneName=variant.geneName, exonicFunc=variant.exonicFunc, chr=variant.chr, pos=variant.pos, ref=variant.ref, alt=variant.alt)
             print(txt)
 
 
