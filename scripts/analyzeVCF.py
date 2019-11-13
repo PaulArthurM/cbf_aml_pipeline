@@ -20,11 +20,11 @@ class Variant():
 
 
         def get_ref(line):
-            return line.split("\t")[2]
+            return line.split("\t")[3]
 
 
         def get_alt(line):
-            return line.split("\t")[3]
+            return line.split("\t")[4]
 
 
         def isExonic(line):
