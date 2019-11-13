@@ -67,7 +67,7 @@ def showAllVariantsInfo(variants):
 
 def main(args):
     vcfs = open_file(args.v)
-    variant = []
+    variants = []
     for vcf in vcfs:
         variants.extend(readVCF(vcf))
     showAllVariantsInfo(variants)
