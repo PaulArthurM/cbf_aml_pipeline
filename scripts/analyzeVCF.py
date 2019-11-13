@@ -1,3 +1,6 @@
+import re
+import argparse
+
 
 class Variant():
     def __init__(self, line, vcf_file):
