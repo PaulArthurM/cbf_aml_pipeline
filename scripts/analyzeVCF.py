@@ -2,6 +2,40 @@ import re
 import argparse
 
 
+class Sample():
+    def __init__(self, sample_name, variants):
+
+        CLONAL_INTERFERENCE_GENES = ["KIT", "FLT3", "NRAS", "KRAS", "JAK2", "CBL"]  # temporaire
+
+
+        def getClonalInterferenceVariants(variants):
+            cpt  = 0
+            genes = ()
+            for variant in variants:
+                if variant.geneName in CLONAL_INTERFERENCE_GENES:
+                    cpt ++
+                    genes.append(variant.geneName)
+            return [cpt, genes]
+
+
+        def getCategorie(nClonalInterferenceVariants):
+            if nClonalInterferenceVariants == 0:
+                return "Group 0"
+            elif nClonalInterferenceVariants == 1:
+                return "Group 1"
+            elif nClonalInterferenceVariants >= 2:
+                return "Group Clonal Interference"
+            else:
+                return "ERROR: No group."
+
+
+        self.sample_name = sample_name
+        self.nClonalInterferenceVariants, self.clonalInterferenceVariants = getClonalInterferenceVariants(variants)
+        self.categorie = getCategorie(nClonalInterferenceVariants)
+
+
+
+
 class Variant():
     def __init__(self, line, vcf_file):
 
@@ -40,7 +74,7 @@ class Variant():
             if m:
                 return m.group(1)
 
-
+Group Clonal Interference
         def get_exonicFunc(line):
             m = re.search("ExonicFunc.refGene=([a-zA-z0-9]+);", line)
             if m:
@@ -88,13 +122,32 @@ def showAllSamplesInfo(samples):
             print(txt)
 
 
+def assignCategorie(samples):
+    grouped_samples = {'Group 0':[], 'Group 1':[], 'Group Clonal Interference':[]}
+    for sample in samples:
+        instance = Sample(sample, samples[sample])
+        grouped_samples[instance.categorie].append(instance)
+    return grouped_samples
+
+
+def showGroupedSamples(grouped_samples):
+    print("#GROUP\tN_CI\tCATEGORIE")
+    for group in grouped_samples:
+        for sample in grouped_samples[group]:
+            txt = "{group}\t{nClonalInterferenceVariants}\t{categorie}"
+            print(txt.format(group=group, nClonalInterferenceVariants=sample.nClonalInterferenceVariants, categorie=sample.categorie))
+
+
+
 def main(args):
     vcfs = open_file(args.v)
     samples = {}
     for vcf in vcfs:
         k,v = readVCF(vcf)
         samples[k] = v
-    showAllSamplesInfo(samples)
+    #showAllSamplesInfo(samples)
+    grouped_samples = assignCategorie(samples)
+    showGroupedSamples(grouped_samples)
 
 
 if __name__== '__main__':
