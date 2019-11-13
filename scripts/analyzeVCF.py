@@ -62,12 +62,13 @@ def open_file(file_path):
 
 def readVCF(vcf_file):
     lines = open_file(vcf_file)
-    return {get_sample(vcf_file):[Variant(line, vcf_file) for line in lines if line[0] != "#"]}
+    return [get_sample(vcf_file), [Variant(line, vcf_file) for line in lines if line[0] != "#"]]
 
 
 def showAllSamplesInfo(samples):
-    for sample in samples:
-        print(sample)
+    print(samples)
+    # for sample in samples:
+    #     print(sample.)
     # for variant in variants:
     #     txt = "\nSAMPLE: {sample}\n\tNAME: {geneName}\n\tFUNC:{exonicFunc}".format(sample=variant.sample, geneName=variant.geneName, exonicFunc=variant.exonicFunc)
     #     print(txt)
@@ -75,9 +76,10 @@ def showAllSamplesInfo(samples):
 
 def main(args):
     vcfs = open_file(args.v)
-    samples = []
+    samples = {}
     for vcf in vcfs:
-        samples.append(readVCF(vcf))
+        k,v = readVCF(vcf)
+        samples[k] = v
     showAllSamplesInfo(samples)
 
 
