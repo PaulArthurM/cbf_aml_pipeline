@@ -72,7 +72,7 @@ def main(args):
 
 if __name__== '__main__':
     parser = argparse.ArgumentParser(description='Analyze VCF.')
-    parser.add_argument('-v', default=None, required=True type=str, help="File with all VCFs name.")
+    parser.add_argument('-v', default=None, required=True, type=str, help="File with all VCFs name.")
     # parser.add_argument('-e', default='SJCBF', type=str, help="Experience. Default: SJCBF.")
     # parser.add_argument('-j', default=True, type=bool, help="Create JSON. Default: True")
     # parser.add_argument('-p', default='/data1/scratch/pamesl/projet_cbf/data/bam/', type=str, help="Path to bam files repository.")
