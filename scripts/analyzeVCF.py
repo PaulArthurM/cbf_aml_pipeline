@@ -3,7 +3,7 @@ class Variant():
     def __init__(self, line, vcf_file):
 
         def get_sample(vcf_file):
-            m = re.search("^(SJCBF[0-9]+)", vcf_file)
+            m = re.search("(SJCBF[0-9]+)", vcf_file)
             if m:
                 return m.group(1)
 
