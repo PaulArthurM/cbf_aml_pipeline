@@ -47,7 +47,10 @@ class Variant():
             self.exonicFunc = "Not exonic"
 
 
-
+def get_sample(vcf_file):
+    m = re.search("(SJCBF[0-9]+)", vcf_file)
+    if m:
+        return m.group(1)
 
 def open_file(file_path):
     if file_path[-1] == "\n":
@@ -59,21 +62,23 @@ def open_file(file_path):
 
 def readVCF(vcf_file):
     lines = open_file(vcf_file)
-    return [Variant(line, vcf_file) for line in lines if line[0] != "#"]
+    return {get_sample(vcf_file):[Variant(line, vcf_file) for line in lines if line[0] != "#"]}
 
 
-def showAllVariantsInfo(variants):
-    for variant in variants:
-        txt = "\nSAMPLE: {sample}\n\tNAME: {geneName}\n\tFUNC:{exonicFunc}".format(sample=variant.sample, geneName=variant.geneName, exonicFunc=variant.exonicFunc)
-        print(txt)
+def showAllSamplesInfo(samples):
+    for sample in sampes.key():
+        print(sample)
+    # for variant in variants:
+    #     txt = "\nSAMPLE: {sample}\n\tNAME: {geneName}\n\tFUNC:{exonicFunc}".format(sample=variant.sample, geneName=variant.geneName, exonicFunc=variant.exonicFunc)
+    #     print(txt)
 
 
 def main(args):
     vcfs = open_file(args.v)
-    variants = []
+    samples = []
     for vcf in vcfs:
-        variants.extend(readVCF(vcf))
-    showAllVariantsInfo(variants)
+        samples.append(readVCF(vcf))
+    showAllVariantsInfo(samples)
 
 
 if __name__== '__main__':
