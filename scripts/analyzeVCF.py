@@ -41,6 +41,7 @@ class Sample():
 class Variant():
     def __init__(self, line, vcf_file):
 
+
         def get_sample(vcf_file):
             m = re.search("(SJCBF[0-9]+)", vcf_file)
             if m:
@@ -76,25 +77,27 @@ class Variant():
             if m:
                 return m.group(1)
 
+
         def get_exonicFunc(line):
             m = re.search("ExonicFunc.refGene=([a-zA-z0-9]+);", line)
             if m:
                 return m.group(1)
 
 
+        def getAlleleFrenquencies(line):
+            d, g = line.split("\t")[9:11]
+            return [d.split(":")[2], g.split(":")[2]]
+
+
+
         self.sample = get_sample(vcf_file)
         self.chr = get_chr(line)
         self.pos = get_pos(line)
-        # if isExonic(line):
         self.ref = get_ref(line)
         self.alt = get_alt(line)
         self.geneName = get_geneName(line)
         self.exonicFunc = get_exonicFunc(line)
-        # else:
-        #     self.ref = "Not exonic"
-        #     self.alt = "Not exonic"
-        #     self.geneName = "Not exonic"
-        #     self.exonicFunc = "Not exonic"
+        self.diagnosisAF, self.germlineAF = getAlleleFrenquencies(line)
 
 
 def get_sample(vcf_file):
@@ -116,10 +119,10 @@ def readVCF(vcf_file):
 
 
 def showAllSamplesInfo(samples):
-    print('#SAMPLE\tCHROM\tPOS\tREF\tALT\tGENE_NAME\tFUNC\n')
+    print('#SAMPLE\tCHROM\tPOS\tREF\tALT\tGENE_NAME\tFUNC\tGERM_AF\tDIAG_AF\n')
     for sample in samples:
         for variant in samples[sample]:
-            txt = "{sample_name}\t{chr}\t{pos}\t{ref}\t{alt}\t{geneName}\t{exonicFunc}\n".format(sample_name=sample, geneName=variant.geneName, exonicFunc=variant.exonicFunc, chr=variant.chr, pos=variant.pos, ref=variant.ref, alt=variant.alt)
+            txt = "{sample_name}\t{chr}\t{pos}\t{ref}\t{alt}\t{geneName}\t{exonicFunc}\t{germAF}\t{diagAF}\n".format(germAF=variant.germlineAF, diagAF=variant.diagnosisAF, sample_name=sample, geneName=variant.geneName, exonicFunc=variant.exonicFunc, chr=variant.chr, pos=variant.pos, ref=variant.ref, alt=variant.alt)
             print(txt)
 
 
@@ -146,14 +149,17 @@ def main(args):
     for vcf in vcfs:
         k,v = readVCF(vcf)
         samples[k] = v
-    showAllSamplesInfo(samples)
-    #grouped_samples = assignCategorie(samples)
-    #showGroupedSamples(grouped_samples)
+    if args.g:
+        grouped_samples = assignCategorie(samples)
+        showGroupedSamples(grouped_samples)
+    else:
+        showAllSamplesInfo(samples)
 
 
 if __name__== '__main__':
     parser = argparse.ArgumentParser(description='Analyze VCF.')
     parser.add_argument('-v', default=None, required=True, type=str, help="File with all VCFs name.")
+    parser.add_argument('-g', default=False, required=False, type=bool, help="Determine and show sample's group.")
     # parser.add_argument('-e', default='SJCBF', type=str, help="Experience. Default: SJCBF.")
     # parser.add_argument('-j', default=True, type=bool, help="Create JSON. Default: True")
     # parser.add_argument('-p', default='/data1/scratch/pamesl/projet_cbf/data/bam/', type=str, help="Path to bam files repository.")
