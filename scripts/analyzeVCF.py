@@ -10,19 +10,21 @@ class Sample():
 
         def getClonalInterferenceVariants(variants):
             cpt  = 0
-            genes = ()
+            genes = []
+            nTotal = 0
             for variant in variants:
+                nTotal += 1
                 if variant.geneName in CLONAL_INTERFERENCE_GENES:
-                    cpt ++
+                    cpt+=1
                     genes.append(variant.geneName)
-            return [cpt, genes]
+            return [cpt, genes, nTotal]
 
 
         def getCategorie(nClonalInterferenceVariants):
             if nClonalInterferenceVariants == 0:
-                return "Group 0"
+                return "Group No Mutation"
             elif nClonalInterferenceVariants == 1:
-                return "Group 1"
+                return "Group Single Mutation"
             elif nClonalInterferenceVariants >= 2:
                 return "Group Clonal Interference"
             else:
@@ -30,8 +32,8 @@ class Sample():
 
 
         self.sample_name = sample_name
-        self.nClonalInterferenceVariants, self.clonalInterferenceVariants = getClonalInterferenceVariants(variants)
-        self.categorie = getCategorie(nClonalInterferenceVariants)
+        self.nClonalInterferenceVariants, self.clonalInterferenceVariants, self.nVariantTotal = getClonalInterferenceVariants(variants)
+        self.categorie = getCategorie(self.nClonalInterferenceVariants)
 
 
 
@@ -74,7 +76,6 @@ class Variant():
             if m:
                 return m.group(1)
 
-Group Clonal Interference
         def get_exonicFunc(line):
             m = re.search("ExonicFunc.refGene=([a-zA-z0-9]+);", line)
             if m:
@@ -123,7 +124,7 @@ def showAllSamplesInfo(samples):
 
 
 def assignCategorie(samples):
-    grouped_samples = {'Group 0':[], 'Group 1':[], 'Group Clonal Interference':[]}
+    grouped_samples = {'Group No Mutation':[], 'Group Single Mutation':[], 'Group Clonal Interference':[]}
     for sample in samples:
         instance = Sample(sample, samples[sample])
         grouped_samples[instance.categorie].append(instance)
@@ -131,11 +132,11 @@ def assignCategorie(samples):
 
 
 def showGroupedSamples(grouped_samples):
-    print("#GROUP\tN_CI\tCATEGORIE")
+    print("#GROUP\tN_CI\tN_TOT\tSAMPLE")
     for group in grouped_samples:
         for sample in grouped_samples[group]:
-            txt = "{group}\t{nClonalInterferenceVariants}\t{categorie}"
-            print(txt.format(group=group, nClonalInterferenceVariants=sample.nClonalInterferenceVariants, categorie=sample.categorie))
+            txt = "{group}\t{nClonalInterferenceVariants}\t{nTot}\t{sample}"
+            print(txt.format(nTot=sample.nVariantTotal, sample=sample.sample_name, nClonalInterferenceVariants=sample.nClonalInterferenceVariants, group=sample.categorie))
 
 
 
@@ -145,9 +146,9 @@ def main(args):
     for vcf in vcfs:
         k,v = readVCF(vcf)
         samples[k] = v
-    #showAllSamplesInfo(samples)
-    grouped_samples = assignCategorie(samples)
-    showGroupedSamples(grouped_samples)
+    showAllSamplesInfo(samples)
+    #grouped_samples = assignCategorie(samples)
+    #showGroupedSamples(grouped_samples)
 
 
 if __name__== '__main__':
