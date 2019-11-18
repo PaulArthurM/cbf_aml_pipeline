@@ -7,6 +7,7 @@ class Sample():
 
         CLONAL_INTERFERENCE_GENES = ["KIT", "FLT3", "NRAS", "KRAS", "JAK2", "CBL"]  # temporaire
 
+        NOT_CAUSALS_VARIATIONS = ["frameshift_deletion", "frameshift_insertion", "None", "synonymous_SNV", "unknown"]
 
         def getClonalInterferenceVariants(variants):
             cpt  = 0
@@ -14,7 +15,7 @@ class Sample():
             nTotal = 0
             for variant in variants:
                 nTotal += 1
-                if variant.geneName in CLONAL_INTERFERENCE_GENES:
+                if (variant.geneName in CLONAL_INTERFERENCE_GENES) and (variant.exonicFunc not in NOT_CAUSALS_VARIATIONS):
                     cpt+=1
                     genes.append(variant.geneName)
             return [cpt, genes, nTotal]
