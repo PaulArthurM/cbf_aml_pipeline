@@ -90,6 +90,12 @@ class Variant():
             return [d.split(":")[2], g.split(":")[2]]
 
 
+        def getTLOD(line):
+            m = re.search("TLOD=([0-9]+(\.[0-9][0-9]?)?);", line)
+            if m:
+                return m.group(1)
+
+
 
         self.sample = get_sample(vcf_file)
         self.chr = get_chr(line)
@@ -99,6 +105,7 @@ class Variant():
         self.geneName = get_geneName(line)
         self.exonicFunc = get_exonicFunc(line)
         self.diagnosisAF, self.germlineAF = getAlleleFrenquencies(line)
+        self.TLOD = getTLOD(line)
 
 
 def get_sample(vcf_file):
@@ -120,10 +127,10 @@ def readVCF(vcf_file):
 
 
 def showAllSamplesInfo(samples):
-    print('#SAMPLE\tCHROM\tPOS\tREF\tALT\tGENE_NAME\tFUNC\tGERM_AF\tDIAG_AF\n')
+    print('#SAMPLE\tCHROM\tPOS\tREF\tALT\tGENE_NAME\tFUNC\tGERM_AF\tDIAG_AF\tTLOD\n')
     for sample in samples:
         for variant in samples[sample]:
-            txt = "{sample_name}\t{chr}\t{pos}\t{ref}\t{alt}\t{geneName}\t{exonicFunc}\t{germAF}\t{diagAF}\n".format(germAF=variant.germlineAF, diagAF=variant.diagnosisAF, sample_name=sample, geneName=variant.geneName, exonicFunc=variant.exonicFunc, chr=variant.chr, pos=variant.pos, ref=variant.ref, alt=variant.alt)
+            txt = "{sample_name}\t{chr}\t{pos}\t{ref}\t{alt}\t{geneName}\t{exonicFunc}\t{germAF}\t{diagAF}\t{tLOD}\n".format(tLOD=variant.TLOD, germAF=variant.germlineAF, diagAF=variant.diagnosisAF, sample_name=sample, geneName=variant.geneName, exonicFunc=variant.exonicFunc, chr=variant.chr, pos=variant.pos, ref=variant.ref, alt=variant.alt)
             print(txt)
 
 
