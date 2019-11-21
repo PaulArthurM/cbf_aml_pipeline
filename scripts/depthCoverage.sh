@@ -25,7 +25,7 @@ gatk3 -T DepthOfCoverage \
   -omitBaseOutput \
   -omitLocusTable\
   -R /data1/scratch/pamesl/projet_cbf/data/b37_data/GRCh37-lite.fa \
-  -I /data/bam/SJCBF040_D.6.7_marked_duplicates_BQSR_merge.bam \
+  -I /data1/scratch/pamesl/projet_cbf/data/bam/SJCBF040_D.6.7_marked_duplicates_BQSR_merge.bam \
   -L /data1/scratch/pamesl/projet_cbf/data/b37_data/Broad.human.exome.b37.interval_list \
   -o SJCBF040_D.coverage \
   -ct 5 -ct 10 -ct 15 -ct 20 -ct 30 -ct 50
