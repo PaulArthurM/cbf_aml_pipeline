@@ -1,12 +1,12 @@
 #!/bin/bash
 #$ -S /bin/bash
-#$ -N samtools_index
+#$ -N oxog_picard
 #$ -cwd
 #$ -o /data1/scratch/pamesl/projet_cbf/stdoe_sge
 #$ -e /data1/scratch/pamesl/projet_cbf/stdoe_sge
 #$ -q short.q
-#$ -l h_rt=01:00:00
-#$ -pe thread 1
+#$ -l h_rt=24:00:00
+#$ -pe thread 5
 #$ -l h_vmem=2.75G
 
 echo "JOB NAME: $JOB_NAME"
