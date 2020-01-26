@@ -4,3 +4,4 @@ stdoe_sge/
 data/trash
 CREDENTIALS_FILE
 .snakemake/*
+*.pdf
