@@ -7,20 +7,39 @@ import os.path
 from os import listdir
 from os.path import isfile, join
 
-include: "rules/functions.smk"
-include: "rules/preprocessing.smk"
-include: "rules/variantCalling.smk"
-include: "rules/panelsOfNormals.smk"
-include: "rules/annotation.smk"
-include: "rules/utils.smk"
-
-# Configuration file
-configfile: "config/config.yaml"
 
 # Load json configuration file
+configfile: "config/config.yaml"
 CONFIG_JSON = json.load(open(config["SAMPLES"]))
-
 SAMPLES = CONFIG_JSON['samples']
+
+include: "workflow/rules/utils.smk"
+include: "workflow/rules/functions.smk"
+include: "workflow/rules/preprocessing.smk"
+include: "workflow/rules/variantCalling.smk"
+include: "workflow/rules/panelsOfNormals.smk"
+include: "workflow/rules/annotation.smk"
+include: "workflow/rules/strelka.smk"
+include: "workflow/rules/freebayes.smk"
+
+
+
+def get_input(wildcards):
+    wanted_input = []
+    # Load json configuration file
+    CONFIG_JSON = json.load(open(config["SAMPLES"]))
+    SAMPLES = CONFIG_JSON['samples']
+    #wanted_input.extend(expand(config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bam", sample=SAMPLES, type=['G', 'D']))
+    #wanted_input.extend(expand(config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bai", sample=SAMPLES, type=['G', 'D']))
+    #wanted_input.extend(expand(config["PROJECT_DIR"] + "data/pon/{sample}_{type}_marked_duplicates_BQSR_merge_for_pon.vcf.gz", sample=SAMPLES, type=['G', 'D']))
+    wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/strelka/raw/{sample}_strelka_vcf", sample=SAMPLES))
+    #wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/mutect2/raw/{sample}_mutect2.vcf.gz", sample=SAMPLES))
+    #wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz", sample=SAMPLES))
+    wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/annovar/{sample}.avinput", sample=SAMPLES))
+    wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/mutect2/pass/{sample}_somatic_filtered_pass.vcf", sample=SAMPLES))
+    wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/freebayes/raw/{sample}_freebayes.vcf", sample=SAMPLES))
+    wanted_input.extend(expand(config["PROJECT_DIR"] + config["FASTQC"]["DIR"] + "{sample}_{type}_fastqc.html", sample=SAMPLES, type=['G', 'D']))
+    return wanted_input
 
 
 rule all:
