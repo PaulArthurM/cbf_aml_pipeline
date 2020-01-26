@@ -1,3 +1,52 @@
+
+def getBamToMergeCommand(wildcards):
+    # Configuration file
+    configfile: "config/config.yaml"
+    CONFIG_JSON = json.load(open(config["SAMPLES"]))
+    SAMPLES = CONFIG_JSON['samples']
+    LANES = SAMPLES[wildcards.sample][wildcards.type]
+    lanesToMerge = ""
+    for lane in LANES:
+        lanesToMerge += "-I " + str(lane)
+    return lanesToMerge
+
+
+def getBamToMerge(wildcards):
+    configfile: "config/config.yaml"
+    CONFIG_JSON = json.load(open(config["SAMPLES"]))
+    SAMPLES = CONFIG_JSON['samples']
+    return SAMPLES[wildcards.sample][wildcards.type]
+
+
+def test(wildcards):
+    SAMPLES = CONFIG_JSON['samples']
+    out = []
+    template = config["PROJECT_DIR"] + "data/bam/" + wildcards.sample + "_" + wildcards.type + "_{lane}_marked_duplicates_BQSR.bam"#.format(sample=wildcards.sample, type=wildcards.type)
+    lanes = [getLane(bam) for bam in SAMPLES[wildcards.sample][wildcards.type]]
+    out.extend(expand(template, lane=lanes))
+    return out
+
+
+
+rule merge_bam:
+    input:
+        test#getBamToMerge
+    output:
+        config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bam"
+    conda:
+        "../envs/gatk4.yaml"
+    params:
+        name="merge_{sample}",
+        nthread=5,
+        bamToMerge=getBamToMergeCommand
+    shell:
+        "gatk MergeSamFiles \
+            {params.bamToMerge} \
+            -O {output}"
+
+
+
+
 # Merge multiple sorted alignment files, producing a single sorted output file
 rule merge_sam_two_files:
     input:
@@ -41,13 +90,13 @@ rule merge_sam_three_files:
 # Rule for create index from BAM file with samtools index
 rule samtools_index:
     input:
-        config["PROJECT_DIR"] + "data/bam/{merged_samples}_marked_duplicates_BQSR_merge.bam"
+        config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bam"
     output:
-        config["PROJECT_DIR"] + "data/bam/{merged_samples}_marked_duplicates_BQSR_merge.bai"
+        config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bai"
     conda:
         "../envs/samtools.yaml"
     params:
-        name="index_{merged_samples}",
+        name="index_{sample}_{type}",
         nthread=config["samtools"]["nthread"]
     shell:
         "samtools index -b {input} {output}"
@@ -55,12 +104,12 @@ rule samtools_index:
 
 rule fastqc:
     input:
-        config["PROJECT_DIR"] + "data/bam/{merged_samples}_marked_duplicates_BQSR_merge.bam"
+        config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bam"
     output:
-        config["PROJECT_DIR"] + config["FASTQC"]["DIR"] + "{merged_samples}_marked_duplicates_BQSR_merge_fastqc.html"
+        config["PROJECT_DIR"] + config["FASTQC"]["DIR"] + "{sample}_{type}_fastqc.html"
     params:
         dir=config["FASTQC"]["DIR"],
-        name="fastq_{merged_samples}",
+        name="fastq_{sample}_{type}",
         nthread=4
     conda:
         "../envs/fastqc.yaml"

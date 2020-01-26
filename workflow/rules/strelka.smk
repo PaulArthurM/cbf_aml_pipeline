@@ -1,38 +1,40 @@
-
-"""
-# configuration
-${STRELKA_INSTALL_PATH}/bin/configureStrelkaSomaticWorkflow.py \
-    --normalBam normal.bam \
-    --tumorBam tumor.bam \
-    --referenceFasta hg38.fa \
-    --runDir demo_somatic
-# execution on a single local machine with 20 parallel jobs
-demo_somatic/runWorkflow.py -m local -j 20
-"""
-
 def get_strelka_input_normal_bam(wildcards):
-    return config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bam".format(sample = wildcards.sample, lanes_normal = wildcards.lanes_normal)
+    return config["PROJECT_DIR"] + "data/preprocessing/{sample}_G.bam".format(sample = wildcards.sample)
 
 
 def get_strelka_input_tumour_bam(wildcards):
-    return config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bam".format(sample = wildcards.sample, lanes_tumour = wildcards.lanes_tumour)
+    return config["PROJECT_DIR"] + "data/preprocessing/{sample}_D.bam".format(sample = wildcards.sample)
 
 
-rule configureStrelkaSomaticWorkflow:
+def get_strelka_input_normal_bai(wildcards):
+    return config["PROJECT_DIR"] + "data/preprocessing/{sample}_G.bai".format(sample = wildcards.sample)
+
+
+def get_strelka_input_tumour_bai(wildcards):
+    return config["PROJECT_DIR"] + "data/preprocessing/{sample}_D.bai".format(sample = wildcards.sample)
+
+
+rule strelka:
     input:
-        normalBam = get_strelka_input_normal_bam,
-        tumorBam = get_strelka_input_tumour_bam
-    params:
-        ref=config["reference_GRCh37-lite"],
-        name="Mutect2_somatic_{sample}",
-        pathToConfigure=["strelka"]["STRELKA_INSTALL_PATH"],
-        runDir=["strelka"]["runDir"],
-        nthread=config["mutect2"]["nthread"]
+        # The normal bam and its index
+        # are optional input
+        normal = get_strelka_input_normal_bam,
+        normal_index = get_strelka_input_normal_bai,
+        tumor = get_strelka_input_tumour_bam,
+        tumor_index = get_strelka_input_tumour_bai,
     output:
-
+        directory(config["PROJECT_DIR"] + "results/variantCalling/strelka/raw/{sample}_strelka_vcf")
+    params:
+        name="strelka_{sample}",
+        nthread=5,
+        ref = config["reference_GRCh37-lite"]
     shell:
-        "${params.STRELKA_INSTALL_PATH}/bin/configureStrelkaSomaticWorkflow.py \
-            --normalBam {input.normalBam} \
-            --tumorBam {input.tumorBam} \
+        "configureStrelkaSomaticWorkflow.py  \
+            {input.normal} \
+            --tumorBam {input.tumor} \
             --referenceFasta {params.ref} \
-            --runDir {params.runDir}"
+            --runDir {output} \
+            && \
+            {output}/runWorkflow.py \
+            --mode local \
+            --jobs {params.nthread}"

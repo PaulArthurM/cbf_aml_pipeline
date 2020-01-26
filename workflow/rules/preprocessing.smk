@@ -3,12 +3,12 @@ rule mark_duplicates:
     input:
         config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lane}.bam"
     output:
-        marked_bam = temp(config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lane}_marked_duplicates.bam"),
-        metrics_txt = config["PROJECT_DIR"] + "data/metrics/{sample}_{type}.{lane}_marked_dup_metrics.txt"
+        marked_bam = temp(config["PROJECT_DIR"] + "data/bam/{sample}_{type}_{lane}_marked_duplicates.bam"),
+        metrics_txt = config["PROJECT_DIR"] + "data/metrics/{sample}_{type}_{lane}_marked_dup_metrics.txt"
     conda:
         "../envs/gatk4.yaml"
     params:
-        name="mark_duplicates_{sample}_{type}.{lane}",
+        name="mark_duplicates_{sample}_{type}_{lane}",
         nthread=config["mark_duplicates"]["classic"]["nthread"]
     shell:
         "gatk MarkDuplicates \

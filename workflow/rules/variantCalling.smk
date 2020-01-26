@@ -1,16 +1,17 @@
 def get_mutect2_input_normal_bam(wildcards):
-    return config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bam".format(sample = wildcards.sample, lanes_normal = wildcards.lanes_normal)
+    return config["PROJECT_DIR"] + "data/preprocessing/{sample}_G.bam".format(sample = wildcards.sample)
 
 
 def get_mutect2_input_tumour_bam(wildcards):
-    return config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bam".format(sample = wildcards.sample, lanes_tumour = wildcards.lanes_tumour)
+    return config["PROJECT_DIR"] + "data/preprocessing/{sample}_D.bam".format(sample = wildcards.sample)
+
 
 def get_mutect2_input_normal_bai(wildcards):
-    return config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bai".format(sample = wildcards.sample, lanes_normal = wildcards.lanes_normal)
+    return config["PROJECT_DIR"] + "data/preprocessing/{sample}_G.bai".format(sample = wildcards.sample)
 
 
 def get_mutect2_input_tumour_bai(wildcards):
-    return config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bai".format(sample = wildcards.sample, lanes_tumour = wildcards.lanes_tumour)
+    return config["PROJECT_DIR"] + "data/preprocessing/{sample}_D.bai".format(sample = wildcards.sample)
 
 
 
@@ -20,16 +21,9 @@ rule variant_calling_Mutect2:
         tumour_bam=get_mutect2_input_tumour_bam,
         normal_bai=get_mutect2_input_normal_bai,
         tumour_bai=get_mutect2_input_tumour_bai
-        # normal_bam = config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bam",
-        # tumour_bam = config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bam",
-	    # normal_bai = config["PROJECT_DIR"] + "data/bam/{sample}_G.{lanes_normal}_marked_duplicates_BQSR_merge.bai",
-	    # tumour_bai = config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes_tumour}_marked_duplicates_BQSR_merge.bai"
     output:
-        vcf_gz = config["PROJECT_DIR"] + "data/vcf/{sample}_{lanes_normal}-{lanes_tumour}_somatic.vcf.gz",
-        f1r2_gz = config["PROJECT_DIR"] + "data/f1r2/{sample}_{lanes_normal}-{lanes_tumour}_f1r2.tar.gz"
-    # wildcard_constraints:
-    #     lanes_tumour="[0-9]\.[0-9]",
-    #     lanes_normal="[0-9]\.[0-9]",
+        vcf_gz = config["PROJECT_DIR"] + "results/variantCalling/mutect2/raw/{sample}_mutect2.vcf.gz",
+        f1r2_gz = config["PROJECT_DIR"] + "data/f1r2/{sample}_f1r2.tar.gz"
     params:
         ref=config["reference_GRCh37-lite"],
         PON=config["PON_VCF"],
@@ -52,18 +46,19 @@ rule variant_calling_Mutect2:
 	    --independent-mates \
         -O {output.vcf_gz}"
 
+
 rule Calculate_Contamination_GetPileupSummaries:
     input:
-        bam=config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lanes}_marked_duplicates_BQSR_merge.bam",
-	    bai=config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lanes}_marked_duplicates_BQSR_merge.bai"
+        bam=config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bam",
+	    bai=config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bai"
     output:
-        config["PROJECT_DIR"] + "data/pileups/{sample}_{type}.{lanes}_pileups.table"
+        config["PROJECT_DIR"] + "data/pileups/{sample}_{type}_pileups.table"
     wildcard_constraints:
         lanes="[0-9]\.[0-9]",
     params:
         exac=config["CalculateContamination"]["GetPileupSummaries"]["exac"],
 	intervals=config["intervals_list"],
-        name="GetPileupSummaries_{sample}_{type}.{lanes}",
+        name="GetPileupSummaries_{sample}_{type}",
         nthread=10
     conda:
         "../envs/gatk4.yaml"
@@ -77,11 +72,11 @@ rule Calculate_Contamination_GetPileupSummaries:
 
 rule Calculate_Contamination:
     input:
-        tumour=config["PROJECT_DIR"] + "data/pileups/{sample}_D.{tumour_lanes}_pileups.table",
-        matched=config["PROJECT_DIR"] + "data/pileups/{sample}_G.{normal_lanes}_pileups.table"
+        tumour=config["PROJECT_DIR"] + "data/pileups/{sample}_D_pileups.table",
+        matched=config["PROJECT_DIR"] + "data/pileups/{sample}_G_pileups.table"
     output:
-        contamination_table=config["PROJECT_DIR"] + "data/pileups/contamination/{sample}_{normal_lanes}-{tumour_lanes}.contamination.table",
-        segmentation=config["PROJECT_DIR"] + "data/pileups/segmentation/{sample}_{normal_lanes}-{tumour_lanes}.tumour_segmentation.tsv"
+        contamination_table=config["PROJECT_DIR"] + "data/pileups/contamination/{sample}.contamination.table",
+        segmentation=config["PROJECT_DIR"] + "data/pileups/segmentation/{sample}.tumour_segmentation.tsv"
     params:
         name="CalculateContamination_{sample}",
         nthread=5
@@ -96,9 +91,9 @@ rule Calculate_Contamination:
 
 rule LearnReadOrientationModel:
     input:
-        config["PROJECT_DIR"] + "data/f1r2/{sample}_{lanes_normal}-{lanes_tumour}_f1r2.tar.gz"
+        config["PROJECT_DIR"] + "data/f1r2/{sample}_f1r2.tar.gz"
     output:
-        config["PROJECT_DIR"] + "data/f1r2/{sample}_{lanes_normal}-{lanes_tumour}_read-orientation-model.tar.gz"
+        config["PROJECT_DIR"] + "data/f1r2/{sample}_read-orientation-model.tar.gz"
     params:
         name="LearnReadOrientationModel_{sample}",
         nthread=5
@@ -112,10 +107,10 @@ rule LearnReadOrientationModel:
 
 rule GetPileupSummaries:
     input:
-        bam=config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes}_marked_duplicates_BQSR_merge.bam",
-	bai=config["PROJECT_DIR"] + "data/bam/{sample}_D.{lanes}_marked_duplicates_BQSR_merge.bai"
+        bam=config["PROJECT_DIR"] + "data/preprocessing/{sample}_D.bam",
+	bai=config["PROJECT_DIR"] + "data/preprocessing/{sample}_D.bai"
     output:
-        config["PROJECT_DIR"] + "data/f1r2/pileups/{sample}_D.{lanes}_getpileupsummaries.table"
+        config["PROJECT_DIR"] + "data/f1r2/pileups/{sample}_D_getpileupsummaries.table"
     params:
         gnomad=config["mutect2"]["gnomad"]["files"]["biallelic"],
 	intervals=config["intervals_list"],
@@ -132,12 +127,12 @@ rule GetPileupSummaries:
 
 rule FilterMutectCalls:
     input:
-        vcf=config["PROJECT_DIR"] + "data/vcf/{sample}_{normal_lanes}-{tumour_lanes}_somatic.vcf.gz",
-        contamination_table=config["PROJECT_DIR"] + "data/pileups/contamination/{sample}_{normal_lanes}-{tumour_lanes}.contamination.table",
-        segmentation=config["PROJECT_DIR"] + "data/pileups/segmentation/{sample}_{normal_lanes}-{tumour_lanes}.tumour_segmentation.tsv",
-        orientation=config["PROJECT_DIR"] + "data/f1r2/{sample}_{normal_lanes}-{tumour_lanes}_read-orientation-model.tar.gz"
+        vcf=config["PROJECT_DIR"] + "results/variantCalling/mutect2/raw/{sample}_mutect2.vcf.gz",
+        contamination_table=config["PROJECT_DIR"] + "data/pileups/contamination/{sample}.contamination.table",
+        segmentation=config["PROJECT_DIR"] + "data/pileups/segmentation/{sample}.tumour_segmentation.tsv",
+        orientation=config["PROJECT_DIR"] + "data/f1r2/{sample}_read-orientation-model.tar.gz"
     output:
-        config["PROJECT_DIR"] + "data/vcf/filtered/{sample}_{normal_lanes}-{tumour_lanes}_somatic_filtered.vcf.gz"
+        config["PROJECT_DIR"] + "results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz"
     params:
         reference=config["reference_GRCh37-lite"],
         name="FilterMutectCalls_{sample}",
@@ -156,9 +151,9 @@ rule FilterMutectCalls:
 
 rule keep_pass_variants:
     input:
-        config["PROJECT_DIR"] + "data/vcf/filtered/{sample}_{normal_lanes}-{tumour_lanes}_somatic_filtered.vcf.gz"
+        config["PROJECT_DIR"] + "results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz"
     output:
-        config["PROJECT_DIR"] + "data/vcf/filtered/{sample}_{normal_lanes}-{tumour_lanes}_somatic_filtered_pass.vcf"
+        config["PROJECT_DIR"] + "results/variantCalling/mutect2/pass/{sample}_somatic_filtered_pass.vcf"
     params:
         name="keep_pass_variants_{sample}",
         nthread=5
