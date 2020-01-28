@@ -39,7 +39,7 @@ def test_return_lanes_list(wildcards):
 rule merge_bam:
     input:
         #test#getBamToMerge
-        expand(config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.{lane}_marked_duplicates_BQSR.bam", lane=test_return_lanes_list(wildcards))
+        expand(config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.{lane}_marked_duplicates_BQSR.bam", lane=test_return_lanes_list)
     output:
         config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bam"
     conda:
