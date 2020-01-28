@@ -28,16 +28,24 @@ def test(wildcards):
     return out
 
 
+def test_return_lanes_list(wildcards):
+    SAMPLES = CONFIG_JSON['samples']
+    lanes = [get_lane(bam) for bam in SAMPLES[wildcards.sample][wildcards.type]]
+    out.extend(expand(template, lane=lanes))
+    return out
+
+
 
 rule merge_bam:
     input:
-        test#getBamToMerge
+        #test#getBamToMerge
+        expand(config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.{lane}_marked_duplicates_BQSR.bam", lane=test_return_lanes_list(wildcards))
     output:
         config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bam"
     conda:
         "../envs/gatk4.yaml"
     params:
-        name="merge_{sample}",
+        name="merge_{sample}_{type}",
         nthread=5,
         bamToMerge=getBamToMergeCommand
     shell:
