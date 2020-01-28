@@ -33,7 +33,7 @@ rule merge_bam:
     input:
         test#getBamToMerge
     output:
-        config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bam"
+        config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type, [DG]}.bam"
     conda:
         "../envs/gatk4.yaml"
     params:
