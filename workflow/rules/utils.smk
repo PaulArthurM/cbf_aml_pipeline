@@ -24,6 +24,7 @@ def test(wildcards):
     template = config["PROJECT_DIR"] + "data/preprocessing/" + wildcards.sample + "_" + wildcards.type + ".{lane}_marked_duplicates_BQSR.bam"#.format(sample=wildcards.sample, type=wildcards.type)
     lanes = [get_lane(bam) for bam in SAMPLES[wildcards.sample][wildcards.type]]
     out.extend(expand(template, lane=lanes))
+    print(out)
     return out
 
 
