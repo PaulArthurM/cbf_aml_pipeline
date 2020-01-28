@@ -1,5 +1,5 @@
-PROJECT_DIR: "/home/paularth/cbf_aml_pipeline/"#"/data1/scratch/pamesl/projet_cbf/"
-SAMPLES: "/home/paularth/cbf_aml_pipeline/config/data.json"#"/data1/scratch/pamesl/projet_cbf/config/data.json"
+PROJECT_DIR: "/data1/scratch/pamesl/cbf_aml_pipeline/"
+SAMPLES: "config/data.json"
 
 #  Reference Genome
 reference_GRCh37-lite: "/data1/scratch/pamesl/projet_cbf/data/b37_data/GRCh37-lite.fa"
