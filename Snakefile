@@ -32,13 +32,13 @@ def get_input(wildcards):
     #wanted_input.extend(expand(config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bam", sample=SAMPLES, type=['G', 'D']))
     #wanted_input.extend(expand(config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bai", sample=SAMPLES, type=['G', 'D']))
     #wanted_input.extend(expand(config["PROJECT_DIR"] + "data/pon/{sample}_{type}_marked_duplicates_BQSR_merge_for_pon.vcf.gz", sample=SAMPLES, type=['G', 'D']))
-    wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/strelka/raw/{sample}_strelka_vcf", sample=SAMPLES))
+    #wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/strelka/raw/{sample}_strelka_vcf", sample=SAMPLES))
     #wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/mutect2/raw/{sample}_mutect2.vcf.gz", sample=SAMPLES))
     #wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz", sample=SAMPLES))
-    wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/annovar/{sample}.avinput", sample=SAMPLES))
+    #wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/annovar/{sample}.avinput", sample=SAMPLES))
     wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/mutect2/pass/{sample}_somatic_filtered_pass.vcf", sample=SAMPLES))
-    wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/freebayes/raw/{sample}_freebayes.vcf", sample=SAMPLES))
-    wanted_input.extend(expand(config["PROJECT_DIR"] + config["FASTQC"]["DIR"] + "{sample}_{type}_fastqc.html", sample=SAMPLES, type=['G', 'D']))
+    #wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/freebayes/raw/{sample}_freebayes.vcf", sample=SAMPLES))
+    #wanted_input.extend(expand(config["PROJECT_DIR"] + config["FASTQC"]["DIR"] + "{sample}_{type}_fastqc.html", sample=SAMPLES, type=['G', 'D']))
     return wanted_input
 
 
