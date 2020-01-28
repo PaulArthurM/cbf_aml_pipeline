@@ -1,10 +1,10 @@
 # Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
 rule mark_duplicates:
     input:
-        config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}_{lane}.bam"
+        config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.{lane}.bam"
     output:
-        marked_bam = temp(config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}_{lane}_marked_duplicates.bam"),
-        metrics_txt = config["PROJECT_DIR"] + "data/metrics/{sample}_{type}_{lane}_marked_dup_metrics.txt"
+        marked_bam = temp(config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.{lane}_marked_duplicates.bam"),
+        metrics_txt = config["PROJECT_DIR"] + "data/metrics/{sample}_{type}.{lane}_marked_dup_metrics.txt"
     conda:
         "../envs/gatk4.yaml"
     params:
