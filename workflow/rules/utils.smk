@@ -22,7 +22,7 @@ def test(wildcards):
     SAMPLES = CONFIG_JSON['samples']
     out = []
     template = config["PROJECT_DIR"] + "data/bam/" + wildcards.sample + "_" + wildcards.type + "_{lane}_marked_duplicates_BQSR.bam"#.format(sample=wildcards.sample, type=wildcards.type)
-    lanes = [getLane(bam) for bam in SAMPLES[wildcards.sample][wildcards.type]]
+    lanes = [get_lane(bam) for bam in SAMPLES[wildcards.sample][wildcards.type]]
     out.extend(expand(template, lane=lanes))
     return out
 
