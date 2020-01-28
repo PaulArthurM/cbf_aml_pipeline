@@ -22,24 +22,16 @@ def test(wildcards):
     SAMPLES = CONFIG_JSON['samples']
     out = []
     template = config["PROJECT_DIR"] + "data/preprocessing/" + wildcards.sample + "_" + wildcards.type + ".{lane}_marked_duplicates_BQSR.bam"#.format(sample=wildcards.sample, type=wildcards.type)
+    print(template)
     lanes = [get_lane(bam) for bam in SAMPLES[wildcards.sample][wildcards.type]]
     out.extend(expand(template, lane=lanes))
     print(out)
     return out
 
 
-def test_return_lanes_list(wildcards):
-    SAMPLES = CONFIG_JSON['samples']
-    lanes = [get_lane(bam) for bam in SAMPLES[wildcards.sample][wildcards.type]]
-    out.extend(expand(template, lane=lanes))
-    return out
-
-
-
 rule merge_bam:
     input:
-        #test#getBamToMerge
-        expand(config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.{lane}_marked_duplicates_BQSR.bam", lane=test_return_lanes_list)
+        test#getBamToMerge
     output:
         config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bam"
     conda:
