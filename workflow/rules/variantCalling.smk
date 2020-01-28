@@ -17,10 +17,10 @@ def get_mutect2_input_tumour_bai(wildcards):
 
 rule variant_calling_Mutect2:
     input:
-        normal_bam=get_mutect2_input_normal_bam,
-        tumour_bam=get_mutect2_input_tumour_bam,
-        normal_bai=get_mutect2_input_normal_bai,
-        tumour_bai=get_mutect2_input_tumour_bai
+        normal_bam="data/preprocessing/{sample}_G.bam",
+        tumour_bam="data/preprocessing/{sample}_D.bam",
+        normal_bai="data/preprocessing/{sample}_G.bai",
+        tumour_bai="data/preprocessing/{sample}_D.bai"
     output:
         vcf_gz = config["PROJECT_DIR"] + "results/variantCalling/mutect2/raw/{sample}_mutect2.vcf.gz",
         f1r2_gz = config["PROJECT_DIR"] + "data/f1r2/{sample}_f1r2.tar.gz"
