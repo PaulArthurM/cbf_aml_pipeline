@@ -1,5 +1,5 @@
 
-def getBamToMergeCommand(wildcards):
+def old_getBamToMergeCommand(wildcards):
     # Configuration file
     configfile: "config/config.yaml"
     CONFIG_JSON = json.load(open(config["SAMPLES"]))
@@ -7,31 +7,38 @@ def getBamToMergeCommand(wildcards):
     LANES = SAMPLES[wildcards.sample][wildcards.type]
     lanesToMerge = ""
     for lane in LANES:
-        lanesToMerge += "-I " + str(lane)
+        lanesToMerge += " -I " + str(lane)
     return lanesToMerge
 
 
-def getBamToMerge(wildcards):
+def old_getBamToMerge(wildcards):
     configfile: "config/config.yaml"
     CONFIG_JSON = json.load(open(config["SAMPLES"]))
     SAMPLES = CONFIG_JSON['samples']
     return SAMPLES[wildcards.sample][wildcards.type]
 
 
-def test(wildcards):
+def getBamToMergeCommand(wildcards):
+    SAMPLES = CONFIG_JSON['samples']
+    LANES = SAMPLES[wildcards.sample][wildcards.type]
+    fileToMerge = ""
+    for file in getBamToMerge(wildcards):
+        fileToMerge += " -I " + str(lane)
+    return fileToMerge
+
+
+def getBamToMerge(wildcards):
     SAMPLES = CONFIG_JSON['samples']
     out = []
     template = config["PROJECT_DIR"] + "data/preprocessing/" + wildcards.sample + "_" + wildcards.type + ".{lane}_marked_duplicates_BQSR.bam"#.format(sample=wildcards.sample, type=wildcards.type)
-    print(template)
     lanes = [get_lane(bam) for bam in SAMPLES[wildcards.sample][wildcards.type]]
     out.extend(expand(template, lane=lanes))
-    print(out)
     return out
 
 
 rule merge_bam:
     input:
-        test#getBamToMerge
+        getBamToMerge
     output:
         config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type, [DG]}.bam"
     conda:
