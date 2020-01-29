@@ -40,13 +40,15 @@ rule merge_bam:
     input:
         getBamToMerge
     output:
-        config["PROJECT_DIR"] + "results/preprocessing/{sample}_{type, [DG]}.bam"
+        config["PROJECT_DIR"] + "results/preprocessing/{sample}_{type}.bam"
     conda:
         "../envs/gatk4.yaml"
     params:
         name="merge_{sample}_{type}",
         nthread=5,
         bamToMerge=getBamToMergeCommand
+    wildcard_constraints:
+        type="[DG]"
     shell:
         "gatk MergeSamFiles \
             {params.bamToMerge} \
