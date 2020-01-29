@@ -49,7 +49,7 @@ def getBamToMergeTEST(wildcards):
 
 rule merge_bam:
     input:
-        getBamToMerge
+        getBamToMergeTEST
     output:
         config["PROJECT_DIR"] + "results/preprocessing/{sample}_{type}.bam"
     conda:
