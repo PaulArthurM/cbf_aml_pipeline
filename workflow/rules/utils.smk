@@ -27,13 +27,13 @@ def getBamToMergeCommand(wildcards):
     return fileToMerge
 
 
-def getBamToMerge(wildcards):
-    SAMPLES = CONFIG_JSON['samples']
-    out = []
-    template = config["PROJECT_DIR"] + "results/preprocessing/" + wildcards.sample + "_" + wildcards.type + "." + lane + "_marked_duplicates_BQSR.bam"#.format(sample=wildcards.sample, type=wildcards.type)
-    lanes = [get_lane(bam) for bam in SAMPLES[wildcards.sample][wildcards.type]]
-    out.extend(expand(template, lane=lanes))
-    return out
+# def getBamToMerge(wildcards):
+#     SAMPLES = CONFIG_JSON['samples']
+#     out = []
+#     template = config["PROJECT_DIR"] + "results/preprocessing/" + wildcards.sample + "_" + wildcards.type + "." + lane + "_marked_duplicates_BQSR.bam"#.format(sample=wildcards.sample, type=wildcards.type)
+#     lanes = [get_lane(bam) for bam in SAMPLES[wildcards.sample][wildcards.type]]
+#     out.extend(expand(template, lane=lanes))
+#     return out
 
 
 def getBamToMergeTEST(wildcards):
@@ -43,6 +43,7 @@ def getBamToMergeTEST(wildcards):
         template = config["PROJECT_DIR"] + "results/preprocessing/" + wildcards.sample + "_" + wildcards.type + "." + get_lane(bam) + "_marked_duplicates_BQSR.bam"#.format(sample=wildcards.sample, type=wildcards.type)
         out.append(template)
     #out.extend(expand(template, lane=lanes))
+    print("getBamToMergeTEST")
     print(out)
     return out
 
