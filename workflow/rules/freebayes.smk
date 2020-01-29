@@ -1,8 +1,8 @@
 rule freebayes:
     input:
         # you can have a list of samples here
-        bamTumor=config["PROJECT_DIR"] + "data/preprocessing/{sample}_D.bam",
-        bamNormal=config["PROJECT_DIR"] + "data/preprocessing/{sample}_G.bam"
+        bamTumor=config["PROJECT_DIR"] + "results/preprocessing/{sample}_D.bam",
+        bamNormal=config["PROJECT_DIR"] + "results/preprocessing/{sample}_G.bam"
     output:
         config["PROJECT_DIR"] + "results/variantCalling/freebayes/raw/{sample}_freebayes.vcf"  # either .vcf or .bcf
     params:

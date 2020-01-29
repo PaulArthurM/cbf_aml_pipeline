@@ -1,10 +1,10 @@
 # Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
 rule mark_duplicates:
     input:
-        config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.{lane}.bam"
+        config["PROJECT_DIR"] + "results/preprocessing/{sample}_{type}.{lane}.bam"
     output:
-        marked_bam = temp(config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.{lane}_marked_duplicates.bam"),
-        metrics_txt = config["PROJECT_DIR"] + "data/metrics/{sample}_{type}.{lane}_marked_dup_metrics.txt"
+        marked_bam = temp(config["PROJECT_DIR"] + "results/preprocessing/{sample}_{type}.{lane}_marked_duplicates.bam"),
+        metrics_txt = config["PROJECT_DIR"] + "results/metrics/{sample}_{type}.{lane}_marked_dup_metrics.txt"
     conda:
         "../envs/gatk4.yaml"
     params:
@@ -45,9 +45,9 @@ rule mark_duplicates:
 #Generates recalibration table for Base Quality Score Recalibration (BQSR)
 rule base_recalibrator:
     input:
-        config["PROJECT_DIR"] + "data/preprocessing/{sample}_marked_duplicates.bam"
+        config["PROJECT_DIR"] + "results/preprocessing/{sample}_marked_duplicates.bam"
     output:
-        temp(config["PROJECT_DIR"] + "data/preprocessing/recal_data_{sample}.table")
+        temp(config["PROJECT_DIR"] + "results/preprocessing/recal_data_{sample}.table")
     params:
         reference=config["reference_GRCh37-lite"],
         intervals_list=config["intervals_list"],
@@ -67,14 +67,14 @@ rule base_recalibrator:
 #Apply base quality score recalibration
 rule apply_BQSR:
     input:
-        table = config["PROJECT_DIR"] + "data/preprocessing/recal_data_{sample}.table",
-        bam = config["PROJECT_DIR"] + "data/preprocessing/{sample}_marked_duplicates.bam"
+        table = config["PROJECT_DIR"] + "results/preprocessing/recal_data_{sample}.table",
+        bam = config["PROJECT_DIR"] + "results/preprocessing/{sample}_marked_duplicates.bam"
     params:
         reference=config["reference_GRCh37-lite"],
         name="apply_BQSR_{sample}",
         nthread=5
     output:
-        temp(config["PROJECT_DIR"] + "data/preprocessing/{sample}_marked_duplicates_BQSR.bam")
+        temp(config["PROJECT_DIR"] + "results/preprocessing/{sample}_marked_duplicates_BQSR.bam")
     conda:
         "../envs/gatk4.yaml"
     shell:

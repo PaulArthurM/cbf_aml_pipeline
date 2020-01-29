@@ -1,29 +1,29 @@
 def get_mutect2_input_normal_bam(wildcards):
-    return config["PROJECT_DIR"] + "data/preprocessing/{sample}_G.bam".format(sample = wildcards.sample)
+    return config["PROJECT_DIR"] + "results/preprocessing/{sample}_G.bam".format(sample = wildcards.sample)
 
 
 def get_mutect2_input_tumour_bam(wildcards):
-    return config["PROJECT_DIR"] + "data/preprocessing/{sample}_D.bam".format(sample = wildcards.sample)
+    return config["PROJECT_DIR"] + "results/preprocessing/{sample}_D.bam".format(sample = wildcards.sample)
 
 
 def get_mutect2_input_normal_bai(wildcards):
-    return config["PROJECT_DIR"] + "data/preprocessing/{sample}_G.bai".format(sample = wildcards.sample)
+    return config["PROJECT_DIR"] + "results/preprocessing/{sample}_G.bai".format(sample = wildcards.sample)
 
 
 def get_mutect2_input_tumour_bai(wildcards):
-    return config["PROJECT_DIR"] + "data/preprocessing/{sample}_D.bai".format(sample = wildcards.sample)
+    return config["PROJECT_DIR"] + "results/preprocessing/{sample}_D.bai".format(sample = wildcards.sample)
 
 
 
 rule variant_calling_Mutect2:
     input:
-        normal_bam="data/preprocessing/{sample}_G.bam",
-        tumour_bam="data/preprocessing/{sample}_D.bam",
-        normal_bai="data/preprocessing/{sample}_G.bai",
-        tumour_bai="data/preprocessing/{sample}_D.bai"
+        normal_bam="results/preprocessing/{sample}_G.bam",
+        tumour_bam="results/preprocessing/{sample}_D.bam",
+        normal_bai="results/preprocessing/{sample}_G.bai",
+        tumour_bai="results/preprocessing/{sample}_D.bai"
     output:
         vcf_gz = config["PROJECT_DIR"] + "results/variantCalling/mutect2/raw/{sample}_mutect2.vcf.gz",
-        f1r2_gz = config["PROJECT_DIR"] + "data/f1r2/{sample}_f1r2.tar.gz"
+        f1r2_gz = config["PROJECT_DIR"] + "results/f1r2/{sample}_f1r2.tar.gz"
     params:
         ref=config["reference_GRCh37-lite"],
         PON=config["PON_VCF"],
@@ -49,10 +49,10 @@ rule variant_calling_Mutect2:
 
 rule Calculate_Contamination_GetPileupSummaries:
     input:
-        bam=config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bam",
-	    bai=config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bai"
+        bam=config["PROJECT_DIR"] + "results/preprocessing/{sample}_{type}.bam",
+	    bai=config["PROJECT_DIR"] + "results/preprocessing/{sample}_{type}.bai"
     output:
-        config["PROJECT_DIR"] + "data/pileups/{sample}_{type}_pileups.table"
+        config["PROJECT_DIR"] + "results/pileups/{sample}_{type}_pileups.table"
     wildcard_constraints:
         lanes="[0-9]\.[0-9]",
     params:
@@ -72,11 +72,11 @@ rule Calculate_Contamination_GetPileupSummaries:
 
 rule Calculate_Contamination:
     input:
-        tumour=config["PROJECT_DIR"] + "data/pileups/{sample}_D_pileups.table",
-        matched=config["PROJECT_DIR"] + "data/pileups/{sample}_G_pileups.table"
+        tumour=config["PROJECT_DIR"] + "results/pileups/{sample}_D_pileups.table",
+        matched=config["PROJECT_DIR"] + "results/pileups/{sample}_G_pileups.table"
     output:
-        contamination_table=config["PROJECT_DIR"] + "data/pileups/contamination/{sample}.contamination.table",
-        segmentation=config["PROJECT_DIR"] + "data/pileups/segmentation/{sample}.tumour_segmentation.tsv"
+        contamination_table=config["PROJECT_DIR"] + "results/pileups/contamination/{sample}.contamination.table",
+        segmentation=config["PROJECT_DIR"] + "results/pileups/segmentation/{sample}.tumour_segmentation.tsv"
     params:
         name="CalculateContamination_{sample}",
         nthread=5
@@ -91,9 +91,9 @@ rule Calculate_Contamination:
 
 rule LearnReadOrientationModel:
     input:
-        config["PROJECT_DIR"] + "data/f1r2/{sample}_f1r2.tar.gz"
+        config["PROJECT_DIR"] + "results/f1r2/{sample}_f1r2.tar.gz"
     output:
-        config["PROJECT_DIR"] + "data/f1r2/{sample}_read-orientation-model.tar.gz"
+        config["PROJECT_DIR"] + "results/f1r2/{sample}_read-orientation-model.tar.gz"
     params:
         name="LearnReadOrientationModel_{sample}",
         nthread=5
@@ -107,10 +107,10 @@ rule LearnReadOrientationModel:
 
 rule GetPileupSummaries:
     input:
-        bam=config["PROJECT_DIR"] + "data/preprocessing/{sample}_D.bam",
-	bai=config["PROJECT_DIR"] + "data/preprocessing/{sample}_D.bai"
+        bam=config["PROJECT_DIR"] + "results/preprocessing/{sample}_D.bam",
+	bai=config["PROJECT_DIR"] + "results/preprocessing/{sample}_D.bai"
     output:
-        config["PROJECT_DIR"] + "data/f1r2/pileups/{sample}_D_getpileupsummaries.table"
+        config["PROJECT_DIR"] + "results/f1r2/pileups/{sample}_D_getpileupsummaries.table"
     params:
         gnomad=config["mutect2"]["gnomad"]["files"]["biallelic"],
 	intervals=config["intervals_list"],
@@ -128,9 +128,9 @@ rule GetPileupSummaries:
 rule FilterMutectCalls:
     input:
         vcf=config["PROJECT_DIR"] + "results/variantCalling/mutect2/raw/{sample}_mutect2.vcf.gz",
-        contamination_table=config["PROJECT_DIR"] + "data/pileups/contamination/{sample}.contamination.table",
-        segmentation=config["PROJECT_DIR"] + "data/pileups/segmentation/{sample}.tumour_segmentation.tsv",
-        orientation=config["PROJECT_DIR"] + "data/f1r2/{sample}_read-orientation-model.tar.gz"
+        contamination_table=config["PROJECT_DIR"] + "results/pileups/contamination/{sample}.contamination.table",
+        segmentation=config["PROJECT_DIR"] + "results/pileups/segmentation/{sample}.tumour_segmentation.tsv",
+        orientation=config["PROJECT_DIR"] + "results/f1r2/{sample}_read-orientation-model.tar.gz"
     output:
         config["PROJECT_DIR"] + "results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz"
     params:

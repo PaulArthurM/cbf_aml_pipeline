@@ -30,7 +30,7 @@ def getBamToMergeCommand(wildcards):
 def getBamToMerge(wildcards):
     SAMPLES = CONFIG_JSON['samples']
     out = []
-    template = config["PROJECT_DIR"] + "data/preprocessing/" + wildcards.sample + "_" + wildcards.type + ".{lane}_marked_duplicates_BQSR.bam"#.format(sample=wildcards.sample, type=wildcards.type)
+    template = config["PROJECT_DIR"] + "results/preprocessing/" + wildcards.sample + "_" + wildcards.type + ".{lane}_marked_duplicates_BQSR.bam"#.format(sample=wildcards.sample, type=wildcards.type)
     lanes = [get_lane(bam) for bam in SAMPLES[wildcards.sample][wildcards.type]]
     out.extend(expand(template, lane=lanes))
     return out
@@ -40,7 +40,7 @@ rule merge_bam:
     input:
         getBamToMerge
     output:
-        config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type, [DG]}.bam"
+        config["PROJECT_DIR"] + "results/preprocessing/{sample}_{type, [DG]}.bam"
     conda:
         "../envs/gatk4.yaml"
     params:
@@ -58,8 +58,8 @@ rule merge_bam:
 # Merge multiple sorted alignment files, producing a single sorted output file
 rule merge_sam_two_files:
     input:
-        lane_1 = config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lane_1}_marked_duplicates_BQSR.bam",
-        lane_2 = config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lane_2}_marked_duplicates_BQSR.bam"
+        lane_1 = config["PROJECT_DIR"] + "results/bam/{sample}_{type}.{lane_1}_marked_duplicates_BQSR.bam",
+        lane_2 = config["PROJECT_DIR"] + "results/bam/{sample}_{type}.{lane_2}_marked_duplicates_BQSR.bam"
     output:
         config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lane_1}.{lane_2}_marked_duplicates_BQSR_merge.bam"
     conda:
@@ -98,9 +98,9 @@ rule merge_sam_three_files:
 # Rule for create index from BAM file with samtools index
 rule samtools_index:
     input:
-        config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bam"
+        config["PROJECT_DIR"] + "results/preprocessing/{sample}_{type}.bam"
     output:
-        config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bai"
+        config["PROJECT_DIR"] + "results/preprocessing/{sample}_{type}.bai"
     conda:
         "../envs/samtools.yaml"
     params:
@@ -112,7 +112,7 @@ rule samtools_index:
 
 rule fastqc:
     input:
-        config["PROJECT_DIR"] + "data/preprocessing/{sample}_{type}.bam"
+        config["PROJECT_DIR"] + "results/preprocessing/{sample}_{type}.bam"
     output:
         config["PROJECT_DIR"] + config["FASTQC"]["DIR"] + "{sample}_{type}_fastqc.html"
     params:
@@ -127,9 +127,9 @@ rule fastqc:
 
 rule unzip_gz:
     input:
-        vcf_gz = config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.gz"
+        vcf_gz = config["PROJECT_DIR"] + "results/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.gz"
     output:
-        vcf = config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf"
+        vcf = config["PROJECT_DIR"] + "results/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf"
     params:
         name="gunzip_{sample}_G.{lane}",
         nthread=1
@@ -139,9 +139,9 @@ rule unzip_gz:
 
 rule IndexFeatureFile:
     input:
-        vcf = config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf"
+        vcf = config["PROJECT_DIR"] + "results/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf"
     output:
-        vcf_idx = config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.idx"
+        vcf_idx = config["PROJECT_DIR"] + "results/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.idx"
     params:
         name="IndexFeatureFile_{sample}_G.{lane}",
         nthread=5
