@@ -1,10 +1,10 @@
 rule freebayes:
     input:
         # you can have a list of samples here
-        bamTumor=config["PROJECT_DIR"] + "results/preprocessing/{sample}_D.bam",
-        bamNormal=config["PROJECT_DIR"] + "results/preprocessing/{sample}_G.bam"
+        bamTumor="results/preprocessing/{sample}_D.bam",
+        bamNormal="results/preprocessing/{sample}_G.bam"
     output:
-        config["PROJECT_DIR"] + "results/variantCalling/freebayes/raw/{sample}_freebayes.vcf"  # either .vcf or .bcf
+        "results/variantCalling/freebayes/raw/{sample}_freebayes.vcf"  # either .vcf or .bcf
     params:
         name="freebayes_{sample}",
         extra="",         # optional parameters

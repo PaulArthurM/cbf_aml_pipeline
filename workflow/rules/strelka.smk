@@ -2,12 +2,12 @@ rule strelka:
     input:
         # The normal bam and its index
         # are optional input
-        normal = config["PROJECT_DIR"] + "results/preprocessing/{sample}_G.bam",
-        normal_index = config["PROJECT_DIR"] + "results/preprocessing/{sample}_G.bai",
-        tumor = config["PROJECT_DIR"] + "results/preprocessing/{sample}_D.bam",
-        tumor_index = config["PROJECT_DIR"] + "results/preprocessing/{sample}_D.bai",
+        normal = "results/preprocessing/{sample}_G.bam",
+        normal_index = "results/preprocessing/{sample}_G.bai",
+        tumor = "results/preprocessing/{sample}_D.bam",
+        tumor_index = "results/preprocessing/{sample}_D.bai",
     output:
-        directory(config["PROJECT_DIR"] + "results/variantCalling/strelka/raw/{sample}_strelka_vcf")
+        directory("results/variantCalling/strelka/raw/{sample}_strelka_vcf")
     params:
         name="strelka_{sample}",
         nthread=5,

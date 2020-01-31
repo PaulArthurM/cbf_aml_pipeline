@@ -36,7 +36,7 @@ def get_input(wildcards):
     #wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/mutect2/raw/{sample}_mutect2.vcf.gz", sample=SAMPLES))
     #wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz", sample=SAMPLES))
     #wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/annovar/{sample}.avinput", sample=SAMPLES))
-    wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/mutect2/pass/{sample}_somatic_filtered_pass.vcf", sample=SAMPLES))
+    wanted_input.extend(expand("results/variantCalling/mutect2/pass/{sample}_somatic_filtered_pass.vcf", sample=SAMPLES))
     #wanted_input.extend(expand(config["PROJECT_DIR"] + "results/variantCalling/freebayes/raw/{sample}_freebayes.vcf", sample=SAMPLES))
     #wanted_input.extend(expand(config["PROJECT_DIR"] + config["FASTQC"]["DIR"] + "{sample}_{type}_fastqc.html", sample=SAMPLES, type=['G', 'D']))
     return wanted_input

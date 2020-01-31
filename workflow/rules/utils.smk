@@ -12,7 +12,7 @@ def getBamToMerge(wildcards):
     SAMPLES = CONFIG_JSON['samples']
     out = []
     for bam in SAMPLES[wildcards.sample][wildcards.type]:
-        template = config["PROJECT_DIR"] + "results/preprocessing/" + wildcards.sample + "_" + wildcards.type + "." + get_lane(bam) + "_marked_duplicates_BQSR.bam"#.format(sample=wildcards.sample, type=wildcards.type)
+        template = "results/preprocessing/" + wildcards.sample + "_" + wildcards.type + "." + get_lane(bam) + "_marked_duplicates_BQSR.bam"#.format(sample=wildcards.sample, type=wildcards.type)
         out.append(template)
     return out
 
@@ -21,7 +21,7 @@ rule merge_bam:
     input:
         getBamToMerge
     output:
-        config["PROJECT_DIR"] + "results/preprocessing/{sample}_{type}.bam"
+        "results/preprocessing/{sample}_{type}.bam"
     conda:
         "../envs/gatk4.yaml"
     params:

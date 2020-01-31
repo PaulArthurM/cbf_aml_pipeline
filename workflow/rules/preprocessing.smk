@@ -1,10 +1,10 @@
 # Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
 rule mark_duplicates:
     input:
-        config["PROJECT_DIR"] + "results/preprocessing/{sample}_{type}.{lane}.bam"
+        "results/preprocessing/{sample}_{type}.{lane}.bam"
     output:
-        marked_bam = temp(config["PROJECT_DIR"] + "results/preprocessing/{sample}_{type}.{lane}_marked_duplicates.bam"),
-        metrics_txt = config["PROJECT_DIR"] + "results/metrics/{sample}_{type}.{lane}_marked_dup_metrics.txt"
+        marked_bam = temp("results/preprocessing/{sample}_{type}.{lane}_marked_duplicates.bam"),
+        metrics_txt = "results/metrics/{sample}_{type}.{lane}_marked_dup_metrics.txt"
     conda:
         "../envs/gatk4.yaml"
     params:
@@ -45,9 +45,9 @@ rule mark_duplicates:
 #Generates recalibration table for Base Quality Score Recalibration (BQSR)
 rule base_recalibrator:
     input:
-        config["PROJECT_DIR"] + "results/preprocessing/{sample}_marked_duplicates.bam"
+        "results/preprocessing/{sample}_marked_duplicates.bam"
     output:
-        temp(config["PROJECT_DIR"] + "results/preprocessing/recal_data_{sample}.table")
+        temp("results/preprocessing/recal_data_{sample}.table")
     params:
         reference=config["reference_GRCh37-lite"],
         intervals_list=config["intervals_list"],
@@ -67,8 +67,8 @@ rule base_recalibrator:
 #Apply base quality score recalibration
 rule apply_BQSR:
     input:
-        table = config["PROJECT_DIR"] + "results/preprocessing/recal_data_{sample}.table",
-        bam = config["PROJECT_DIR"] + "results/preprocessing/{sample}_marked_duplicates.bam"
+        table = "results/preprocessing/recal_data_{sample}.table",
+        bam = "results/preprocessing/{sample}_marked_duplicates.bam"
     params:
         reference=config["reference_GRCh37-lite"],
         name="apply_BQSR_{sample}",
