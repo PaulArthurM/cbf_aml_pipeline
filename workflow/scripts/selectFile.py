@@ -183,7 +183,7 @@ def main(args):
     for objet in objets:
         if limit < args.l:
             print("\n\n")
-            print(objet.bam_file_name)    parser.add_argument('-t', default=None, type=str, help="Type of files to download. For exemple: 'D' or 'G'.", required=True)
+            print(objet.bam_file_name)
             if not check_merge(objet, files, args.t):
                 if check_two_file_forms(objet, args.d):
                     print("File already exist.")
