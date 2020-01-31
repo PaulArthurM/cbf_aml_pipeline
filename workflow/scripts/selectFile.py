@@ -116,11 +116,11 @@ def decrypt_file(sample):
         print(process.returncode)
 
 
-def write_json(dictionary):
-    if os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/samples.json"):
+def write_json(dictionary, conf):
+    if os.path.isfile(conf):
         print("File a json file already exist.")
     else:
-        with open('/data2/home/pamesl/cbf_aml_pipeline/samples.json', 'w') as fp:
+        with open(conf, 'w') as fp:
             json.dump(dictionary, fp)
 
 
@@ -172,7 +172,7 @@ def main(args):
             if objet.sample_name not in json_file["samples"]:
                 json_file["samples"][objet.sample_name] = {"D":[], "G":[]}
                 json_file["samples"][objet.sample_name][objet.sample_type].append(objet.file_prefix)
-        write_json(json_file)
+        write_json(json_file, args.c)
 
 
     path = args.p
@@ -202,6 +202,7 @@ if __name__== '__main__':
     parser.add_argument('-m', default='/data1/scratch/pamesl/projet_cbf/Sample_File_SJCBF.map', type=str, help="Metadata file.")
     parser.add_argument('-e', default='SJCBF', type=str, help="Experience. Default: SJCBF.")
     parser.add_argument('-j', default=True, type=bool, help="Create JSON. Default: True")
+    parser.add_argument('-c', default="data.json", type=str, help="Config JSON name. Default: data.json")
     parser.add_argument('-p', default='/data1/scratch/pamesl/projet_cbf/data/bam/', type=str, help="Path to bam files repository.")
     parser.add_argument('-l', default=1, type=int, help="Number of files to download. Default: 1.")
     parser.add_argument('-t', default=None, type=str, help="Type of files to download. For exemple: 'D' or 'G'.", required=True)
