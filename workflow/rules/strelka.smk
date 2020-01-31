@@ -16,7 +16,7 @@ rule strelka:
         "../envs/strelka.yaml"
     shell:
         "configureStrelkaSomaticWorkflow.py  \
-            {input.normal} \
+            --normalBam {input.normal} \
             --tumorBam {input.tumor} \
             --referenceFasta {params.ref} \
             --runDir {output} \
