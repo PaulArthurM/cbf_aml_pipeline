@@ -13,7 +13,7 @@ rule strelka:
         nthread=5,
         ref = config["reference_GRCh37-lite"]
     conda:
-        "workflow/envs/strelka.yaml"
+        "../strelka.yaml"
     shell:
         "configureStrelkaSomaticWorkflow.py  \
             {input.normal} \

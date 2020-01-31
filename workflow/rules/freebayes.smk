@@ -13,7 +13,7 @@ rule freebayes:
         chunksize=100000,  # reference genome chunk size for parallelization (default: 100000)
         nthreads=2
     conda:
-        "workflow/envs/freebayes.yaml"
+        "../freebayes.yaml"
     shell:
         "freebayes \
             -f {params.ref} \
