@@ -89,7 +89,7 @@ def request_germline_file(sample):
         cmd = cmd.format(email=sys.argv[2], password=sys.argv[3], egaf_id=sample.egaf_id, label="label_"+sample.egaf_id)
         print(cmd)
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        process.wait()get_
+        process.wait()
         print(process.returncode)
     else:
         print("Not a germline file.")
