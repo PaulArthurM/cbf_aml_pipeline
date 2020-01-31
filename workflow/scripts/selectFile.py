@@ -47,12 +47,18 @@ class Sample():
             if m:
                 return m.group(1) + m.group(2)
 
+        def get_short_file_name(string):
+            m = re.search("(SJCBF[0-9]+_[DG])-[A-Za-z0-9]+\.[0-9]\.bam\.cip", string)
+            if m:
+                return m.group(1) + ".bam"
+
         self.sample_name = get_sample_name(string)
         self.sample_type = get_sample_type(string)
         self.bam_file_name = get_bam_file_name(string)
         self.file_prefix = get_file_prefix(string)
         self.egaf_id = get_EGAF(string)
         self.name_no_machine_id = get_name_no_machine_id(string)
+        self.short_file_name = get_short_file_name(string)
 
 
 def open_file(file_path):
@@ -83,7 +89,7 @@ def request_germline_file(sample):
         cmd = cmd.format(email=sys.argv[2], password=sys.argv[3], egaf_id=sample.egaf_id, label="label_"+sample.egaf_id)
         print(cmd)
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        process.wait()
+        process.wait()get_
         print(process.returncode)
     else:
         print("Not a germline file.")
@@ -102,7 +108,7 @@ def download_germline_file(sample):
 
 def decrypt_file(sample):
     if sample.sample_type == "G":
-        cmd = "java -jar /data1/scratch/pamesl/projet_cbf/data/bam/EgaDemoClient.jar -p {email} {password} -dc /data1/scratch/pamesl/projet_cbf/data/bam/{bam}.cip -dck abc"
+        cmd = "java -jar /data1/scratch/pamesl/projet_cbf/data/bam/get_EgaDemoClient.jar -p {email} {password} -dc /data1/scratch/pamesl/projet_cbf/data/bam/{bam}.cip -dck abc"
         cmd = cmd.format(email=sys.argv[2], password=sys.argv[3], bam=sample.bam_file_name)
         print(cmd)
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
@@ -141,10 +147,11 @@ def download_file_pyega3(sample):
     print(process.returncode)
 
 
-def check_two_file_forms(sample):
-    isFile_1 = os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+sample.bam_file_name)
-    isFile_2 = os.path.isfile("/data1/scratch/pamesl/projet_cbf/data/bam/"+sample.name_no_machine_id)
-    if (isFile_1 or isFile_2):
+def check_two_file_forms(sample, directory):
+    isFile_1 = os.path.isfile(directory + sample.bam_file_name)
+    isFile_2 = os.path.isfile(directory + sample.name_no_machine_id)
+    isFile_3 = os.path.isfile(directory + sample.short_file_name)
+    if (isFile_1 or isFile_2 or isFile_3):
         return True
     else:
         return False
@@ -169,19 +176,22 @@ def main(args):
 
 
     path = args.p
+    dry_run = args.b
+    wait_time = args.w
     files = [f for f in glob.glob(path + "*merge.bam")]
     limit = 0
     for objet in objets:
         if limit < args.l:
             print("\n\n")
-            print(objet.bam_file_name)
+            print(objet.bam_file_name)    parser.add_argument('-t', default=None, type=str, help="Type of files to download. For exemple: 'D' or 'G'.", required=True)
             if not check_merge(objet, files, args.t):
-                if check_two_file_forms(objet):
+                if check_two_file_forms(objet, args.d):
                     print("File already exist.")
                 else:
-                    time.sleep(5)
+                    time.sleep(wait_time)
                     print("Sample {sample} is being downloaded.".format(sample=objet.file_prefix))
-                    download_file_pyega3(objet)
+                    if not dry_run:
+                        download_file_pyega3(objet)
                     limit+=1
         else: break
 
@@ -195,6 +205,9 @@ if __name__== '__main__':
     parser.add_argument('-p', default='/data1/scratch/pamesl/projet_cbf/data/bam/', type=str, help="Path to bam files repository.")
     parser.add_argument('-l', default=1, type=int, help="Number of files to download. Default: 1.")
     parser.add_argument('-t', default=None, type=str, help="Type of files to download. For exemple: 'D' or 'G'.", required=True)
+    parser.add_argument('-d', default="~/", type=str, help="Location where to scan existing files.")
+    parser.add_argument('-b', default=False, type=bool, help="Dryrun")
+    parser.add_argument('-w', default=5, type=int, help="Wait time")
 
     args = parser.parse_args()
 
