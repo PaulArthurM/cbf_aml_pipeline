@@ -74,7 +74,7 @@ rule apply_BQSR:
         name="apply_BQSR_{sample}",
         nthread=5
     output:
-        temp(config["PROJECT_DIR"] + "results/preprocessing/{sample}_marked_duplicates_BQSR.bam")
+        temp("results/preprocessing/{sample}_marked_duplicates_BQSR.bam")
     conda:
         "../envs/gatk4.yaml"
     shell:
