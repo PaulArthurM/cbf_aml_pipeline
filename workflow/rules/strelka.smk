@@ -8,7 +8,7 @@ rule strelka:
         tumor_index = "results/preprocessing/{sample}_D.bai",
         manta_candidates = "results/variantCalling/Manta/Manta_{sample}.candidateSmallIndels.vcf.gz"
     output:
-        directory("results/variantCalling/Strelka/{sample}")
+        "results/variantCalling/Strelka/Strelka_{sample}_variants.vcf.gz"
     params:
         name="strelka_{sample}",
         nthread=8,
