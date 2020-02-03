@@ -45,7 +45,7 @@ rule mantaCandidateSmallsIndels:
         normal = "results/preprocessing/{sample}_G.bam",
         tumor = "results/preprocessing/{sample}_D.bam",
     output:
-        "results/variantCalling/Manta_{sample}.candidateSmallIndels.vcf.gz",
+        "results/variantCalling/Manta/Manta_{sample}.candidateSmallIndels.vcf.gz",
     params:
         name="Manta_{sample}",
         nthread=8,
