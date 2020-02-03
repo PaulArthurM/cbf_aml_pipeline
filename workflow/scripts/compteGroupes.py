@@ -13,12 +13,13 @@ variants = f_sample.readlines()
 dico = {}
 
 for variant in variants:
-    sample = variant.split("\t")[2]
-    if sample in samples:
-        if sample in dico:
-            dico[sample] += 1
-        elif not sample in dico:
-            dico[sample] = 1
+    split = variant.split("\t")
+    if split > 2:
+        if sample in samples:
+            if sample in dico:
+                dico[sample] += 1
+            elif not sample in dico:
+                dico[sample] = 1
 
 
 print(dico)
