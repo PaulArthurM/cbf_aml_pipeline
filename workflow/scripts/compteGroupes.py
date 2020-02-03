@@ -14,7 +14,7 @@ dico = {}
 
 for variant in variants:
     split = variant.split("\t")
-    if split > 2:
+    if len(split) > 2:
         if sample in samples:
             if sample in dico:
                 dico[sample] += 1
