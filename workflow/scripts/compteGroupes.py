@@ -2,8 +2,8 @@
 
 
 file_sample = "/data1/scratch/pamesl/cbf_aml_pipeline/Sample_File_SJCBF.map"
-fo_sample = open(file)
-samples = fo.readlines()
+fo_sample = open(file_sample)
+samples = fo_sample.readlines()
 
 file = "/data1/scratch/pamesl/cbf_aml_pipeline/validated_SJCBF.tsv"
 f_sample = open(file)
