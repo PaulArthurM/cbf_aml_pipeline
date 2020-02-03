@@ -30,14 +30,14 @@ rule strelka:
             --mode sge \
             --jobs {params.nthread} \
             && \
-            mv results/variantCalling/Strelka/{sample}/results/variants/genome.*.vcf.gz \
-                results/variantCalling/Strelka/Strelka_{sample}_genome.vcf.gz \
-            mv results/variantCalling/Strelka/{sample}/results/variants/genome.*.vcf.gz.tbi \
-                results/variantCalling/Strelka/Strelka_{sample}_genome.vcf.gz.tbi \
-            mv results/variantCalling/Strelka/{sample}/results/variants/variants.vcf.gz \
-                results/variantCalling/Strelka/Strelka_{sample}_variants.vcf.gz \
-            mv results/variantCalling/Strelka/{sample}/results/variants/variants.vcf.gz.tbi \
-                results/variantCalling/Strelka/Strelka_{sample}_variants.vcf.gz.tbi"
+            mv results/variantCalling/Strelka/{wildcards.sample}/results/variants/genome.*.vcf.gz \
+                results/variantCalling/Strelka/Strelka_{wildcards.sample}_genome.vcf.gz \
+            mv results/variantCalling/Strelka/{wildcards.sample}/results/variants/genome.*.vcf.gz.tbi \
+                results/variantCalling/Strelka/Strelka_{wildcards.sample}_genome.vcf.gz.tbi \
+            mv results/variantCalling/Strelka/{wildcards.sample}/results/variants/variants.vcf.gz \
+                results/variantCalling/Strelka/Strelka_{wildcards.sample}_variants.vcf.gz \
+            mv results/variantCalling/Strelka/{wildcards.sample}/results/variants/variants.vcf.gz.tbi \
+                results/variantCalling/Strelka/Strelka_{wildcards.sample}_variants.vcf.gz.tbi"
 
 
 rule mantaCandidateSmallsIndels:
@@ -66,15 +66,15 @@ rule mantaCandidateSmallsIndels:
             --mode sge \
             --jobs {params.nthread} \
             && \
-            mv results/variantCalling/Manta/{sample}/results/variants/candidateSmallIndels.vcf.gz \
-                results/variantCalling/Manta/Manta_{sample}.candidateSmallIndels.vcf.gz \
-            mv results/variantCalling/Manta/{sample}/results/variants/candidateSmallIndels.vcf.gz.tbi \
-                results/variantCalling/Manta/Manta_{sample}.candidateSmallIndels.vcf.gz.tbi \
-            mv results/variantCalling/Manta/{sample}/results/variants/candidateSV.vcf.gz \
-                results/variantCalling/Manta/Manta_{sample}.candidateSV.vcf.gz \
-            mv results/variantCalling/Manta/{sample}/results/variants/candidateSV.vcf.gz.tbi \
-                results/variantCalling/Manta/Manta_{sample}.candidateSV.vcf.gz.tbi \
-            mv results/variantCalling/Manta/{sample}/results/variants/tumorSV.vcf.gz \
-                results/variantCalling/Manta/Manta_{sample}.tumorSV.vcf.gz \
-            mv results/variantCalling/Manta/{sample}/results/variants/tumorSV.vcf.gz.tbi \
-                results/variantCalling/Manta/Manta_{sample}.tumorSV.vcf.gz.tbi"
+            mv results/variantCalling/Manta/{wildcards.ample}/results/variants/candidateSmallIndels.vcf.gz \
+                results/variantCalling/Manta/Manta_{wildcards.sample}.candidateSmallIndels.vcf.gz \
+            mv results/variantCalling/Manta/{wildcards.sample}/results/variants/candidateSmallIndels.vcf.gz.tbi \
+                results/variantCalling/Manta/Manta_{wildcards.sample}.candidateSmallIndels.vcf.gz.tbi \
+            mv results/variantCalling/Manta/{wildcards.sample}/results/variants/candidateSV.vcf.gz \
+                results/variantCalling/Manta/Manta_{wildcards.sample}.candidateSV.vcf.gz \
+            mv results/variantCalling/Manta/{wildcards.sample}/results/variants/candidateSV.vcf.gz.tbi \
+                results/variantCalling/Manta/Manta_{wildcards.sample}.candidateSV.vcf.gz.tbi \
+            mv results/variantCalling/Manta/{wildcards.sample}/results/variants/tumorSV.vcf.gz \
+                results/variantCalling/Manta/Manta_{wildcards.sample}.tumorSV.vcf.gz \
+            mv results/variantCalling/Manta/{wildcards.sample}/results/variants/tumorSV.vcf.gz.tbi \
+                results/variantCalling/Manta/Manta_{wildcards.sample}.tumorSV.vcf.gz.tbi"
