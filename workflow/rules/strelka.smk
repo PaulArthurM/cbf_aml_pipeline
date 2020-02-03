@@ -6,12 +6,14 @@ rule strelka:
         normal_index = "results/preprocessing/{sample}_G.bai",
         tumor = "results/preprocessing/{sample}_D.bam",
         tumor_index = "results/preprocessing/{sample}_D.bai",
+        manta_candidates = "results/variantCalling/Manta/Manta_{sample}.candidateSmallIndels.vcf.gz"
     output:
-        directory("results/variantCalling/strelka/raw/{sample}_strelka_vcf")
+        directory("results/variantCalling/Strelka/{sample}")
     params:
         name="strelka_{sample}",
-        nthread=5,
-        ref = config["reference_GRCh37-lite"]
+        nthread=8,
+        ref = config["reference_GRCh37-lite"],
+        callRegions = config["bed_intervals"]
     conda:
         "../envs/strelka.yaml"
     shell:
@@ -19,8 +21,60 @@ rule strelka:
             --normalBam {input.normal} \
             --tumorBam {input.tumor} \
             --referenceFasta {params.ref} \
-            --runDir {output} \
+            --indelCandidates {input.manta_candidates} \
+            --exome \
+            --callRegions {params.callRegions} \
+            --runDir results/variantCalling/Strelka/{sample} \
             && \
-            {output}/runWorkflow.py \
-            --mode local \
-            --jobs {params.nthread}"
+            results/variantCalling/Strelka/{sample}/runWorkflow.py \
+            --mode sge \
+            --jobs {params.nthread} \
+            && \
+            mv results/variantCalling/Strelka/{sample}/results/variants/genome.*.vcf.gz \
+                results/variantCalling/Strelka/Strelka_{sample}_genome.vcf.gz \
+            mv results/variantCalling/Strelka/{sample}/results/variants/genome.*.vcf.gz.tbi \
+                results/variantCalling/Strelka/Strelka_{sample}_genome.vcf.gz.tbi \
+            mv results/variantCalling/Strelka/{sample}/results/variants/variants.vcf.gz \
+                results/variantCalling/Strelka/Strelka_{sample}_variants.vcf.gz \
+            mv results/variantCalling/Strelka/{sample}/results/variants/variants.vcf.gz.tbi \
+                results/variantCalling/Strelka/Strelka_{sample}_variants.vcf.gz.tbi"
+
+
+rule mantaCandidateSmallsIndels:
+    input:
+        normal = "results/preprocessing/{sample}_G.bam",
+        tumor = "results/preprocessing/{sample}_D.bam",
+    output:
+        "results/variantCalling/Manta_{sample}.candidateSmallIndels.vcf.gz",
+    params:
+        name="Manta_{sample}",
+        nthread=8,
+        ref = config["reference_GRCh37-lite"],
+        callRegions = config["bed_intervals"]
+    conda:
+        "../envs/strelka.yaml"
+    shell:
+        "configManta.py \
+            --normalBam {input.normal} \
+            --tumorBam {input.tumor} \
+            --referenceFasta {params.ref} \
+            --exome \
+            --callRegions {params.callRegions} \
+            --runDir results/variantCalling/Manta/{sample} \
+            && \
+            results/variantCalling/Manta/{sample}/runWorkflow.py \
+            --mode sge \
+            --jobs {params.nthread} \
+            && \
+            mv results/variantCalling/Manta/{sample}/results/variants/candidateSmallIndels.vcf.gz \
+                results/variantCalling/Manta/Manta_{sample}.candidateSmallIndels.vcf.gz \
+            mv results/variantCalling/Manta/{sample}/results/variants/candidateSmallIndels.vcf.gz.tbi \
+                results/variantCalling/Manta/Manta_{sample}.candidateSmallIndels.vcf.gz.tbi \
+            mv results/variantCalling/Manta/{sample}/results/variants/candidateSV.vcf.gz \
+                results/variantCalling/Manta/Manta_{sample}.candidateSV.vcf.gz \
+            mv results/variantCalling/Manta/{sample}/results/variants/candidateSV.vcf.gz.tbi \
+                results/variantCalling/Manta/Manta_{sample}.candidateSV.vcf.gz.tbi \
+            mv results/variantCalling/Manta/{sample}/results/variants/tumorSV.vcf.gz \
+                results/variantCalling/Manta/Manta_{sample}.tumorSV.vcf.gz \
+            mv results/variantCalling/Manta/{sample}/results/variants/tumorSV.vcf.gz.tbi \
+                results/variantCalling/Manta/Manta_{sample}.tumorSV.vcf.gz.tbi"
