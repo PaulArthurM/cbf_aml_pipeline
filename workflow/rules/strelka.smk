@@ -66,11 +66,7 @@ rule mantaCandidateSmallsIndels:
             --mode sge \
             --jobs {params.nthread} \
             && \
-<<<<<<< HEAD
             mv results/variantCalling/Manta/{wildcards.sample}/results/variants/candidateSmallIndels.vcf.gz \
-=======
-            mv results/variantCalling/Manta/{wildcards.ample}/results/variants/candidateSmallIndels.vcf.gz \
->>>>>>> df7da8f685331be6f4596f46e7f734cad0590773
                 results/variantCalling/Manta/Manta_{wildcards.sample}.candidateSmallIndels.vcf.gz \
             mv results/variantCalling/Manta/{wildcards.sample}/results/variants/candidateSmallIndels.vcf.gz.tbi \
                 results/variantCalling/Manta/Manta_{wildcards.sample}.candidateSmallIndels.vcf.gz.tbi \
