@@ -13,7 +13,7 @@ VCF_MAP: "/home/data/pameslin/cbf_aml_pipeline/map/sample_vcf.map"
 reader_threads: 1
 batch_size: 50
 intervals_list: "/data1/scratch/pamesl/projet_cbf/data/b37_data/Broad.human.exome.b37.interval_list"
-bed_intervals: "/data1/scratch/pamesl/projet_cbf/data/b37_data/Broad.human.exome.b37.bed"
+bed_intervals: "/data1/scratch/pamesl/projet_cbf/data/b37_data/Broad.human.exome.b37.bed.gz"
 PON_VCF: "/data1/scratch/pamesl/projet_cbf/data/vcf/SJCBF_panel_of_normals.vcf.gz"
 
 #  DataBase GenomicsDBImport
