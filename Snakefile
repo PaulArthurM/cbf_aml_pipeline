@@ -22,6 +22,7 @@ include: "workflow/rules/annotation.smk"
 include: "workflow/rules/strelka.smk"
 include: "workflow/rules/freebayes.smk"
 include: "workflow/rules/somaticSniper.smk"
+include: "workflow/rules/filteringVCF.smk"
 
 
 def get_input(wildcards):
