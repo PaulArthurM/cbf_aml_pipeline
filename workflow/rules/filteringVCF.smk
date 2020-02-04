@@ -14,9 +14,9 @@ rule VariantFiltration:
         'gatk VariantFiltration \
             --output {output} \
             --variant {input} \
-            --filterName VariantAlleleCount    --filterExpression "VariantAlleleCount < 3" \
-            --filterName VariantCountControl   --filterExpression "VariantAlleleCountControl > 1" \
-            --filterName VariantBaseQualMedian --filterExpression "VariantBaseQualMedian < 25.0" \
-            --filterName VariantMapQualMedian  --filterExpression "VariantMapQualMedian < 40.0" \
-            --filterName MapQualDiffMedian     --filterExpression "MapQualDiffMedian < -5.0 || MapQualDiffMedian > 5.0" \
-            --filterName LowMapQual            --filterExpression "LowMapQual > 0.05"'
+            --filter-name VariantAlleleCount    --filterExpression "VariantAlleleCount < 3" \
+            --filter-name VariantCountControl   --filterExpression "VariantAlleleCountControl > 1" \
+            --filter-name VariantBaseQualMedian --filterExpression "VariantBaseQualMedian < 25.0" \
+            --filter-name VariantMapQualMedian  --filterExpression "VariantMapQualMedian < 40.0" \
+            --filter-name MapQualDiffMedian     --filterExpression "MapQualDiffMedian < -5.0 || MapQualDiffMedian > 5.0" \
+            --filter-name LowMapQual            --filterExpression "LowMapQual > 0.05"'
