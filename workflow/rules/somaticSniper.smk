@@ -1,5 +1,5 @@
 
-rule somatic-sniper:
+rule somatic_sniper:
     input:
         normal = "results/preprocessing/{sample}_G.bam",
         tumor = "results/preprocessing/{sample}_D.bam"
