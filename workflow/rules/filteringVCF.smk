@@ -14,9 +14,8 @@ rule VariantFiltration:
         'gatk VariantFiltration \
             --output {output} \
             --variant {input} \
-            --filter-name VariantAlleleCount    --filter-expression "VariantAlleleCount < 3" \
-            --filter-name VariantCountControl   --filter-expression "VariantAlleleCountControl > 1" \
-            --filter-name VariantBaseQualMedian --filter-expression "VariantBaseQualMedian < 25.0" \
-            --filter-name VariantMapQualMedian  --filter-expression "VariantMapQualMedian < 40.0" \
-            --filter-name MapQualDiffMedian     --filter-expression "MapQualDiffMedian < -5.0 || MapQualDiffMedian > 5.0" \
-            --filter-name LowMapQual            --filter-expression "LowMapQual > 0.05"'
+            --filter-name VariantOrientation    --filter-expression "ALT_F1R2 > 0" \
+            --filter-name VariantOrientation    --filter-expression "ALT_F2R1 > 0" \
+            --filter-name VariantBaseQualMedian --filter-expression "MBQ < 25.0" \
+            --filter-name VariantMapQualMedian  --filter-expression "MMQ < 40.0" \
+            --filter-name VariantTLOD           --filter-expression "TLOD > 8.5"'
