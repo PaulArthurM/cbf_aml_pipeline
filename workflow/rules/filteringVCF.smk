@@ -6,7 +6,7 @@ rule VariantFiltration:
         "results/variantCalling/mutect2/filtered/{sample}_somatic_filtered_twice.vcf.gz"
     params:
         name="VariantFiltration_{sample}",
-        nthread=5l,
+        nthread=5,
         ref=config["reference_GRCh37-lite"]
     conda:
         "../envs/gatk4.yaml"
