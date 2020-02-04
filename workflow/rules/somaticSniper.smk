@@ -10,7 +10,7 @@ rule somatic_sniper:
         nthread=5,
         ref = config["reference_GRCh37-lite"]
     conda:
-        "../envs/somaticsniper.yaml"
+        "../envs/somaticSniper.yaml"
     shell:
         "bam-somaticsniper \
             -q 40 \
