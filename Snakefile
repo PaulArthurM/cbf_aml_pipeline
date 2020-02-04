@@ -21,7 +21,7 @@ include: "workflow/rules/panelsOfNormals.smk"
 include: "workflow/rules/annotation.smk"
 include: "workflow/rules/strelka.smk"
 include: "workflow/rules/freebayes.smk"
-
+include; "workflow/rules/somaticSniper.smk"
 
 
 def get_input(wildcards):
