@@ -7,7 +7,7 @@ rule VariantFiltration:
     params:
         name="",
         nthread="",
-        ref=config["reference_GRCh37"]
+        ref=config["reference_GRCh37-lite"]
     conda:
         "../envs/gatk4.yaml"
     shell:
