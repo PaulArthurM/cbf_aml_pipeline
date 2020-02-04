@@ -13,7 +13,7 @@ rule VariantFiltration:
     shell:
         'gatk VariantFiltration \
             --output {output} \
-            --variant {inpit} \
+            --variant {input} \
             --filterName VariantAlleleCount    --filterExpression "VariantAlleleCount < 3" \
             --filterName VariantCountControl   --filterExpression "VariantAlleleCountControl > 1" \
             --filterName VariantBaseQualMedian --filterExpression "VariantBaseQualMedian < 25.0" \
