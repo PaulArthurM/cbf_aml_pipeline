@@ -79,15 +79,15 @@ rule fastqc:
 #         "gunzip {input.vcf_gz}"
 #
 #
- rule IndexFeatureFile:
-     input:
-         "results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz"
-     output:
+rule IndexFeatureFile:
+    input:
+        "results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz"
+    output:
         "results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz.idx"
-     params:
-         name="IndexFeatureFile_{sample}",
-         nthread=5
-     conda:
-         "../envs/gatk4.yaml"
-     shell:
-         "gatk IndexFeatureFile -F {input}"
+    params:
+        name="IndexFeatureFile_{sample}",
+        nthread=5
+    conda:
+        "../envs/gatk4.yaml"
+    shell:
+        "gatk IndexFeatureFile -F {input}"
