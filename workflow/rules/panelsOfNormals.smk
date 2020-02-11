@@ -1,14 +1,14 @@
 rule Mutect2_tumour_only:
     input:
-        bam=config["PROJECT_DIR"] + "data/bam/{sample}_G.{lane}_marked_duplicates_BQSR_merge.bam",
-        bai=config["PROJECT_DIR"] + "data/bam/{sample}_G.{lane}_marked_duplicates_BQSR_merge.bai"
+        bam="results/preprocessing/{sample}_G.bam",
+        bai="results/preprocessing/{sample}_G.bai"
     output:
-        temp(config["PROJECT_DIR"] + "data/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.gz")
+        temp("results/vcf/{sample}_pon.vcf.gz")
     params:
         ref=config["reference_GRCh37-lite"],
         gnomad=config["mutect2"]["gnomad"]["files"]["raw"],
         intervals=config["intervals_list"],
-        name="Mutect2_tumour_only_{sample}_G.{lane}",
+        name="Mutect2_tumour_only_{sample}",
         nthread=config["mutect2"]["nthread"]
     conda:
         "../envs/gatk4.yaml"
@@ -23,9 +23,9 @@ rule Mutect2_tumour_only:
 
 rule GenomicsDB:
     input:
-        "none"#VCF_IDX
+        PON_VCF
     output:
-        #db=directory(config["db_GDBI"]),
+        db=directory(config["db_GDBI"]),
         test="genomicsdb.txt"
     params:
         ref=config["reference_GRCh37-lite"],
@@ -46,9 +46,7 @@ rule GenomicsDB:
 
 rule CreateSomaticPanelOfNormals:
     input:
-        #VCF,
-        #VCF_IDX,
-        test="genomicsdb.txt"
+        "genomicsdb.txt"
     output:
         config["PON_VCF"]
     params:
