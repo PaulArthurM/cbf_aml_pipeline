@@ -1,3 +1,9 @@
+def extra_mutect2(wildcards):
+    configfile: "config/config.yaml"
+    extra = config['mutect2']['extra']
+    return extra
+
+
 rule variant_calling_Mutect2:
     input:
         normal_bam="results/preprocessing/{sample}_G.bam",
@@ -5,13 +11,14 @@ rule variant_calling_Mutect2:
         normal_bai="results/preprocessing/{sample}_G.bai",
         tumour_bai="results/preprocessing/{sample}_D.bai"
     output:
-        vcf_gz = "results/variantCalling/mutect2/raw/{sample}_mutect2.vcf.gz",
-        f1r2_gz = "results/f1r2/{sample}_f1r2.tar.gz"
+        vcf_gz = "results/variantCalling/mutect2/{sample}/mutect2_calls.vcf.gz"
+        #f1r2_gz = "results/f1r2/{sample}_f1r2.tar.gz"
     params:
         ref=config["reference_GRCh37-lite"],
-        PON=config["PON_VCF"],
-        gnomad=config["mutect2"]["gnomad"]["files"]["raw"],
-        intervals=config["intervals_list"],
+        #PON=config["PON_VCF"],
+        #gnomad=config["mutect2"]["gnomad"]["files"]["raw"],
+        #intervals=config["intervals_list"],
+        extra=extra_mutect2,
         name="Mutect2_somatic_{sample}",
         nthread=config["mutect2"]["nthread"]
     conda:
@@ -19,14 +26,9 @@ rule variant_calling_Mutect2:
     shell:
         "gatk Mutect2 \
         -R {params.ref} \
-        -L {params.intervals} \
         -I {input.normal_bam} \
         -I {input.tumour_bam} \
-        -normal {wildcards.sample}_G_FREQEXCAP \
-        --germline-resource {params.gnomad} \
-        --panel-of-normals {params.PON} \
-        --f1r2-tar-gz {output.f1r2_gz} \
-	    --independent-mates \
+        {params.extra} \
         -O {output.vcf_gz}"
 
 

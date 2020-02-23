@@ -13,16 +13,18 @@ configfile: "config/config.yaml"
 CONFIG_JSON = json.load(open(config["SAMPLES"]))
 SAMPLES = CONFIG_JSON['samples']
 
-include: "workflow/rules/utils.smk"
+#include: "workflow/rules/utils.smk"
 include: "workflow/rules/functions.smk"
 include: "workflow/rules/preprocessing.smk"
 include: "workflow/rules/variantCalling.smk"
-include: "workflow/rules/panelsOfNormals.smk"
+#include: "workflow/rules/panelsOfNormals.smk"
 include: "workflow/rules/annotation.smk"
 include: "workflow/rules/strelka.smk"
 include: "workflow/rules/freebayes.smk"
 include: "workflow/rules/somaticSniper.smk"
 include: "workflow/rules/filteringVCF.smk"
+include: "workflow/rules/varlociraptor.smk"
+include: "workflow/rules/varscan.smk"
 
 
 def get_input(wildcards):
@@ -33,14 +35,14 @@ def get_input(wildcards):
     #wanted_input.extend(expand("data/preprocessing/{sample}_{type}.bam", sample=SAMPLES, type=['G', 'D']))
     #wanted_input.extend(expand("data/preprocessing/{sample}_{type}.bai", sample=SAMPLES, type=['G', 'D']))
     #wanted_input.extend(expand("data/pon/{sample}_{type}_marked_duplicates_BQSR_merge_for_pon.vcf.gz", sample=SAMPLES, type=['G', 'D']))
-    #wanted_input.extend(expand("results/variantCalling/Strelka/Strelka_{sample}_variants.vcf.gz", sample=SAMPLES))
-    #wanted_input.extend(expand("results/variantCalling/mutect2/raw/{sample}_mutect2.vcf.gz", sample=SAMPLES))
+    wanted_input.extend(expand("results/variantCalling/Strelka/{sample}/results/variants/somatic.snvs.vcf.gz", sample=SAMPLES))
+    wanted_input.extend(expand("results/variantCalling/mutect2/raw/{sample}_mutect2.vcf.gz", sample=SAMPLES))
     #wanted_input.extend(expand("results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz", sample=SAMPLES))
     #wanted_input.extend(expand("results/variantCalling/annovar/{sample}.avinput", sample=SAMPLES))
     #wanted_input.extend(expand("results/variantCalling/mutect2/pass/{sample}_somatic_filtered_pass.vcf", sample=SAMPLES))
-    #wanted_input.extend(expand("results/variantCalling/freebayes/raw/{sample}_freebayes.vcf", sample=SAMPLES))
+    wanted_input.extend(expand("results/variantCalling/freebayes/raw/{sample}_freebayes.vcf", sample=SAMPLES))
     #wanted_input.extend(expand(config["FASTQC"]["DIR"] + "{sample}_{type}_fastqc.html", sample=SAMPLES, type=['G', 'D']))
-    #wanted_input.extend(expand("results/variantCalling/Somatic-sniper/{sample}_somatic-sniper.snv", sample=SAMPLES))
+    wanted_input.extend(expand("results/variantCalling/Somatic-sniper/{sample}_somatic-sniper.snv", sample=SAMPLES))
     return wanted_input
 
 
