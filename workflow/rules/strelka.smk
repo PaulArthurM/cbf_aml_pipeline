@@ -32,7 +32,7 @@ rule strelka:
             --normalBam {input.normal} \
             --tumorBam {input.tumor} \
             --referenceFasta {params.ref} \
-            --runDir results/variantCalling/strelka2/{wildcards.sample} \
+            --runDir results/variantCalling/strelka/{wildcards.sample} \
             --indelCandidates {input.manta_candidates} \
             --exome \
             --callRegions {params.callRegions} \
