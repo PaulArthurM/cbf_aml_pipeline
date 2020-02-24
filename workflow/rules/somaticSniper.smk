@@ -7,7 +7,7 @@ rule somatic_sniper:
         "results/variantCalling/somatic-sniper/{sample}/somatic-sniper_calls.vcf"
     params:
         name="somatic-sniper_{sample}",
-        nthread=1,
+        nthread=5,
         ref = config["reference_GRCh37-lite"]
     conda:
         "../envs/somaticSniper.yaml"

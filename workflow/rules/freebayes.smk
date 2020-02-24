@@ -11,7 +11,7 @@ rule freebayes:
         ref=config['reference_GRCh37-lite'],
         intervals=config['bed_intervals'],
         chunksize=100000,  # reference genome chunk size for parallelization (default: 100000)
-        nthreads=2
+        nthread=5
     conda:
         "../envs/freebayes.yaml"
     shell:
