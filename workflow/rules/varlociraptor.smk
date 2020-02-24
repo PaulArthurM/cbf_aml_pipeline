@@ -33,7 +33,7 @@ rule calling:
             --tumor {input.tumor} \
             --normal {input.normal} > {output}"
 
-
+"""
 rule ffpe:
     input:
     output:
@@ -49,3 +49,4 @@ rule filter:
     conda:
     shell:
         "varlociraptor filter-calls control-fdr calls.bcf --events SOMATIC_TUMOR --fdr 0.05 --var SNV"
+"""
