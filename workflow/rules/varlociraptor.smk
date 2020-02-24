@@ -11,6 +11,8 @@ rule preprocessing:
     output:
         "results/varlociraptor/{sample}/varlociraptor_{tool}_{type}_preprocessing.bcf"
     params:
+        name="varlociraptor_preprocessing_{sample}_{tool}",
+        nthread=5,
         ref=config["reference_GRCh37-lite"]
     conda:
         "../envs/varlociraptor.yaml"
@@ -27,7 +29,8 @@ rule calling:
     output:
         "results/varlociraptor/{sample}/{tool}_calls.bcf"
     params:
-        ""
+        name="varlociraptor_preprocessing_{sample}_{tool}",
+        nthread=5,
     conda:
         "../envs/varlociraptor.yaml"
     shell:
