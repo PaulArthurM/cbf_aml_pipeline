@@ -1,0 +1,8 @@
+samples:
+  ffpe-tumor:
+    universe: "[0.0,1.0]"
+    resolution: 100
+
+events:
+  ffpe_artifact: "(C>T | G>A) & tumor:]0.0,0.05["
+  present: "((C>T | G>A) & tumor:]0.05,1.0]) | (!(C>T | G>A) & tumor:]0.0,1.0[)"
