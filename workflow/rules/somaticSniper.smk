@@ -13,7 +13,9 @@ rule somatic_sniper:
         "../envs/somaticSniper.yaml"
     shell:
         "bam-somaticsniper \
-            -F classic \
+            -F vcf \
+            -q 20 \
+            -Q 20 \
             -f {params.ref} \
             {input.tumor} \
             {input.normal} \
