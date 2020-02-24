@@ -9,7 +9,7 @@ rule freebayes:
         name="freebayes_{sample}",
         extra="",         # optional parameters
         ref=config['reference_GRCh37-lite'],
-        intervals="/mnt/d/Pipelines/files_generator/intervals.bed",
+        intervals=config['bed_intervals'],
         chunksize=100000,  # reference genome chunk size for parallelization (default: 100000)
         nthreads=2
     conda:
