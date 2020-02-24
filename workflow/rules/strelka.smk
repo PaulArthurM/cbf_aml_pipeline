@@ -23,6 +23,7 @@ rule strelka:
         name="strelka_{sample}",
         nthread=8,
         ref = config["reference_GRCh37-lite"],
+        callRegions=config['bed_intervals'],
         extra=extra_strelka
     conda:
         "../envs/strelka.yaml"
