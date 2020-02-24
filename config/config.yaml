@@ -55,3 +55,6 @@ samtools:
 
 FilterMutectCalls:
   nthread: 10
+
+strelka:
+  extra: ""
