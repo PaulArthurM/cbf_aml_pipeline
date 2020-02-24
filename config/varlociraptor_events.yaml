@@ -1,5 +1,5 @@
 samples:
-  ffpe-tumor:
+  tumor:
     universe: "[0.0,1.0]"
     resolution: 100
 
