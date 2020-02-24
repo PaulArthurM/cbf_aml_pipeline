@@ -50,7 +50,7 @@ rule mantaCandidateSmallsIndels:
         tumor = "results/preprocessing/{sample}_D.bam",
     output:
         "results/variantCalling/manta/manta_{sample}.candidateSmallIndels.vcf.gz"
-        params:
+    params:
         name="Manta_{sample}",
         nthread=8,
         ref = config["reference_GRCh37-lite"],
