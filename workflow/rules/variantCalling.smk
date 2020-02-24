@@ -15,9 +15,6 @@ rule variant_calling_Mutect2:
         #f1r2_gz = "results/f1r2/{sample}_f1r2.tar.gz"
     params:
         ref=config["reference_GRCh37-lite"],
-        #PON=config["PON_VCF"],
-        #gnomad=config["mutect2"]["gnomad"]["files"]["raw"],
-        #intervals=config["intervals_list"],
         extra=extra_mutect2,
         name="Mutect2_somatic_{sample}",
         nthread=config["mutect2"]["nthread"]
