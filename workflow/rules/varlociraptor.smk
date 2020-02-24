@@ -32,3 +32,20 @@ rule calling:
             --purity 0.75 \
             --tumor {input.tumor} \
             --normal {input.normal} > {output}"
+
+
+rule ffpe:
+    input:
+    output:
+    params:
+    conda:
+    shell:
+        "varlociraptor call variants generic --scenario scenario.yaml --obs relapse=relapse.bcf tumor=tumor.bcf normal=normal.bam > calls.bcf"
+
+rule filter:
+    input:
+    output:
+    params:
+    conda:
+    shell:
+        "varlociraptor filter-calls control-fdr calls.bcf --events SOMATIC_TUMOR --fdr 0.05 --var SNV"
