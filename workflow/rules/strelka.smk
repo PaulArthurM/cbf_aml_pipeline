@@ -18,7 +18,7 @@ rule strelka:
         manta_candidates = "results/variantCalling/manta/manta_{sample}.candidateSmallIndels.vcf.gz"
     output:
         #"results/variantCalling/strelka/{sample}/results/variants/somatic.snvs.vcf.gz"
-        "results/variantCalling/strelka2/{sample}/strelka2_calls.vcf.gz"
+        "results/variantCalling/strelka/{sample}/strelka_calls.vcf.gz"
     params:
         name="strelka_{sample}",
         nthread=8,
@@ -36,12 +36,12 @@ rule strelka:
             --exome \
             --callRegions {params.callRegions} \
             && \
-            results/variantCalling/strelka2/{wildcards.sample}/runWorkflow.py \
+            results/variantCalling/strelka/{wildcards.sample}/runWorkflow.py \
             --jobs {params.nthread} \
             -m local \
             {params.extra} \
             && \
-            mv results/variantCalling/strelka2/{wildcards.sample}/results/variants/somatic.snvs.vcf.gz results/variantCalling/strelka2/{wildcards.sample}/strelka2_calls.vcf.gz"
+            mv results/variantCalling/strelka/{wildcards.sample}/results/variants/somatic.snvs.vcf.gz results/variantCalling/strelka2/{wildcards.sample}/strelka2_calls.vcf.gz"
 
 
 rule mantaCandidateSmallsIndels:
@@ -50,7 +50,7 @@ rule mantaCandidateSmallsIndels:
         tumor = "results/preprocessing/{sample}_D.bam",
     output:
         "results/variantCalling/manta/manta_{sample}.candidateSmallIndels.vcf.gz"
-    params:
+        params:
         name="Manta_{sample}",
         nthread=8,
         ref = config["reference_GRCh37-lite"],
