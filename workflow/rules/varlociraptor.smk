@@ -1,9 +1,3 @@
-
-
-"results/preprocessing/{sample}_G.bam"
-"results/preprocessing/{sample}_D.bam"
-
-
 rule preprocessing:
     input:
         bam="results/preprocessing/{sample}_{type}.bam",

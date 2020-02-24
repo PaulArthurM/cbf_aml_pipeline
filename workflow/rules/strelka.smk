@@ -42,7 +42,7 @@ rule strelka:
             -m local \
             {params.extra} \
             && \
-            mv results/variantCalling/strelka/{wildcards.sample}/results/variants/somatic.snvs.vcf.gz results/variantCalling/strelka2/{wildcards.sample}/strelka2_calls.vcf.gz"
+            mv results/variantCalling/strelka/{wildcards.sample}/results/variants/somatic.snvs.vcf.gz results/variantCalling/strelka/{wildcards.sample}/strelka_calls.vcf.gz"
 
 
 rule mantaCandidateSmallsIndels:
