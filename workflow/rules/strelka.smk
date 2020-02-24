@@ -15,7 +15,7 @@ rule strelka:
         normal_index = "results/preprocessing/{sample}_G.bai",
         tumor = "results/preprocessing/{sample}_D.bam",
         tumor_index = "results/preprocessing/{sample}_D.bai",
-        manta_candidates = "results/variantCalling/manta/manta_{sample}.candidateSmallIndels.vcf.gz"
+        manta_candidates = "results/variantCalling/manta/{sample}/results/variants/candidateSmallIndels.vcf.gz"
     output:
         #"results/variantCalling/strelka/{sample}/results/variants/somatic.snvs.vcf.gz"
         "results/variantCalling/strelka/{sample}/strelka_calls.vcf.gz"
@@ -51,6 +51,7 @@ rule mantaCandidateSmallsIndels:
         tumor = "results/preprocessing/{sample}_D.bam",
     output:
         "results/variantCalling/manta/manta_{sample}.candidateSmallIndels.vcf.gz"
+        "results/variantCalling/manta/SJCBF040/results/variants/candidateSmallIndels.vcf.gz"
     params:
         name="Manta_{sample}",
         nthread=8,
@@ -69,9 +70,4 @@ rule mantaCandidateSmallsIndels:
             && \
             results/variantCalling/manta/{wildcards.sample}/runWorkflow.py \
             --mode local \
-            --jobs {params.nthread} \
-            && \
-            mv results/variantCalling/manta/{wildcards.sample}/results/variants/candidateSmallIndels.vcf.gz \
-                results/variantCalling/manta/manta_{wildcards.sample}.candidateSmallIndels.vcf.gz \
-            mv results/variantCalling/manta/{wildcards.sample}/results/variants/candidateSmallIndels.vcf.gz.tbi \
-                results/variantCalling/manta/manta_{wildcards.sample}.candidateSmallIndels.vcf.gz.tbi"
+            --jobs {params.nthread}"
