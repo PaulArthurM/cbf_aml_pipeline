@@ -68,7 +68,7 @@ rule mantaCandidateSmallsIndels:
             --callRegions {params.callRegions} \
             && \
             results/variantCalling/manta/{wildcards.sample}/runWorkflow.py \
-            --mode sge \
+            --mode local \
             --jobs {params.nthread} \
             && \
             mv results/variantCalling/manta/{wildcards.sample}/results/variants/candidateSmallIndels.vcf.gz \
