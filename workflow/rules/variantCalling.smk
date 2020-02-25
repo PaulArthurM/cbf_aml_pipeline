@@ -12,7 +12,7 @@ rule variant_calling_Mutect2:
         tumour_bai="results/preprocessing/{sample}_D.bai"
     output:
         vcf_gz = "results/variantCalling/mutect2/{sample}/mutect2_calls.vcf.gz",
-        f1r2_gz = "results/f1r2/{sample}_f1r2.tar.gz"
+        f1r2_gz = "results/variantCalling/mutect2/f1r2/{sample}_f1r2.tar.gz"
     params:
         ref=config["reference_GRCh37-lite"],
         extra=extra_mutect2,
