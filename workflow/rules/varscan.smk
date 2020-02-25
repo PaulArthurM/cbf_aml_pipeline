@@ -7,7 +7,7 @@ rule mpileup:
         "results/preprocessing/{sample}_{type}.mpileup"
     params:
         ref = config["reference_GRCh37-lite"]
-    conda:
+        conda:
         "../envs/samtools.yaml"
     shell:
         "samtools mpileup -f {params.ref} {input} > {output}"
@@ -32,6 +32,7 @@ rule varscan:
             --min-coverage 1 && \
             mv {output}.snp {output}"
 
+"""
 rule index_vcf:
     input:
         "results/variantCalling/{tool}/{sample}/{tool}_calls.vcf"
@@ -39,3 +40,4 @@ rule index_vcf:
         "results/variantCalling/{tool}/{sample}/{tool}_calls.vcf.gz"  # either .vcf or .bcf
     shell:
         "bgzip {input}"
+"""
