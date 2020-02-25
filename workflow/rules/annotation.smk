@@ -1,8 +1,8 @@
 rule annotate:
     input:
-        config["PROJECT_DIR"] + "data/vcf/filtered/{sample}_somatic_filtered.vcf.gz"
+        "results/vcf/filtered/{sample}_somatic_filtered.vcf.gz"
     output:
-        config["PROJECT_DIR"] + "data/vcf/annotated/{sample}_variants.funcotated.vcf"
+        "results/vcf/annotated/{sample}_variants.funcotated.vcf"
     params:
         reference=config["reference_GRCh37-lite"],
         data_sources=config["funcotator"]["directory"],
@@ -23,11 +23,11 @@ rule annotate:
 
 rule annovar:
     input:
-        config["PROJECT_DIR"] + "results/variantCalling/mutect2/pass/{sample}_somatic_filtered_pass.vcf"
+        "results/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass.vcf"
     output:
-        config["PROJECT_DIR"] + "results/variantCalling/annovar/{sample}.avinput"
+        "results/variantCalling/annovar/{sample}.hg19_multianno.vcf"
     params:
-        path=config["PROJECT_DIR"] + "data",
+        path=config["PROJECT_DIR"] + "results",
         name="Annovar_annotate_{sample}",
         nthread=4
     shell:
@@ -40,4 +40,4 @@ rule annovar:
         --buildver hg19 \
         --remove \
         --vcfinput \
-        -out {params.path}/vcf/annotated/{wildcards.sample}"
+        -out {params.path}/variantCalling/annovar/{wildcards.sample}"
