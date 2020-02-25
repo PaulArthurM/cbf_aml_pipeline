@@ -13,7 +13,7 @@ configfile: "config/config.yaml"
 CONFIG_JSON = json.load(open(config["SAMPLES"]))
 SAMPLES = CONFIG_JSON['samples']
 
-#include: "workflow/rules/utils.smk"
+include: "workflow/rules/utils.smk"
 include: "workflow/rules/functions.smk"
 include: "workflow/rules/preprocessing.smk"
 include: "workflow/rules/variantCalling.smk"
