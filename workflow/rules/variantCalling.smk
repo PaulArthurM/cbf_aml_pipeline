@@ -25,6 +25,7 @@ rule variant_calling_Mutect2:
         -R {params.ref} \
         -I {input.normal_bam} \
         -I {input.tumour_bam} \
+        --f1r2-tar-gz {output.f1r2_gz} \
         {params.extra} \
         -O {output.vcf_gz}"
 
