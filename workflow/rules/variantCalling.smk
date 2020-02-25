@@ -109,7 +109,7 @@ rule GetPileupSummaries:
 
 rule FilterMutectCalls:
     input:
-        vcf="results/variantCalling/mutect2/raw/{sample}_mutect2.vcf.gz",
+        vcf="results/variantCalling/mutect2/{sample}/mutect2_calls.vcf.gz",
         contamination_table="results/variantCalling/mutect2/pileups/contamination/{sample}.contamination.table",
         segmentation="results/variantCalling/mutect2/pileups/segmentation/{sample}.tumour_segmentation.tsv",
         orientation="results/variantCalling/mutect2/f1r2/{sample}_read-orientation-model.tar.gz"
