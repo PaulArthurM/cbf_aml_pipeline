@@ -7,7 +7,7 @@ rule mpileup:
         "results/preprocessing/{sample}_{type}.mpileup"
     params:
         ref = config["reference_GRCh37-lite"]
-        conda:
+    conda:
         "../envs/samtools.yaml"
     shell:
         "samtools mpileup -f {params.ref} {input} > {output}"
