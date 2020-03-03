@@ -37,10 +37,10 @@ def get_input(wildcards):
     CONFIG_JSON = json.load(open(config["SAMPLES"]))
     #SAMPLES = CONFIG_JSON['samples']
     SAMPLES = sample_sheet['samples']
-    wanted_input.extend(expand("data/preprocessing/{sample}_{type}.bam", sample=SAMPLES, type=['G', 'D']))
-    wanted_input.extend(expand("data/preprocessing/{sample}_{type}.bai", sample=SAMPLES, type=['G', 'D']))
+    wanted_input.extend(expand("results/preprocessing/{sample}_{type}.bam", sample=SAMPLES, type=['G', 'D']))
+    wanted_input.extend(expand("results/preprocessing/{sample}_{type}.bai", sample=SAMPLES, type=['G', 'D']))
     if config["mutect2"]["to_use"] == True:
-        wanted_input.extend(expand("data/pon/{sample}_{type}_marked_duplicates_BQSR_merge_for_pon.vcf.gz", sample=SAMPLES, type=['G', 'D']))
+        wanted_input.extend(expand("results/pon/{sample}_{type}_marked_duplicates_BQSR_merge_for_pon.vcf.gz", sample=SAMPLES, type=['G', 'D']))
         wanted_input.extend(expand("results/variantCalling/mutect2/raw/{sample}_mutect2.vcf.gz", sample=SAMPLES))
         wanted_input.extend(expand("results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz", sample=SAMPLES))
         wanted_input.extend(expand("results/variantCalling/mutect2/pass/{sample}_somatic_filtered_pass.vcf", sample=SAMPLES))
