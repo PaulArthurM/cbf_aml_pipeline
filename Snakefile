@@ -36,7 +36,7 @@ def get_input(wildcards):
     # Load json configuration file
     CONFIG_JSON = json.load(open(config["SAMPLES"]))
     #SAMPLES = CONFIG_JSON['samples']
-    SAMPLES = sample_sheet['samples     ']
+    SAMPLES = sample_sheet['samples']
     wanted_input.extend(expand("data/preprocessing/{sample}_{type}.bam", sample=SAMPLES, type=['G', 'D']))
     wanted_input.extend(expand("data/preprocessing/{sample}_{type}.bai", sample=SAMPLES, type=['G', 'D']))
     if config["mutect2"]["to_use"] == True:
