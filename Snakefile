@@ -46,7 +46,7 @@ def get_input(wildcards):
     if config["strelka"]["to_use"] == True:
         wanted_input.extend(expand("results/variantCalling/strelka/{sample}/strelka_calls.vcf.gz", sample=SAMPLES))
     if config["freebayes"]["to_use"] == True:
-        wanted_input.extend(expand("results/variantCalling/freebayes/raw/{sample}_freebayes.vcf", sample=SAMPLES))
+        wanted_input.extend(expand("results/variantCalling/freebayes/{sample}/freebayes_calls.vcf", sample=SAMPLES))
     if config["somaticSniper"]["to_use"] == True:
         wanted_input.extend(expand("results/variantCalling/Somatic-sniper/{sample}_somatic-sniper.snv", sample=SAMPLES))
     if config["annovar"]["to_use"] == True:
