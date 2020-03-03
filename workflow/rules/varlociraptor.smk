@@ -1,4 +1,4 @@
-rule preprocessing:
+rule varlociraptor_preprocessing:
     input:
         bam="results/preprocessing/{sample}_{type}.bam",
         vcf="results/variantCalling/{tool}/{sample}/{tool}_calls.vcf.gz"
@@ -16,7 +16,7 @@ rule preprocessing:
         --output {output} < {input.vcf}"
 
 
-rule calling:
+rule varlociraptor_calling:
     input:
         tumor="results/varlociraptor/{sample}/varlociraptor_{tool}_D_preprocessing.bcf",
         normal="results/varlociraptor/{sample}/varlociraptor_{tool}_G_preprocessing.bcf"
@@ -34,7 +34,7 @@ rule calling:
             --normal {input.normal} > {output}"
 
 
-rule filter:
+rule varlociraptor_filter:
     input:
         "results/varlociraptor/{sample}/{tool}_calls.bcf"
     output:

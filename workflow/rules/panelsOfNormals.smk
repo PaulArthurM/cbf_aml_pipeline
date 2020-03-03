@@ -21,7 +21,7 @@ rule Mutect2_tumour_only:
         -O {output}"
 
 
-rule GenomicsDB:
+rule GenomicsDBImport:
     input:
         PON_VCF
     output:

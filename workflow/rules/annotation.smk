@@ -1,4 +1,4 @@
-rule annotate:
+rule Funcotator:
     input:
         "results/vcf/filtered/{sample}_somatic_filtered.vcf.gz"
     output:
@@ -21,7 +21,7 @@ rule annotate:
 
 
 
-rule annovar:
+rule table_annovar:
     input:
         "results/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass.vcf"
     output:

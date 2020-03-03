@@ -1,5 +1,5 @@
 # Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
-rule mark_duplicates:
+rule MarkDuplicates:
     input:
         "results/preprocessing/{sample}_{type}.{lane}.bam"
     output:
@@ -43,7 +43,7 @@ rule mark_duplicates:
 
 
 #Generates recalibration table for Base Quality Score Recalibration (BQSR)
-rule base_recalibrator:
+rule BaseRecalibrator:
     input:
         "results/preprocessing/{sample}_marked_duplicates.bam"
     output:
@@ -65,7 +65,7 @@ rule base_recalibrator:
 
 
 #Apply base quality score recalibration
-rule apply_BQSR:
+rule ApplyBQSR:
     input:
         table = "results/preprocessing/recal_data_{sample}.table",
         bam = "results/preprocessing/{sample}_marked_duplicates.bam"
