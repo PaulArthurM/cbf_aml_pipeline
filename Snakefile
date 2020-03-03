@@ -48,7 +48,7 @@ def get_input(wildcards):
     if config["freebayes"]["to_use"] == True:
         wanted_input.extend(expand("results/variantCalling/freebayes/{sample}/freebayes_calls.vcf", sample=SAMPLES))
     if config["somaticSniper"]["to_use"] == True:
-        wanted_input.extend(expand("results/variantCalling/Somatic-sniper/{sample}_somatic-sniper.snv", sample=SAMPLES))
+        wanted_input.extend(expand("results/variantCalling/somatic-sniper/{sample}/somatic-sniper_calls.vcf", sample=SAMPLES))
     if config["annovar"]["to_use"] == True:
         wanted_input.extend(expand("results/variantCalling/annovar/{sample}.hg19_multianno.vcf", sample=SAMPLES))
     if config["FASTQC"]["to_use"] == True:
