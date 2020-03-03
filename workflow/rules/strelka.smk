@@ -14,7 +14,8 @@ rule strelka:
         tumor_index = "results/preprocessing/{sample}_D.bai",
         manta_candidates = "results/variantCalling/manta/{sample}/results/variants/candidateSmallIndels.vcf.gz"
     output:
-        "results/variantCalling/strelka/{sample}/strelka_calls.vcf.gz"
+        "results/variantCalling/strelka/{sample}/runWorkflow.py"
+        #"results/variantCalling/strelka/{sample}/strelka_calls.vcf.gz"
     params:
         name="strelka_{sample}",
         nthread=8,
@@ -31,14 +32,27 @@ rule strelka:
             --runDir results/variantCalling/strelka/{wildcards.sample} \
             --indelCandidates {input.manta_candidates} \
             --exome \
-            --callRegions {params.callRegions} \
-            && \
-            results/variantCalling/strelka/{wildcards.sample}/runWorkflow.py \
-            --jobs {params.nthread} \
-            -m local \
-            {params.extra} \
-            && \
-            mv results/variantCalling/strelka/{wildcards.sample}/results/variants/somatic.snvs.vcf.gz results/variantCalling/strelka/{wildcards.sample}/strelka_calls.vcf.gz"
+            --callRegions {params.callRegions}"
+
+
+
+rule runWorkflow_strelka:
+    input:
+        "results/variantCalling/strelka/{sample}/runWorkflow.py"
+    output:
+        "results/variantCalling/strelka/{sample}/strelka_calls.vcf.gz"
+    params:
+        name="runWorkflow_strelka_{sample}",
+        nthread=5,
+    conda:
+        "../envs/strelka.yaml"
+    shell:
+        "results/variantCalling/strelka/{wildcards.sample}/runWorkflow.py \
+        --jobs {params.nthread} \
+        -m local \
+        && \
+        mv results/variantCalling/strelka/{wildcards.sample}/results/variants/somatic.snvs.vcf.gz results/variantCalling/strelka/{wildcards.sample}/strelka_calls.vcf.gz"
+
 
 
 rule mantaCandidateSmallsIndels:
