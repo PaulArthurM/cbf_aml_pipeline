@@ -1,3 +1,8 @@
+def extra_somatic_sniper(wildcards):
+    configfile: "config/config.yaml"
+    extra = config['somaticSniper']['extra']
+    return extra
+
 
 rule somatic_sniper:
     input:
@@ -8,14 +13,14 @@ rule somatic_sniper:
     params:
         name="somatic-sniper_{sample}",
         nthread=5,
-        ref = config["reference_GRCh37-lite"]
+        ref = config["reference_GRCh37-lite"],
+        extra=extra_somatic_sniper
     conda:
         "../envs/somaticSniper.yaml"
     shell:
         "bam-somaticsniper \
             -F vcf \
-            -q 20 \
-            -Q 20 \
+            {params.extra}
             -f {params.ref} \
             {input.tumor} \
             {input.normal} \

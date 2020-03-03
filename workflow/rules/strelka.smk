@@ -1,9 +1,6 @@
 def extra_strelka(wildcards):
-    extra = ''
     configfile: "config/config.yaml"
-    if (config['strelka']['extra'] != "None"):
-        for opt in config['strelka']['extra']:
-            extra = extra + opt
+    extra = config['strelka']['extra']
     return extra
 
 
@@ -17,7 +14,6 @@ rule strelka:
         tumor_index = "results/preprocessing/{sample}_D.bai",
         manta_candidates = "results/variantCalling/manta/{sample}/results/variants/candidateSmallIndels.vcf.gz"
     output:
-        #"results/variantCalling/strelka/{sample}/results/variants/somatic.snvs.vcf.gz"
         "results/variantCalling/strelka/{sample}/strelka_calls.vcf.gz"
     params:
         name="strelka_{sample}",

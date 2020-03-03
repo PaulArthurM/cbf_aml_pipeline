@@ -1,3 +1,9 @@
+def extra_freebayes(wildcards):
+    configfile: "config/config.yaml"
+    extra = config['freebayes']['extra']
+    return extra
+
+
 rule freebayes:
     input:
         # you can have a list of samples here
@@ -7,7 +13,7 @@ rule freebayes:
         "results/variantCalling/freebayes/{sample}/freebayes_calls.vcf"  # either .vcf or .bcf
     params:
         name="freebayes_{sample}",
-        extra="",         # optional parameters
+        extra=extra_freebayes,         # optional parameters
         ref=config['reference_GRCh37-lite'],
         intervals=config['bed_intervals'],
         chunksize=100000,  # reference genome chunk size for parallelization (default: 100000)
@@ -17,14 +23,6 @@ rule freebayes:
     shell:
         "freebayes \
             -f {params.ref} \
-            --pooled-continuous \
-            --pooled-discrete \
-            --genotype-qualities \
-            --report-genotype-likelihood-max \
-            --allele-balance-priors-off \
-            --min-alternate-fraction 0.03 \
-            --min-repeat-entropy 1 \
-            --min-alternate-count 2 \
             -t {params.intervals} \
             {input.bamTumor} \
             {input.bamNormal} > {output}"
