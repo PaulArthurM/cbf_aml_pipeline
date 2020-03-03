@@ -17,7 +17,7 @@ def getBamToMerge(wildcards):
     return out
 
 
-rule merge_bam:
+rule MergeSamFiles:
     input:
         getBamToMerge
     output:

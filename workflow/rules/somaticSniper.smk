@@ -20,7 +20,7 @@ rule somatic_sniper:
     shell:
         "bam-somaticsniper \
             -F vcf \
-            {params.extra}
+            {params.extra} \
             -f {params.ref} \
             {input.tumor} \
             {input.normal} \
