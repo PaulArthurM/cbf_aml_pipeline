@@ -44,7 +44,7 @@ def get_input(wildcards):
     if config["mutect2"]["to_use"] == True:
         wanted_input.extend(expand("results/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass.vcf", sample=SAMPLES))
     if config["strelka"]["to_use"] == True:
-        wanted_input.extend(expand("results/variantCalling/strelka/{sample}/results/variants/somatic.snvs.vcf.gz", sample=SAMPLES))
+        wanted_input.extend(expand("results/variantCalling/strelka/{sample}/strelka_calls.vcf.gz", sample=SAMPLES))
     if config["freebayes"]["to_use"] == True:
         wanted_input.extend(expand("results/variantCalling/freebayes/raw/{sample}_freebayes.vcf", sample=SAMPLES))
     if config["somaticSniper"]["to_use"] == True:
