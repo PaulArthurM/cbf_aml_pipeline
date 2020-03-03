@@ -42,8 +42,8 @@ def get_input(wildcards):
     if config["panelsOfNormals"]["to_use"] == True:
         wanted_input.extend(expand("results/pon/{sample}_{type}_marked_duplicates_BQSR_merge_for_pon.vcf.gz", sample=SAMPLES, type=['G', 'D']))
     if config["mutect2"]["to_use"] == True:
-        wanted_input.extend(expand("results/variantCalling/mutect2/{sample}/mutect2_calls.vcf.gz", sample=SAMPLES))
-        wanted_input.extend(expand("results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered.vcf.gz", sample=SAMPLES))
+        #wanted_input.extend(expand("results/variantCalling/mutect2/{sample}/mutect2_calls.vcf.gz", sample=SAMPLES))
+        #wanted_input.extend(expand("results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered.vcf.gz", sample=SAMPLES))
         wanted_input.extend(expand("results/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass.vcf", sample=SAMPLES))
     if config["strelka"]["to_use"] == True:
         wanted_input.extend(expand("results/variantCalling/Strelka/{sample}/results/variants/somatic.snvs.vcf.gz", sample=SAMPLES))
