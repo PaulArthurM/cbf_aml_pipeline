@@ -47,7 +47,7 @@ rule mantaCandidateSmallsIndels:
         tumor = "results/preprocessing/{sample}_D.bam",
     output:
         "results/variantCalling/manta/manta_{sample}.candidateSmallIndels.vcf.gz"
-        "results/variantCalling/manta/SJCBF040/results/variants/candidateSmallIndels.vcf.gz"
+        "results/variantCalling/manta/{sample}/results/variants/candidateSmallIndels.vcf.gz"
     params:
         name="Manta_{sample}",
         nthread=8,
