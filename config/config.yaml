@@ -88,6 +88,8 @@ FASTQC:
   to_use: False
 
 #  Panel of Normales parameters:
+panelsOfNormals:
+  to_use: False
 VCF_MAP: "/home/data/pameslin/cbf_aml_pipeline/map/sample_vcf.map"
 reader_threads: 1
 batch_size: 50
