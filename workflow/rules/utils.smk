@@ -65,6 +65,17 @@ rule fastqc:
     shell:
         "fastqc {input} -t {params.nthread} -o results/quality_control/"
 
+
+
+rule multiqc:
+    input:
+        expand("results/quality_control/{sample}_{type}_fastqc.html", sample=sample_sheet['samples'], type=['D', 'G'])
+    output:
+        "results/report/multiqc_report.html"
+    wrapper:
+        "0.31.1/bio/multiqc"
+
+
 #
 # rule unzip_gz:
 #     input:
