@@ -56,15 +56,14 @@ rule fastqc:
     input:
         "results/preprocessing/{sample}_{type}.bam"
     output:
-        config["FASTQC"]["DIR"] + "{sample}_{type}_fastqc.html"
+        "results/quality_control/{sample}_{type}_fastqc.html"
     params:
-        dir=config["FASTQC"]["DIR"],
         name="fastq_{sample}_{type}",
         nthread=4
     conda:
         "../envs/fastqc.yaml"
     shell:
-        "fastqc {input} -t {params.nthread} -o {params.dir}"
+        "fastqc {input} -t {params.nthread} -o results/quality_control/"
 
 #
 # rule unzip_gz:
