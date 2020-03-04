@@ -52,7 +52,7 @@ def get_input(wildcards):
     if config["annovar"]["to_use"] == True:
         wanted_input.extend(expand("results/variantCalling/annovar/{sample}.hg19_multianno.vcf", sample=SAMPLES))
     if config["FASTQC"]["to_use"] == True:
-        wanted_input.extend(expand(config["FASTQC"]["DIR"] + "{sample}_{type}_fastqc.html", sample=SAMPLES, type=['G', 'D']))
+        wanted_input.extend(expand("results/quality_control/{sample}_{type}_fastqc.html", sample=SAMPLES, type=['G', 'D']))
     return wanted_input
 
 
