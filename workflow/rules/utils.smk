@@ -78,6 +78,8 @@ rule multiqc:
         out_dir = "results/report/",
         input_dir = "results/quality_control/",
         out_file = "multiqc_report.html"
+    conda:
+        "../envs/multiqc.yaml"
     shell:
         "multiqc \
         --force \
