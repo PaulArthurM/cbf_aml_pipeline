@@ -71,18 +71,19 @@ rule multiqc:
     input:
         expand("results/quality_control/{sample}_{type}_fastqc.html", sample=sample_sheet['samples'], type=['D', 'G'])
     output:
-        "multiqc_report.html"
+        "results/report/multiqc_report.html"
     params:
         name="multiqc_report",
         nthread=5,
         out_dir = "results/report/",
-        input_dir = "results/quality_control/"
+        input_dir = "results/quality_control/",
+        out_file = "multiqc_report.html"
     shell:
         "multiqc \
         --force \
         -o {params.out_dir} \
-        -n {output} \
-        {input}"
+        -n {params.out_file} \
+        {params.input_dir}"
 
 
 #
