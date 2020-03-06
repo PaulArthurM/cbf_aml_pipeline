@@ -124,7 +124,7 @@ rule FilterMutectCalls:
         name="FilterMutectCalls_{sample}",
         nthread=config["FilterMutectCalls"]["nthread"]
     conda:
-        "../envs/gatk4.yaml"
+        "../envs/gatk4.1.4.1.yaml"
     shell:
         "gatk FilterMutectCalls \
         -R {params.reference} \
