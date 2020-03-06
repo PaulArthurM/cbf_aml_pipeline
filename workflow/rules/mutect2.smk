@@ -98,7 +98,7 @@ rule GetPileupSummaries:
         "results/variantCalling/mutect2/f1r2/pileups/{sample}_D_getpileupsummaries.table"
     params:
         gnomad=config["mutect2"]["gnomad"]["files"]["biallelic"],
-	intervals=config["intervals_list"],
+	    intervals=config["intervals_list"],
         name="GetPileupSummaries_{sample}",
         nthread=5
     conda: "../envs/gatk4.yaml"
@@ -155,3 +155,45 @@ rule keep_pass_variants:
         "bcftools view \
         -f .,PASS \
         {input} > {output}"
+
+
+rule CollectSequencingArtifactMetrics:
+    input:
+        "results/preprocessing/{sample}_D.bam"
+    output:
+        "results/artifacts/{sample}/tumor_artifact.pre_adapter_detail_metrics.txt"
+    params:
+        reference=config["reference_GRCh37-lite"],
+        path_out="results/artifacts/{sample}/tumor_artifact",
+        name="CollectSequencingArtifactMetrics_{sample}",
+        nthread=5
+    conda:
+        "../envs/gatk4.yaml"
+    shell:
+        ' gatk CollectSequencingArtifactMetrics \
+            -R {params.reference} \
+            -I {input} \
+            --FILE_EXTENSION ".txt" \
+            -O {params.path_out}'
+
+
+rule FilterByOrientationBias:
+    input:
+        vcf="results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered.vcf.gz",
+        metrics="results/artifacts/{sample}/tumor_artifact.pre_adapter_detail_metrics.txt"
+    output:
+        "results/variantCalling/vcf/mutect2/oxog_filtered/{sample}_oxog_filtered.vcf.gz"
+    params:
+        reference=config["reference_GRCh37-lite"],
+        name="FilterByOrientationBias_{sample}",
+        intervals=config["intervals_list"],
+        nthread=5
+    conda:
+        "../envs/gatk4.yaml"
+    shell:
+        "gatk FilterByOrientationBias \
+            -V {input.vcf} \
+            --intervals {} \
+            --artifact-modes 'G/T' \
+            -P {input.metrics} \
+            -O {output}"

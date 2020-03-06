@@ -43,6 +43,7 @@ def get_input(wildcards):
         wanted_input.extend(expand("results/pon/{sample}_{type}_marked_duplicates_BQSR_merge_for_pon.vcf.gz", sample=SAMPLES, type=['G', 'D']))
     if config["mutect2"]["to_use"] == True:
         wanted_input.extend(expand("results/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass_stringencyUp.vcf", sample=SAMPLES))
+        wanted_input.extend(expand("results/variantCalling/vcf/mutect2/oxog_filtered/{sample}_oxog_filtered.vcf.gz", sample=SAMPLES))
     if config["strelka"]["to_use"] == True:
         wanted_input.extend(expand("results/variantCalling/strelka/{sample}/strelka_calls.vcf.gz", sample=SAMPLES))
     if config["freebayes"]["to_use"] == True:
