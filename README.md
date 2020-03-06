@@ -1,10 +1,10 @@
-# Analysis of Whole-Exome Sequencing data
+# Yet Another Pipeline for Normal/Tumor Variant Calling
 
 A Snakemake pipeline for the bioinformatics analysis of WES data with normal/tumor pair.
 
-Implement GATK4 Best Practices for SNVs + Indels detection.
+Multiple variant callers are being added :
 
-Others variant callers are being added :
+- Mutect2 (GATK4)
 
 - Strelka2
 
