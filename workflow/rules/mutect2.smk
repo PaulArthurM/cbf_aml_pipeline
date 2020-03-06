@@ -132,9 +132,10 @@ rule FilterMutectCalls:
         --contamination-table {input.contamination_table} \
         --tumor-segmentation {input.segmentation} \
         --orientation-bias-artifact-priors {input.orientation} \
+        --threshold-strategy FALSE_DISCOVERY_RATE \
         --max-events-in-region 4 \
         --min-reads-per-strand 1 \
-        --orientation-bias-fdr 0.01 \
+        --false-discovery-rate 0.01 \
         -O {output}"
 
 
