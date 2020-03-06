@@ -1,4 +1,4 @@
-# Yet Another Pipeline for Normal/Tumor Variant Calling
+# Yet Another Pipeline for Normal/Tumor Variant Calling from Whole-Exome Sequencing data
 
 A Snakemake pipeline for the bioinformatics analysis of WES data with normal/tumor pair.
 
