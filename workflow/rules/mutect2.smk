@@ -117,7 +117,7 @@ rule FilterMutectCalls:
         segmentation="results/variantCalling/mutect2/pileups/segmentation/{sample}.tumour_segmentation.tsv",
         orientation="results/variantCalling/mutect2/f1r2/{sample}_read-orientation-model.tar.gz"
     output:
-        "results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered.vcf.gz"
+        "results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered_stringencyUp.vcf.gz"
         #"results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz"
     params:
         reference=config["reference_GRCh37-lite"],
@@ -132,15 +132,18 @@ rule FilterMutectCalls:
         --contamination-table {input.contamination_table} \
         --tumor-segmentation {input.segmentation} \
         --orientation-bias-artifact-priors {input.orientation} \
+        --max-events-in-region 4 \
+        --strict-strand-bias true \
+        --orientation-bias-fdr 0.01 \
         -O {output}"
 
 
 
 rule keep_pass_variants:
     input:
-        "results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered.vcf.gz"
+        "results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered_stringencyUp.vcf.gz"
     output:
-        "results/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass.vcf"
+        "results/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass_stringencyUp.vcf"
         #"results/variantCalling/mutect2/pass/{sample}_somatic_filtered_pass.vcf"
     params:
         name="keep_pass_variants_{sample}",
