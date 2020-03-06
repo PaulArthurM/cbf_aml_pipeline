@@ -1,5 +1,13 @@
 # Analysis of Whole-Exome Sequencing data
 
-A pipeline for the bioinformatics analysis of WES data.
+A Snakemake pipeline for the bioinformatics analysis of WES data with normal/tumor pair.
 
-The objective of this pipeline is to detect SNVs, regardless of their impact on the disease.
+Implement GATK4 Best Practices for SNVs + Indels detection.
+
+Others variant callers are being added :
+
+- Strelka2
+
+- Freebayes
+
+- SomaticSniper
