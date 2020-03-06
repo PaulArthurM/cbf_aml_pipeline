@@ -193,7 +193,7 @@ rule FilterByOrientationBias:
     shell:
         "gatk FilterByOrientationBias \
             -V {input.vcf} \
-            --intervals {} \
+            --intervals {params.intervals} \
             --artifact-modes 'G/T' \
             -P {input.metrics} \
             -O {output}"
