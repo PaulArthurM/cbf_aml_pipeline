@@ -133,7 +133,7 @@ rule FilterMutectCalls:
         --tumor-segmentation {input.segmentation} \
         --orientation-bias-artifact-priors {input.orientation} \
         --max-events-in-region 4 \
-        --strict-strand-bias true \
+        --min-reads-per-strand 1 \
         --orientation-bias-fdr 0.01 \
         -O {output}"
 
