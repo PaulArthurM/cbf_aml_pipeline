@@ -23,7 +23,7 @@ rule Mutect2_tumour_only:
 
 rule GenomicsDBImport:
     input:
-        PON_VCF
+        config["PON_VCF"]
     output:
         db=directory(config["db_GDBI"]),
         test="genomicsdb.txt"
