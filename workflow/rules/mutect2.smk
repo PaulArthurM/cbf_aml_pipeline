@@ -147,7 +147,7 @@ rule keep_pass_variants:
         "../envs/samtools.yaml"
     shell:
         "bcftools view \
-        -f .,PASS \_GRCh37-lite
+        -f .,PASS \_GRCh37-lite \
         {input} > {output}"
 
 
