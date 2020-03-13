@@ -1,22 +1,3 @@
-def getBamToMergeCommand(wildcards):
-    SAMPLES = CONFIG_JSON['samples']
-    LANES = SAMPLES[wildcards.sample][wildcards.type]
-    fileToMerge = ""
-    for file in getBamToMerge(wildcards):
-        fileToMerge += " -I " + str(file)
-    return fileToMerge
-
-
-
-def getBamToMerge(wildcards):
-    SAMPLES = CONFIG_JSON['samples']
-    out = []
-    for bam in SAMPLES[wildcards.sample][wildcards.type]:
-        template = "results/preprocessing/" + wildcards.sample + "_" + wildcards.type + "." + get_lane(bam) + "_marked_duplicates_BQSR.bam"#.format(sample=wildcards.sample, type=wildcards.type)
-        out.append(template)
-    return out
-
-
 rule MergeSamFiles:
     input:
         getBamToMerge
@@ -52,55 +33,6 @@ rule samtools_index:
         "samtools index -b {input} {output}"
 
 
-rule fastqc:
-    input:
-        "results/preprocessing/{sample}_{type}.bam"
-    output:
-        "results/quality_control/{sample}_{type}_fastqc.html"
-    params:
-        name="fastq_{sample}_{type}",
-        nthread=4
-    conda:
-        "../envs/fastqc.yaml"
-    shell:
-        "fastqc {input} -t {params.nthread} -o results/quality_control/"
-
-
-
-rule multiqc:
-    input:
-        expand("results/quality_control/{sample}_{type}_fastqc.html", sample=sample_sheet['samples'], type=['D', 'G'])
-    output:
-        "results/report/multiqc_report.html"
-    params:
-        name="multiqc_report",
-        nthread=5,
-        out_dir = "results/report/",
-        input_dir = "results/quality_control/",
-        out_file = "multiqc_report.html"
-    conda:
-        "../envs/multiqc.yaml"
-    shell:
-        "multiqc \
-        --force \
-        -o {params.out_dir} \
-        -n {params.out_file} \
-        {params.input_dir}"
-
-
-#
-# rule unzip_gz:
-#     input:
-#         vcf_gz = config["PROJECT_DIR"] + "results/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf.gz"
-#     output:
-#         vcf = config["PROJECT_DIR"] + "results/vcf/{sample}_G.{lane}_marked_duplicates_BQSR_merge_for_pon.vcf"
-#     params:
-#         name="gunzip_{sample}_G.{lane}",
-#         nthread=1
-#     shell:
-#         "gunzip {input.vcf_gz}"
-#
-#
 rule IndexFeatureFile:
     input:
         "results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz"

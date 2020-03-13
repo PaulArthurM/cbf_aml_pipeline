@@ -1,9 +1,3 @@
-def extra_freebayes(wildcards):
-    configfile: "config/config.yaml"
-    extra = config['freebayes']['extra']
-    return extra
-
-
 rule freebayes:
     input:
         # you can have a list of samples here
@@ -14,7 +8,7 @@ rule freebayes:
     params:
         name="freebayes_{sample}",
         extra=extra_freebayes,         # optional parameters
-        ref=config['reference_GRCh37-lite'],
+        ref=config['reference'],
         intervals=config['bed_intervals'],
         chunksize=100000,  # reference genome chunk size for parallelization (default: 100000)
         nthread=5

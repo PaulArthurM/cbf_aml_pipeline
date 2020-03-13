@@ -1,9 +1,3 @@
-def extra_mutect2(wildcards):
-    configfile: "config/config.yaml"
-    extra = config['mutect2']['extra']
-    return extra
-
-
 rule variant_calling_Mutect2:
     input:
         normal_bam="results/preprocessing/{sample}_G.bam",
@@ -14,7 +8,7 @@ rule variant_calling_Mutect2:
         vcf_gz = "results/variantCalling/mutect2/{sample}/mutect2_calls.vcf.gz",
         f1r2_gz = "results/variantCalling/mutect2/f1r2/{sample}_f1r2.tar.gz"
     params:
-        ref=config["reference_GRCh37-lite"],
+        ref=config["reference"],
         extra=extra_mutect2,
         name="Mutect2_somatic_{sample}",
         nthread=config["mutect2"]["nthread"]
@@ -120,7 +114,7 @@ rule FilterMutectCalls:
         "results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered_stringencyUp.vcf.gz"
         #"results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz"
     params:
-        reference=config["reference_GRCh37-lite"],
+        reference=config["reference"],
         name="FilterMutectCalls_{sample}",
         nthread=config["FilterMutectCalls"]["nthread"]
     conda:
@@ -153,7 +147,7 @@ rule keep_pass_variants:
         "../envs/samtools.yaml"
     shell:
         "bcftools view \
-        -f .,PASS \
+        -f .,PASS \_GRCh37-lite
         {input} > {output}"
 
 
@@ -163,7 +157,7 @@ rule CollectSequencingArtifactMetrics:
     output:
         "results/artifacts/{sample}/tumor_artifact.pre_adapter_detail_metrics.txt"
     params:
-        reference=config["reference_GRCh37-lite"],
+        reference=config["reference"],
         path_out="results/artifacts/{sample}/tumor_artifact",
         name="CollectSequencingArtifactMetrics_{sample}",
         nthread=5
@@ -184,7 +178,7 @@ rule FilterByOrientationBias:
     output:
         "results/variantCalling/vcf/mutect2/oxog_filtered/{sample}_oxog_filtered.vcf.gz"
     params:
-        reference=config["reference_GRCh37-lite"],
+        reference=config["reference"],
         name="FilterByOrientationBias_{sample}",
         intervals=config["intervals_list"],
         nthread=5

@@ -1,9 +1,3 @@
-def extra_strelka(wildcards):
-    configfile: "config/config.yaml"
-    extra = config['strelka']['extra']
-    return extra
-
-
 rule strelka:
     input:
         # The normal bam and its index
@@ -19,7 +13,7 @@ rule strelka:
     params:
         name="strelka_{sample}",
         nthread=8,
-        ref = config["reference_GRCh37-lite"],
+        ref = config["reference"],
         callRegions=config['bed_intervals'],
         extra=extra_strelka
     conda:
@@ -65,7 +59,7 @@ rule mantaCandidateSmallsIndels:
     params:
         name="Manta_{sample}",
         nthread=8,
-        ref = config["reference_GRCh37-lite"],
+        ref = config["reference"],
         callRegions = config["bed_intervals"]
     conda:
         "../envs/strelka.yaml"

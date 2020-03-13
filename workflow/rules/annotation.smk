@@ -4,7 +4,7 @@ rule Funcotator:
     output:
         "results/vcf/annotated/{sample}_variants.funcotated.vcf"
     params:
-        reference=config["reference_GRCh37-lite"],
+        reference=config["reference"],
         data_sources=config["funcotator"]["directory"],
         name="Funcotator_annotate_{sample}",
         nthread=4
@@ -27,7 +27,7 @@ rule table_annovar:
     output:
         "results/variantCalling/annovar/{sample}.hg19_multianno.vcf"
     params:
-        path=config["PROJECT_DIR"] + "results",
+        path=config["project_dir"] + "results",
         name="Annovar_annotate_{sample}",
         nthread=4
     shell:

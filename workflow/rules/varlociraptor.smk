@@ -7,7 +7,7 @@ rule varlociraptor_preprocessing:
     params:
         name="varlociraptor_preprocessing_{sample}_{tool}",
         nthread=5,
-        ref=config["reference_GRCh37-lite"]
+        ref=config["reference"]
     conda:
         "../envs/varlociraptor.yaml"
     shell:

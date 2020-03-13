@@ -5,7 +5,7 @@ rule Mutect2_tumour_only:
     output:
         temp("results/vcf/{sample}_pon.vcf.gz")
     params:
-        ref=config["reference_GRCh37-lite"],
+        ref=config["reference"],
         gnomad=config["mutect2"]["gnomad"]["files"]["raw"],
         intervals=config["intervals_list"],
         name="Mutect2_tumour_only_{sample}",
@@ -28,7 +28,7 @@ rule GenomicsDBImport:
         db=directory(config["db_GDBI"]),
         test="genomicsdb.txt"
     params:
-        ref=config["reference_GRCh37-lite"],
+        ref=config["reference"],
         inputString = lambda wildcards, input: " -V ".join(input),
         intervals=config["intervals_list"],
         name="GenomicsDB",
@@ -50,7 +50,7 @@ rule CreateSomaticPanelOfNormals:
     output:
         config["PON_VCF"]
     params:
-        ref=config["reference_GRCh37-lite"],
+        ref=config["reference"],
         db=config["db_GDBI"],
         name="create_PON",
         nthread=20

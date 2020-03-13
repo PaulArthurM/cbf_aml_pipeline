@@ -2,6 +2,60 @@ import re
 import argparse
 
 
+class Filter():
+    all_chrom = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "X", "Y"]
+    def __init__(self, samples=[], chrom=all_chrom, germAF = 0, diagAF = 0.05, tlod = 8, roq = 0, f1r2 = 3, f2r1 = 3, mbq = 20, mmq = 20):
+        self.samples = samples
+        self.chrom = chrom
+        self.germAF = germAF
+        self.diagAF = diagAF
+        self.tlod  = tlod
+        self.roq = roq
+        self.f1r2 = f1r2
+        self.f2r1 = f2r1
+        self.mbq = mbq
+        self.mmq = mmq
+
+
+    def applyFilter(self, samples):
+        print('#SAMPLE\tCHROM\tPOS\tREF\tALT\tGENE_NAME\tFUNC\tGERM_AF\tDIAG_AF\tTLOD\tNLOD\tAD_GERM\tROQ\tF1R2\tF2R1\tMBQ\tMMQ')
+        for sample in samples:
+            if sample in self.samples:
+                continue
+            else:
+                for variant in samples[sample]:
+                    variant_pass = True
+                    if not variant.chr in self.chrom:
+                        variant_pass = False
+                    if float(variant.somaticAF) < float(self.diagAF):
+                        variant_pass = False
+                        #print("Somatic VAF")
+                    if float(variant.germlineAF) < float(self.germAF):
+                        variant_pass = False
+                        #print("Germline VAF")
+                    if float(variant.TLOD) < float(self.tlod):
+                        variant_pass = False
+                        #print("TLOD")
+                    if float(variant.ROQ) < float(self.roq):
+                        variant_pass = False
+                        #print("ROQ")
+                    if int(variant.F1R2) < int(self.f1r2):
+                        variant_pass = False
+                        #print("F1R2")
+                    if int(variant.F2R1) < int(self.f2r1):
+                        variant_pass = False
+                        #print("F2R1")
+                    if int(variant.MMQ) < int(self.mmq):
+                        variant_pass = False
+                        #print("MMQ")
+                    if int(variant.MBQ) < int(self.mbq):
+                        variant_pass = False
+                        #print("MBQ")
+                    if variant_pass == True:
+                        txt = "{sample_name}\t{chr}\t{pos}\t{ref}\t{alt}\t{geneName}\t{exonicFunc}\t{germAF}\t{diagAF}\t{tLOD}\t{nLOD}\t{ad}\t{roq}\t{f1r2}\t{f2r1}\t{mbq}\t{mmq}".format(mmq=variant.MMQ, mbq=variant.MBQ, f2r1=variant.F2R1, f1r2=variant.F1R2, roq=variant.ROQ, ad=variant.AD, nLOD=variant.NLOD, tLOD=variant.TLOD, germAF=variant.germlineAF, diagAF=variant.somaticAF, sample_name=sample, geneName=variant.geneName, exonicFunc=variant.exonicFunc, chr=variant.chr, pos=variant.pos, ref=variant.ref, alt=variant.alt)
+                        print(txt)
+
+
 class Sample():
     def __init__(self, sample_name, variants):
 
@@ -96,7 +150,7 @@ class Variant():
 
 
         def getTLOD(line):
-            m = re.search("TLOD=([0-9]+(\.[0-9][0-9]?)?);", line)
+            m = re.search("TLOD=([0-9]+(\.[0-9][0-9]?)?)", line)
             if m:
                 return m.group(1)
 
@@ -112,6 +166,29 @@ class Variant():
                 return m.group(1)
 
 
+        def getF1R2(line):
+            d = line.split("\t")[9]
+            return d.split(":")[4].split(",")[1]
+
+
+        def getF2R1(line):
+            d = line.split("\t")[9]
+            return d.split(":")[5].split(",")[1]
+
+
+        def getMBQ(line):
+            m = re.search("MBQ=([0-9]+(\.[0-9][0-9]?)?),([0-9]+(\.[0-9][0-9]?)?);", line)
+            if m:
+                return m.group(3)
+
+
+        def getMMQ(line):
+            m = re.search("MMQ=([0-9]+(\.[0-9][0-9]?)?),([0-9]+(\.[0-9][0-9]?)?);", line)
+            if m:
+                return m.group(3)
+
+
+
         self.sample = get_sample(vcf_file)
         self.chr = get_chr(line)
         self.pos = get_pos(line)
@@ -119,11 +196,15 @@ class Variant():
         self.alt = get_alt(line)
         self.geneName = get_geneName(line)
         self.exonicFunc = get_exonicFunc(line)
-        self.diagnosisAF, self.germlineAF = getAlleleFrenquencies(line)
+        self.somaticAF, self.germlineAF = getAlleleFrenquencies(line)
         self.TLOD = getTLOD(line)
         self.NLOD = getNLOD(line)
         self.AD = getAD(line)
         self.ROQ = getROQ(line)
+        self.F1R2 = getF1R2(line)
+        self.F2R1 = getF2R1(line)
+        self.MBQ = getMBQ(line)
+        self.MMQ = getMMQ(line)
 
 
 def get_sample(vcf_file):
@@ -145,10 +226,10 @@ def readVCF(vcf_file):
 
 
 def showAllSamplesInfo(samples):
-    print('#SAMPLE\tCHROM\tPOS\tREF\tALT\tGENE_NAME\tFUNC\tGERM_AF\tDIAG_AF\tTLOD\tNLOD\tAD_GERM\tROQ\n')
+    print('#SAMPLE\tCHROM\tPOS\tREF\tALT\tGENE_NAME\tFUNC\tGERM_AF\tDIAG_AF\tTLOD\tNLOD\tAD_GERM\tROQ\tF1R2\tF2R1\tMBQ\tMMQ\n')
     for sample in samples:
         for variant in samples[sample]:
-            txt = "{sample_name}\t{chr}\t{pos}\t{ref}\t{alt}\t{geneName}\t{exonicFunc}\t{germAF}\t{diagAF}\t{tLOD}\t{nLOD}\t{ad}\t{roq}\n".format(roq=variant.ROQ, ad=variant.AD, nLOD=variant.NLOD, tLOD=variant.TLOD, germAF=variant.germlineAF, diagAF=variant.diagnosisAF, sample_name=sample, geneName=variant.geneName, exonicFunc=variant.exonicFunc, chr=variant.chr, pos=variant.pos, ref=variant.ref, alt=variant.alt)
+            txt = "{sample_name}\t{chr}\t{pos}\t{ref}\t{alt}\t{geneName}\t{exonicFunc}\t{germAF}\t{diagAF}\t{tLOD}\t{nLOD}\t{ad}\t{roq}\t{f1r2}\t{f2r1}\t{mbq}\t{mmq}\n".format(mmq=variant.MMQ, mbq=variant.MBQ, f2r1=variant.F2R1, f1r2=variant.F1R2, roq=variant.ROQ, ad=variant.AD, nLOD=variant.NLOD, tLOD=variant.TLOD, germAF=variant.germlineAF, diagAF=variant.somaticAF, sample_name=sample, geneName=variant.geneName, exonicFunc=variant.exonicFunc, chr=variant.chr, pos=variant.pos, ref=variant.ref, alt=variant.alt)
             print(txt)
 
 
@@ -178,6 +259,9 @@ def main(args):
     if args.g:
         grouped_samples = assignCategorie(samples)
         showGroupedSamples(grouped_samples)
+    if args.f:
+        filter = Filter()
+        filter.applyFilter(samples)
     else:
         showAllSamplesInfo(samples)
 
@@ -191,6 +275,7 @@ if __name__== '__main__':
     # parser.add_argument('-p', default='/data1/scratch/pamesl/projet_cbf/data/bam/', type=str, help="Path to bam files repository.")
     # parser.add_argument('-l', default=1, type=int, help="Number of files to download. Default: 1.")
     # parser.add_argument('-t', default=None, type=str, help="Type of files to download. For exemple: 'D' or 'G'.", required=True)
+    parser.add_argument('-f', default=False, type=bool, help="Filter vcf.", required=False)
 
     args = parser.parse_args()
 

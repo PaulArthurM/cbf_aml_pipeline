@@ -17,31 +17,6 @@ rule MarkDuplicates:
             -M {output.metrics_txt}"
 
 
-# rule BQSRPipelineSpark:
-#     input:
-#         config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates.bam"
-#     output:
-#         temp(config["PROJECT_DIR"] + "data/bam/{sample}_marked_duplicates_BQSR.bam")
-#     params:
-#         reference=config["reference_GRCh37-lite"],
-#         intervals_list=config["intervals_list"],
-#         dbsnp_138=config["known-sites"]["dbsnp_138"],
-#         mills_1000G=config["known-sites"]["mills_1000G"],
-#         name="BQSRPipelineSpark_{sample}",
-#         nthread=config["BQSRPipelineSpark"]["nthread"]
-#     conda:
-#         "../envs/gatk4.yaml"
-#     shell:
-#         "gatk BQSRPipelineSpark \
-#         -R {params.reference} \
-#         -I {input} \
-#         --known-sites {params.dbsnp_138} \
-#         --known-sites {params.mills_1000G} \
-#         -L {params.intervals_list} \
-#         -O {output} \
-#         --conf 'spark.executor.cores={params.nthread}'"
-
-
 #Generates recalibration table for Base Quality Score Recalibration (BQSR)
 rule BaseRecalibrator:
     input:
@@ -49,7 +24,7 @@ rule BaseRecalibrator:
     output:
         temp("results/preprocessing/recal_data_{sample}.table")
     params:
-        reference=config["reference_GRCh37-lite"],
+        reference=config["reference"],
         intervals_list=config["intervals_list"],
         name="base_recalibrator_{sample}",
         nthread=5
@@ -70,7 +45,7 @@ rule ApplyBQSR:
         table = "results/preprocessing/recal_data_{sample}.table",
         bam = "results/preprocessing/{sample}_marked_duplicates.bam"
     params:
-        reference=config["reference_GRCh37-lite"],
+        reference=config["reference"],
         name="apply_BQSR_{sample}",
         nthread=5
     output:
@@ -83,23 +58,3 @@ rule ApplyBQSR:
             -I {input.bam} \
             --bqsr-recal-file {input.table} \
             -O {output}"
-
-
-# # Rule for mark duplicates reads in BAM file using MarkDuplicates from GATK4
-# rule mark_duplicates_spark:
-#     input:
-#         config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lane}.bam"
-#     output:
-#         marked_bam = temp(config["PROJECT_DIR"] + "data/bam/{sample}_{type}.{lane}_marked_duplicates.bam"),
-#         metrics_txt = config["PROJECT_DIR"] + "data/metrics/{sample}_{type}.{lane}_marked_dup_metrics.txt"
-#     conda:
-#         "../envs/gatk4.yaml"
-#     params:
-#         name="mark_duplicates_spark_{sample}_{type}.{lane}",
-#         nthread=config["mark_duplicates"]["spark"]["nthread"]
-#     shell:
-#         "gatk MarkDuplicatesSpark \
-#             -I {input} \
-#             -O {output.marked_bam} \
-#             -M {output.metrics_txt} \
-#             --conf 'spark.executor.cores={params.nthread}'"
