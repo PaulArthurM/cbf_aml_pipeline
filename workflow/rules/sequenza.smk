@@ -1,5 +1,6 @@
 
 
+
 rule sequenza:
     input:
         normal = "results/preprocessing/{sample}_G.bam",
@@ -13,11 +14,7 @@ rule sequenza:
         name = "Sequenza_{sample}",
         nthread = 5
     conda:
-<<<<<<< HEAD
         "../envs/sequenza.yaml"
-=======
-        "workflow/envs/sequenza.yaml"
->>>>>>> 96699d48d257bc61c1dde95fb9ddb4562f157f44
     shell:
         "sequenza-utils.py bam2seqz \
             --fasta {params.reference} \
@@ -27,23 +24,19 @@ rule sequenza:
             --chromosome {params.chrom} | gzip > {output}"
 
 
-rule cg_wiggle:
-    input:
-        config['reference']
-    output:
-        "/results/sequenza/genome_gc.wig.gz"
-    params:
-        name = "GC_Wiggle",
-        nthread = 5,
-        window = 50
-    conda:
-<<<<<<< HEAD
-        "../envs/sequenza.yaml"
-=======
-        "workflow/envs/sequenza.yaml"
->>>>>>> 96699d48d257bc61c1dde95fb9ddb4562f157f44
-    shell:
-        "sequenza-utils gc_wiggle \
-            -f {input} \
-            -O {output} \
-            -w {params.window}"
+# rule cg_wiggle:
+#     input:
+#         config['reference']
+#     output:
+#         "/results/sequenza/genome_gc.wig.gz"
+#     params:
+#         name = "GC_Wiggle",
+#         nthread = 5,
+#         window = 50
+#     conda:
+#         "../envs/sequenza.yaml"
+#     shell:
+#         "sequenza-utils gc_wiggle \
+#             -f {input} \
+#             -O {output} \
+#             -w {params.window}"
