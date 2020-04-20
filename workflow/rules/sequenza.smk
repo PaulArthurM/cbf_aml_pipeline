@@ -9,7 +9,7 @@ rule sequenza:
         'results/sequenza/seqzfile.{sample}.vcf'
     params:
         reference = config['reference'],
-        chrom = config['sequenza']['chrom']
+        chrom = config['sequenza']['chrom'],
         name = "Sequenza_{sample}",
         nthread = 5
     conda:
