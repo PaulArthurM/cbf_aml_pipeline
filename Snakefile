@@ -19,7 +19,7 @@ sample_sheet = pd.read_csv(config['sample_sheet'])
 
 include: "workflow/rules/commons.smk"
 include: "workflow/rules/qc.smk"
-include: "workflow/rules/utils.smk"
+#include: "workflow/rules/utils.smk"
 include: "workflow/rules/preprocessing.smk"
 include: "workflow/rules/mutect2.smk"
 include: "workflow/rules/panelsOfNormals.smk"
