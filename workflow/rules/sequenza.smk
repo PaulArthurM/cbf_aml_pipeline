@@ -13,7 +13,11 @@ rule sequenza:
         name = "Sequenza_{sample}",
         nthread = 5
     conda:
+<<<<<<< HEAD
         "../envs/sequenza.yaml"
+=======
+        "workflow/envs/sequenza.yaml"
+>>>>>>> 96699d48d257bc61c1dde95fb9ddb4562f157f44
     shell:
         "sequenza-utils.py bam2seqz \
             --fasta {params.reference} \
@@ -33,7 +37,11 @@ rule cg_wiggle:
         nthread = 5,
         window = 50
     conda:
+<<<<<<< HEAD
         "../envs/sequenza.yaml"
+=======
+        "workflow/envs/sequenza.yaml"
+>>>>>>> 96699d48d257bc61c1dde95fb9ddb4562f157f44
     shell:
         "sequenza-utils gc_wiggle \
             -f {input} \
