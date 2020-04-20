@@ -5,3 +5,7 @@ data/trash
 CREDENTIALS_FILE
 .snakemake/*
 *.pdf
+results/preprocessing/*
+results/variantCalling/*
+results/varlociraptor/*
+vcf_files.txt
