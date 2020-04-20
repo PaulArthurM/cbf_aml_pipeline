@@ -30,6 +30,7 @@ include: "workflow/rules/somaticSniper.smk"
 include: "workflow/rules/filteringVCF.smk"
 include: "workflow/rules/varlociraptor.smk"
 include: "workflow/rules/varscan.smk"
+include: "workflow/rules/sequenza.smk"
 
 
 rule all:

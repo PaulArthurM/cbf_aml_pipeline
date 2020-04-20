@@ -1,0 +1,5 @@
+name: sequenza
+channels:
+  - bioconda
+dependencies:
+  - sequenza-utils=3.0.0

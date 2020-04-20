@@ -94,6 +94,14 @@ FASTQC:
   activate: False
 
 
+# Sequenza
+sequenza:
+  activate: True
+  gcfile: "config/sequenza/gc.file"
+  chrom: "config/sequenza/chrom.txt"
+
+
+
 #  Panel of Normales parameters:
 panelsOfNormals:
   activate: False

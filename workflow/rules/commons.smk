@@ -90,4 +90,6 @@ def get_input(wildcards):
     if config["FASTQC"]["activate"] == True:
         wanted_input.extend(expand("results/quality_control/{sample}_{type}_fastqc.html", sample=SAMPLES, type=['G', 'D']))
         wanted_input.append("results/report/multiqc_report.html")
+    if config['sequenza']['activate'] == True:
+        wanted_input.extend(expand('results/sequenza/seqzfile.{sample}.vcf', sample=SAMPLES))
     return wanted_input
