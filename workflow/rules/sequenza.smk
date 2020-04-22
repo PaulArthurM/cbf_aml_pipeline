@@ -1,29 +1,3 @@
-
-
-
-rule sequenza:
-    input:
-        normal = "results/preprocessing/{sample}_G.bam",
-        tumor = "results/preprocessing/{sample}_D.bam",
-        gcfile = "results/sequenza/genome_gc.wig.gz"
-    output:
-        'results/sequenza/seqzfile.{sample}.vcf'
-    params:
-        reference = config['reference'],
-        chrom = config['sequenza']['chrom'],
-        name = "Sequenza_{sample}",
-        nthread = 5
-    conda:
-        "../envs/sequenza.yaml"
-    shell:
-        "sequenza-utils bam2seqz \
-            --fasta {params.reference} \
-            -n {input.normal} \
-            -t {input.tumor} \
-            -gc {input.gcfile} \
-            --chromosome {params.chrom} | gzip > {output}"
-
-
 rule cg_wiggle:
     input:
         ref=config['reference']
@@ -42,9 +16,35 @@ rule cg_wiggle:
              -w {params.window}"
 
 
+rule sequenza:
+    input:
+        normal = "results/preprocessing/{sample}_G.bam",
+        tumor = "results/preprocessing/{sample}_D.bam",
+        gcfile = "results/sequenza/genome_gc.wig.gz"
+    output:
+        'results/sequenza/seqzfile.{sample}.seqz.gz'
+    params:
+        reference = config['reference'],
+        chrom = config['sequenza']['chrom'],
+        name = "Sequenza_{sample}",
+        nthread = 5
+    conda:
+        "../envs/sequenza.yaml"
+    shell:
+        "sequenza-utils bam2seqz \
+            --fasta {params.reference} \
+            -n {input.normal} \
+            -t {input.tumor} \
+            -gc {input.gcfile} \
+            --chromosome {params.chrom} \
+            -o {output}"
+
+
+
+
 rule seqz_binning:
     input:
-        'results/sequenza/seqzfile.{sample}.vcf'
+        'results/sequenza/{sample}.seqz.gz'
     output:
         'results/sequenza/small.{sample}.seqz.gz'
     params:
