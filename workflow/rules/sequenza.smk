@@ -20,7 +20,7 @@ rule sequenza:
             --fasta {params.reference} \
             -n {input.normal} \
             -t {input.tumor} \
-            -gc {params.gcfile} \
+            -gc {input.gcfile} \
             --chromosome {params.chrom} | gzip > {output}"
 
 
