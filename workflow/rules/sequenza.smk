@@ -5,7 +5,7 @@ rule sequenza:
     input:
         normal = "results/preprocessing/{sample}_G.bam",
         tumor = "results/preprocessing/{sample}_D.bam",
-        gcfile = "/results/sequenza/genome_gc.wig.gz"
+        gcfile = "results/sequenza/genome_gc.wig.gz"
     output:
         'results/sequenza/seqzfile.{sample}.vcf'
     params:
@@ -28,7 +28,7 @@ rule cg_wiggle:
     input:
         ref=config['reference']
     output:
-        "/results/sequenza/genome_gc.wig.gz"
+        "results/sequenza/genome_gc.wig.gz"
     params:
         name = "GC_Wiggle",
         nthread = 5,
