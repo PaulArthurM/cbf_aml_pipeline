@@ -56,4 +56,4 @@ rule seqz_binning:
         "sequenza-utils seqz_binning \
         --seqz {input} \
         -w 50 \
-        -o out {output}"
+        -o {output}"
