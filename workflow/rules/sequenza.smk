@@ -38,5 +38,5 @@ rule cg_wiggle:
     shell:
         "sequenza-utils gc_wiggle \
              -f {input} \
-             -O {output} \
+             -o {output} \
              -w {params.window}"
