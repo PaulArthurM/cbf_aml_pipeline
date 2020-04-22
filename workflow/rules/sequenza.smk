@@ -16,7 +16,7 @@ rule sequenza:
     conda:
         "../envs/sequenza.yaml"
     shell:
-        "sequenza-utils.py bam2seqz \
+        "sequenza-utils bam2seqz \
             --fasta {params.reference} \
             -n {input.normal} \
             -t {input.tumor} \
