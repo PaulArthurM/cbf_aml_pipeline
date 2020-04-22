@@ -40,3 +40,20 @@ rule cg_wiggle:
              -f {input} \
              -o {output} \
              -w {params.window}"
+
+
+rule seqz_binning:
+    input:
+        'results/sequenza/seqzfile.{sample}.vcf'
+    output:
+        'small.{sample}.seqz.gz'
+    params:
+        name=,
+        nthread=
+    conda:
+        "../envs/sequenza.yaml"
+    shell:
+        "sequenza−utils seqz_binning \
+        --seqz {input} \
+        -w 50 \
+        -o out {output}"
