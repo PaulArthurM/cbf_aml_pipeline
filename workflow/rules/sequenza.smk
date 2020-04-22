@@ -28,7 +28,7 @@ rule cg_wiggle:
     input:
         ref=config['reference']
     output:
-        "/results/sequenza/genome_gc.wig.gz"
+        "results/sequenza/genome_gc.wig.gz"
     params:
         name = "GC_Wiggle",
         nthread = 5,
