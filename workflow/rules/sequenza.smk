@@ -24,19 +24,19 @@ rule sequenza:
             --chromosome {params.chrom} | gzip > {output}"
 
 
-# rule cg_wiggle:
-#     input:
-#         config['reference']
-#     output:
-#         "/results/sequenza/genome_gc.wig.gz"
-#     params:
-#         name = "GC_Wiggle",
-#         nthread = 5,
-#         window = 50
-#     conda:
-#         "../envs/sequenza.yaml"
-#     shell:
-#         "sequenza-utils gc_wiggle \
-#             -f {input} \
-#             -O {output} \
-#             -w {params.window}"
+rule cg_wiggle:
+    input:
+        ref=config['reference']
+    output:
+        "/results/sequenza/genome_gc.wig.gz"
+    params:
+        name = "GC_Wiggle",
+        nthread = 5,
+        window = 50
+    conda:
+        "../envs/sequenza.yaml"
+    shell:
+        "sequenza-utils gc_wiggle \
+             -f {input} \
+             -O {output} \
+             -w {params.window}"
