@@ -36,7 +36,6 @@ rule sequenza:
             -n {input.normal} \
             -t {input.tumor} \
             -gc {input.gcfile} \
-            --chromosome {params.chrom} \
             -o {output}"
 
 
