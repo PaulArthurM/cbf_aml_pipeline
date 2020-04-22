@@ -53,7 +53,7 @@ rule seqz_binning:
     conda:
         "../envs/sequenza.yaml"
     shell:
-        "sequenza−utils seqz_binning \
+        "sequenza-utils seqz_binning \
         --seqz {input} \
         -w 50 \
         -o out {output}"
