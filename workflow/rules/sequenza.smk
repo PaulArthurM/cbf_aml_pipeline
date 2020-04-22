@@ -46,7 +46,7 @@ rule seqz_binning:
     input:
         'results/sequenza/seqzfile.{sample}.vcf'
     output:
-        'small.{sample}.seqz.gz'
+        'results/sequenza/small.{sample}.seqz.gz'
     params:
         name="seqz_binning_{sample}",
         nthread=5
