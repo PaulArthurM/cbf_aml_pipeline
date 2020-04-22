@@ -22,7 +22,7 @@ rule sequenza:
         tumor = "results/preprocessing/{sample}_D.bam",
         gcfile = "results/sequenza/genome_gc.wig.gz"
     output:
-        'results/sequenza/seqzfile.{sample}.seqz.gz'
+        'results/sequenza/{sample}.seqz.gz'
     params:
         reference = config['reference'],
         chrom = config['sequenza']['chrom'],
