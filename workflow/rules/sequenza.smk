@@ -24,7 +24,6 @@ rule sequenza:
             --chromosome {params.chrom} | gzip > {output}"
 
 
-<<<<<<< HEAD
 rule cg_wiggle:
     input:
         ref=config['reference']
@@ -38,21 +37,6 @@ rule cg_wiggle:
         "../envs/sequenza.yaml"
     shell:
         "sequenza-utils gc_wiggle \
-=======
- rule cg_wiggle:
-     input:
-         ref=config['reference']
-     output:
-         "/results/sequenza/genome_gc.wig.gz"
-     params:
-         name = "GC_Wiggle",
-         nthread = 5,
-         window = 50
-     conda:
-         "../envs/sequenza.yaml"
-     shell:
-         "sequenza-utils gc_wiggle \
->>>>>>> 11c3a94f58ee67c658e3f58403917439dff017d3
              -f {input} \
              -O {output} \
              -w {params.window}"
