@@ -48,8 +48,8 @@ rule seqz_binning:
     output:
         'small.{sample}.seqz.gz'
     params:
-        name=,
-        nthread=
+        name="seqz_binning_{sample}",
+        nthread=5
     conda:
         "../envs/sequenza.yaml"
     shell:
