@@ -77,7 +77,7 @@ def get_input(wildcards):
     if config["panelsOfNormals"]["activate"] == True:
         wanted_input.extend(expand("results/pon/{sample}_{type}_marked_duplicates_BQSR_merge_for_pon.vcf.gz", sample=SAMPLES, type=['G', 'D']))
     if config["mutect2"]["activate"] == True:
-        wanted_input.extend(expand("results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered_pass_fdr05.vcf", sample=SAMPLES))
+        wanted_input.extend(expand("results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered_pass_fdr05.vcf.gz", sample=SAMPLES))
         wanted_input.extend(expand("results/variantCalling/vcf/mutect2/oxog_filtered/{sample}_oxog_filtered.vcf.gz", sample=SAMPLES))
     if config["strelka"]["activate"] == True:
         wanted_input.extend(expand("results/variantCalling/strelka/{sample}/strelka_calls.vcf.gz", sample=SAMPLES))
