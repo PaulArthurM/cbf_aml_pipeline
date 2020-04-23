@@ -111,7 +111,7 @@ rule FilterMutectCalls:
         segmentation="results/variantCalling/mutect2/pileups/segmentation/{sample}.tumour_segmentation.tsv",
         orientation="results/variantCalling/mutect2/f1r2/{sample}_read-orientation-model.tar.gz"
     output:
-        "results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered_stringencyUp.vcf.gz"
+        "results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered_fdr05.vcf.gz"
         #"results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz"
     params:
         reference=config["reference"],
@@ -129,7 +129,7 @@ rule FilterMutectCalls:
         --threshold-strategy FALSE_DISCOVERY_RATE \
         --max-events-in-region 4 \
         --min-reads-per-strand 1 \
-        --false-discovery-rate 0.01 \
+        --false-discovery-rate 0.05 \
         -O {output}"
 
 
