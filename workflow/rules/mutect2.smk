@@ -136,9 +136,9 @@ rule FilterMutectCalls:
 
 rule keep_pass_variants:
     input:
-        "results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered_stringencyUp.vcf.gz"
+        "results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered_fdr05.vcf.gz"
     output:
-        "results/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass_stringencyUp.vcf"
+        "results/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass_fdr05.vcf"
         #"results/variantCalling/mutect2/pass/{sample}_somatic_filtered_pass.vcf"
     params:
         name="keep_pass_variants_{sample}",
