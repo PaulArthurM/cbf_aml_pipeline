@@ -16,7 +16,7 @@ rule cg_wiggle:
              -w {params.window}"
 
 
-rule sequenza:
+rule sequenza_bam2seqz:
     input:
         normal = "results/preprocessing/{sample}_G.bam",
         tumor = "results/preprocessing/{sample}_D.bam",
@@ -39,8 +39,6 @@ rule sequenza:
             -o {output}"
 
 
-
-
 rule seqz_binning:
     input:
         'results/sequenza/{sample}.seqz.gz'
@@ -56,3 +54,17 @@ rule seqz_binning:
         --seqz {input} \
         -w 50 \
         -o {output}"
+
+
+rule sequenza_R:
+    input:
+        'results/sequenza/small.{sample}.seqz.gz'
+    output:
+        directory('results/sequenza/{sample}_seqz')
+    params:
+        name="Sequenza_r_{sample}",
+        nthread=5
+    conda:
+        "../envs/sequenza.yaml"
+    script:
+        "scripts/sequenza_run.R"
