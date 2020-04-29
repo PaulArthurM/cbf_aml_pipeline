@@ -8,5 +8,5 @@ CP <- sequenza.fit(test)
 
 
 sequenza.results(sequenza.extract = test,
-    cp.table = CP, sample.id = snakemake@wildcards[[0]],
+    cp.table = CP, sample.id = snakemake@wildcards[[1]],
     out.dir=snakemake@output[[1]])

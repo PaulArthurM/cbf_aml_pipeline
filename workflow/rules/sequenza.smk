@@ -60,7 +60,7 @@ rule sequenza_R:
     input:
         'results/sequenza/small.{sample}.seqz.gz'
     output:
-        directory('results/sequenza/{sample}_seqz')
+        'results/sequenza/{sample}_seqz/Test_segments.txt'
     params:
         name="Sequenza_r_{sample}",
         nthread=5
@@ -68,3 +68,16 @@ rule sequenza_R:
         "../envs/sequenza.yaml"
     script:
         "scripts/sequenza_run.R"
+
+
+
+rule segments_bed:
+    input:
+        'results/sequenza/{sample}_seqz/Test_segments.txt'
+    output:
+        'results/sequenza/{sample}_seqz/Test_segments.bed'
+    params:
+        name = "Segments_bed_{sample}",
+        nthread = 5
+    shell:
+        "./workflow/scripts/segments_bed.sh {input} {output}"
