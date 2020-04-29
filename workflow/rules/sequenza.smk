@@ -67,7 +67,7 @@ rule sequenza_R:
     conda:
         "../envs/sequenza.yaml"
     script:
-        "scripts/sequenza_run.R"
+        "../scripts/sequenza_run.R"
 
 
 
@@ -80,4 +80,4 @@ rule segments_bed:
         name = "Segments_bed_{sample}",
         nthread = 5
     shell:
-        "./workflow/scripts/segments_bed.sh {input} {output}"
+        "../scripts/segments_bed.sh {input} {output}"
