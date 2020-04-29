@@ -22,7 +22,8 @@ rule sequenza_bam2seqz:
         tumor = "results/preprocessing/{sample}_D.bam",
         gcfile = "results/sequenza/genome_gc.wig.gz"
     output:
-        temp('results/sequenza/{sample}.seqz.gz')
+        gz = temp('results/sequenza/{sample}.seqz.gz'),
+        tbi = temp('results/sequenza/{sample}.seqz.gz.tbi')
     params:
         reference = config['reference'],
         chrom = config['sequenza']['chrom'],
@@ -36,7 +37,7 @@ rule sequenza_bam2seqz:
             -n {input.normal} \
             -t {input.tumor} \
             -gc {input.gcfile} \
-            -o {output}"
+            -o {output.gz}"
 
 
 rule seqz_binning:
@@ -60,6 +61,7 @@ rule sequenza_R:
     input:
         input = 'results/sequenza/small.{sample}.seqz.gz'
     output:
+        dir = directory('results/sequenza/{sample}_seqz/')
         output = 'results/sequenza/{sample}_seqz/Test_segments.txt'
     params:
         name="Sequenza_r_{sample}",
@@ -80,4 +82,4 @@ rule segments_bed:
         name = "Segments_bed_{sample}",
         nthread = 5
     shell:
-        "../scripts/segments_bed.sh {input} {output}"
+        "workflow/scripts/segments_bed.sh {input} {output}"

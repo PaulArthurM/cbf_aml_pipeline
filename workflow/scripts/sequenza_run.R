@@ -9,4 +9,4 @@ CP <- sequenza.fit(test)
 
 sequenza.results(sequenza.extract = test,
     cp.table = CP, sample.id = snakemake@wildcards[["sample"]],
-    out.dir=snakemake@output[["output"]])
+    out.dir=snakemake@output[["dir"]])
