@@ -61,7 +61,7 @@ rule sequenza_R:
     input:
         input = 'results/sequenza/small.{sample}.seqz.gz'
     output:
-        output = 'results/sequenza/{sample}_seqz/Test_segments.txt'
+        output = 'results/sequenza/{sample}_seqz/{sample}_segments.txt'
     params:
         name="Sequenza_r_{sample}",
         nthread=5,
@@ -75,9 +75,9 @@ rule sequenza_R:
 
 rule segments_bed:
     input:
-        'results/sequenza/{sample}_seqz/Test_segments.txt'
+        'results/sequenza/{sample}_seqz/{sample}_segments.txt'
     output:
-        'results/sequenza/{sample}_seqz/Test_segments.bed'
+        'results/sequenza/{sample}_seqz/{sample}_segments.txt'
     params:
         name = "Segments_bed_{sample}",
         nthread = 5
