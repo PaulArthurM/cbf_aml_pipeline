@@ -3,3 +3,4 @@ channels:
   - bioconda
 dependencies:
   - sequenza-utils=3.0.0
+  - r-base=4.0.0
