@@ -58,9 +58,9 @@ rule seqz_binning:
 
 rule sequenza_R:
     input:
-        'results/sequenza/small.{sample}.seqz.gz'
+        input = 'results/sequenza/small.{sample}.seqz.gz'
     output:
-        'results/sequenza/{sample}_seqz/Test_segments.txt'
+        output = 'results/sequenza/{sample}_seqz/Test_segments.txt'
     params:
         name="Sequenza_r_{sample}",
         nthread=5

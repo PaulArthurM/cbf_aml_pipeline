@@ -1,12 +1,12 @@
 library(sequenza)
 
 
-test <- sequenza.extract(snakemake@input[[1]], verbose = FALSE)
+test <- sequenza.extract(snakemake@input[["input"]], verbose = FALSE)
 
 
 CP <- sequenza.fit(test)
 
 
 sequenza.results(sequenza.extract = test,
-    cp.table = CP, sample.id = snakemake@wildcards[[1]],
-    out.dir=snakemake@output[[1]])
+    cp.table = CP, sample.id = snakemake@wildcards[["sample"]],
+    out.dir=snakemake@output[["output"]])
