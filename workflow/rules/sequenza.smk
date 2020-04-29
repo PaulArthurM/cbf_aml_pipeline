@@ -61,11 +61,11 @@ rule sequenza_R:
     input:
         input = 'results/sequenza/small.{sample}.seqz.gz'
     output:
-        dir = directory('results/sequenza/{sample}_seqz/'),
         output = 'results/sequenza/{sample}_seqz/Test_segments.txt'
     params:
         name="Sequenza_r_{sample}",
-        nthread=5
+        nthread=5,
+        dir = 'results/sequenza/{sample}_seqz/'
     conda:
         "../envs/sequenza.yaml"
     script:
