@@ -109,9 +109,10 @@ rule FilterMutectCalls:
         vcf="results/variantCalling/mutect2/{sample}/mutect2_calls.vcf.gz",
         contamination_table="results/variantCalling/mutect2/pileups/contamination/{sample}.contamination.table",
         segmentation="results/variantCalling/mutect2/pileups/segmentation/{sample}.tumour_segmentation.tsv",
-        orientation="results/variantCalling/mutect2/f1r2/{sample}_read-orientation-model.tar.gz"
+        orientation="results/variantCalling/mutect2/f1r2/{sample}_read-orientation-model.tar.gz",
+        regions="results/sequenza/{sample}_seqz/{sample}_segments.bed"
     output:
-        "results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered_fdr05.vcf.gz"
+        "results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered_diploid.vcf.gz"
         #"results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz"
     params:
         reference=config["reference"],
@@ -126,19 +127,18 @@ rule FilterMutectCalls:
         --contamination-table {input.contamination_table} \
         --tumor-segmentation {input.segmentation} \
         --orientation-bias-artifact-priors {input.orientation} \
-        --threshold-strategy FALSE_DISCOVERY_RATE \
         --max-events-in-region 4 \
         --min-reads-per-strand 1 \
-        --false-discovery-rate 0.05 \
+        -L {input.regions}\
         -O {output}"
 
 
 
 rule keep_pass_variants:
     input:
-        "results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered_fdr05.vcf.gz"
+        "results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered_diploid.vcf.gz"
     output:
-        "results/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass_fdr05.vcf"
+        "results/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass_diploid.vcf"
         #"results/variantCalling/mutect2/pass/{sample}_somatic_filtered_pass.vcf"
     params:
         name="keep_pass_variants_{sample}",
