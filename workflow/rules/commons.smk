@@ -92,5 +92,5 @@ def get_input(wildcards):
         wanted_input.append("results/report/multiqc_report.html")
     if config['sequenza']['activate'] == True:
         wanted_input.extend(expand('results/sequenza/small.{sample}.seqz.gz', sample=SAMPLES))
-        wanted_input.extend(expand('results/sequenza/{sample}_seqz/Test_segments.bed', sample=SAMPLES))
+        wanted_input.extend(expand('results/sequenza/{sample}_seqz/{sample}_segments.bed', sample=SAMPLES))
     return wanted_input

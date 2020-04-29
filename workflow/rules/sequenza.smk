@@ -77,7 +77,7 @@ rule segments_bed:
     input:
         'results/sequenza/{sample}_seqz/{sample}_segments.txt'
     output:
-        'results/sequenza/{sample}_seqz/{sample}_segments.txt'
+        'results/sequenza/{sample}_seqz/{sample}_segments.bed'
     params:
         name = "Segments_bed_{sample}",
         nthread = 5
