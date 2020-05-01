@@ -2,7 +2,7 @@ rule cg_wiggle:
     input:
         ref=config['reference']
     output:
-        "results/sequenza/genome_gc.wig.gz"
+        "results/{token}/sequenza/genome_gc.wig.gz"
     params:
         name = "GC_Wiggle",
         nthread = 5,
@@ -20,10 +20,10 @@ rule sequenza_bam2seqz:
     input:
         normal = "results/preprocessing/{sample}_G.bam",
         tumor = "results/preprocessing/{sample}_D.bam",
-        gcfile = "results/sequenza/genome_gc.wig.gz"
+        gcfile = "results/{token}/sequenza/genome_gc.wig.gz"
     output:
-        gz = temp('results/sequenza/{sample}.seqz.gz'),
-        tbi = temp('results/sequenza/{sample}.seqz.gz.tbi')
+        gz = temp('results/{token}/sequenza/{sample}.seqz.gz'),
+        tbi = temp('results/{token}/sequenza/{sample}.seqz.gz.tbi')
     params:
         reference = config['reference'],
         chrom = config['sequenza']['chrom'],
@@ -42,9 +42,9 @@ rule sequenza_bam2seqz:
 
 rule seqz_binning:
     input:
-        'results/sequenza/{sample}.seqz.gz'
+        'results/{token}/sequenza/{sample}.seqz.gz'
     output:
-        'results/sequenza/small.{sample}.seqz.gz'
+        'results/{token}/sequenza/small.{sample}.seqz.gz'
     params:
         name="seqz_binning_{sample}",
         nthread=5
@@ -59,9 +59,9 @@ rule seqz_binning:
 
 rule sequenza_R:
     input:
-        input = 'results/sequenza/small.{sample}.seqz.gz'
+        input = 'results/{token}/sequenza/small.{sample}.seqz.gz'
     output:
-        output = 'results/sequenza/{sample}_seqz/{sample}_segments.txt'
+        output = 'results/{token}/sequenza/{sample}_seqz/{sample}_segments.txt'
     params:
         name="Sequenza_r_{sample}",
         nthread=5,
@@ -75,9 +75,9 @@ rule sequenza_R:
 
 rule segments_bed:
     input:
-        'results/sequenza/{sample}_seqz/{sample}_segments.txt'
+        'results/{token}/sequenza/{sample}_seqz/{sample}_segments.txt'
     output:
-        'results/sequenza/{sample}_seqz/{sample}_segments.bed'
+        'results/{token}/sequenza/{sample}_seqz/{sample}_segments.bed'
     params:
         name = "Segments_bed_{sample}",
         nthread = 5

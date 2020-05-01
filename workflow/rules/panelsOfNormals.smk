@@ -3,7 +3,7 @@ rule Mutect2_tumour_only:
         bam="results/preprocessing/{sample}_G.bam",
         bai="results/preprocessing/{sample}_G.bai"
     output:
-        temp("results/vcf/{sample}_pon.vcf.gz")
+        temp("results/{token}/vcf/{sample}_pon.vcf.gz")
     params:
         ref=config["reference"],
         gnomad=config["mutect2"]["gnomad"]["files"]["raw"],
@@ -11,7 +11,7 @@ rule Mutect2_tumour_only:
         name="Mutect2_tumour_only_{sample}",
         nthread=config["mutect2"]["nthread"]
     conda:
-        "../envs/gatk4.yaml"
+        "../envs/gatk4.1.7.0.yaml"
     shell:
         " gatk Mutect2 \
         -R {params.ref} \
@@ -34,7 +34,7 @@ rule GenomicsDBImport:
         name="GenomicsDB",
         nthread=20
     conda:
-        "../envs/gatk4.yaml"
+        "../envs/gatk4.1.7.0.yaml"
     shell:
         "gatk GenomicsDBImport \
         -R {params.ref} \
@@ -55,7 +55,7 @@ rule CreateSomaticPanelOfNormals:
         name="create_PON",
         nthread=20
     conda:
-        "../envs/gatk4.yaml"
+        "../envs/gatk4.1.7.0.yaml"
     shell:
         "gatk CreateSomaticPanelOfNormals \
         -R {params.ref} \

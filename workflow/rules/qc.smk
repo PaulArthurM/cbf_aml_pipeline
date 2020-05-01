@@ -2,7 +2,7 @@ rule fastqc:
     input:
         "results/preprocessing/{sample}_{type}.bam"
     output:
-        "results/quality_control/{sample}_{type}_fastqc.html"
+        "results/{token}/quality_control/{sample}_{type}_fastqc.html"
     params:
         name="fastq_{sample}_{type}",
         nthread=4
@@ -15,9 +15,9 @@ rule fastqc:
 
 rule multiqc:
     input:
-        expand("results/quality_control/{sample}_{type}_fastqc.html", sample=sample_sheet['samples'], type=['D', 'G'])
+        expand("results/{token}/quality_control/{sample}_{type}_fastqc.html", sample=sample_sheet['samples'], type=['D', 'G'])
     output:
-        "results/report/multiqc_report.html"
+        "results/{token}/report/multiqc_report.html"
     params:
         name="multiqc_report",
         nthread=5,

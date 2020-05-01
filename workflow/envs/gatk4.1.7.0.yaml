@@ -1,5 +1,5 @@
-name: gatk4.1.4.1
+name: gatk4.1.7.0
 channels:
   - bioconda
 dependencies:
-  - gatk4=4.1.4.1
+  - gatk4=4.1.7.0

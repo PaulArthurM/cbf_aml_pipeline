@@ -74,23 +74,27 @@ def get_input(wildcards):
     wanted_input = []
     # Load json configuration file
     SAMPLES = sample_sheet['samples']
+    TOKEN = config["token"]
     if config["panelsOfNormals"]["activate"] == True:
-        wanted_input.extend(expand("results/pon/{sample}_{type}_marked_duplicates_BQSR_merge_for_pon.vcf.gz", sample=SAMPLES, type=['G', 'D']))
+        wanted_input.extend(expand("results/{token}/pon/{sample}_{type}_marked_duplicates_BQSR_merge_for_pon.vcf.gz", sample=SAMPLES, type=['G', 'D'], token=TOKEN))
     if config["mutect2"]["activate"] == True:
-        wanted_input.extend(expand("results/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered_diploid.vcf.gz", sample=SAMPLES))
-        wanted_input.extend(expand("results/variantCalling/vcf/mutect2/oxog_filtered/{sample}_oxog_filtered.vcf.gz", sample=SAMPLES))
+        wanted_input.extend(expand("results/{token}/variantCalling/vcf/mutect2/filtered/{sample}_oxog_filtered.vcf.gz", sample=SAMPLES, token=TOKEN))
     if config["strelka"]["activate"] == True:
-        wanted_input.extend(expand("results/variantCalling/strelka/{sample}/strelka_calls.vcf.gz", sample=SAMPLES))
+        wanted_input.extend(expand("results/{token}/variantCalling/strelka/{sample}/strelka_calls.vcf.gz", sample=SAMPLES, token=TOKEN))
     if config["freebayes"]["activate"] == True:
-        wanted_input.extend(expand("results/variantCalling/freebayes/{sample}/freebayes_calls.vcf", sample=SAMPLES))
+        wanted_input.extend(expand("results/{token}/variantCalling/freebayes/{sample}/freebayes_calls.vcf", sample=SAMPLES, token=TOKEN))
     if config["somaticSniper"]["activate"] == True:
-        wanted_input.extend(expand("results/variantCalling/somatic-sniper/{sample}/somatic-sniper_calls.vcf", sample=SAMPLES))
+        wanted_input.extend(expand("results/{token}/variantCalling/somatic-sniper/{sample}/somatic-sniper_calls.vcf", sample=SAMPLES, token=TOKEN))
     if config["annovar"]["activate"] == True:
-        wanted_input.extend(expand("results/variantCalling/annovar/{sample}.hg19_multianno.vcf", sample=SAMPLES))
+        wanted_input.extend(expand("results/{token}/variantCalling/annovar/{sample}.hg19_multianno.vcf", sample=SAMPLES, token=TOKEN))
     if config["FASTQC"]["activate"] == True:
-        wanted_input.extend(expand("results/quality_control/{sample}_{type}_fastqc.html", sample=SAMPLES, type=['G', 'D']))
-        wanted_input.append("results/report/multiqc_report.html")
+        wanted_input.extend(expand("results/{token}/quality_control/{sample}_{type}_fastqc.html", sample=SAMPLES, type=['G', 'D'], token=TOKEN))
+        wanted_input.append("results/{token}/report/multiqc_report.html")
     if config['sequenza']['activate'] == True:
-        wanted_input.extend(expand('results/sequenza/small.{sample}.seqz.gz', sample=SAMPLES))
-        wanted_input.extend(expand('results/sequenza/{sample}_seqz/{sample}_segments.bed', sample=SAMPLES))
+        wanted_input.extend(expand('results/{token}/sequenza/small.{sample}.seqz.gz', sample=SAMPLES, token=TOKEN))
+        wanted_input.extend(expand('results/{token}/sequenza/{sample}_seqz/{sample}_segments.bed', sample=SAMPLES, token=TOKEN))
+    if config["VariantFiltering"]["diploid_variants"] == True:
+        wanted_input.extend(expand('results/{token}/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass_diploid.vcf', sample=SAMPLES, token=TOKEN))
+    if config["VariantFiltering"]["oxog_filtering"] == True:
+        wanted_input.extend(expand("results/{token}/variantCalling/vcf/mutect2/oxog_filtered/{sample}_oxog_filtered.vcf.gz", sample=SAMPLES, token=TOKEN))
     return wanted_input

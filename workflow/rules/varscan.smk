@@ -18,7 +18,7 @@ rule varscan:
         normal="results/preprocessing/{sample}_G.mpileup",
         tumor="results/preprocessing/{sample}_D.mpileup"
     output:
-        "results/variantCalling/varscan/{sample}/varscan_calls.vcf"
+        "results/{token}/variantCalling/varscan/{sample}/varscan_calls.vcf"
     params:
         ""
     conda:

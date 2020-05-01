@@ -3,7 +3,7 @@ rule somatic_sniper:
         normal = "results/preprocessing/{sample}_G.bam",
         tumor = "results/preprocessing/{sample}_D.bam"
     output:
-        "results/variantCalling/somatic-sniper/{sample}/somatic-sniper_calls.vcf"
+        "results/{token}/variantCalling/somatic-sniper/{sample}/somatic-sniper_calls.vcf"
     params:
         name="somatic-sniper_{sample}",
         nthread=5,

@@ -6,7 +6,7 @@ rule MarkDuplicates:
         marked_bam = temp("results/preprocessing/{sample}_{type}.{lane}_marked_duplicates.bam"),
         metrics_txt = "results/metrics/{sample}_{type}.{lane}_marked_dup_metrics.txt"
     conda:
-        "../envs/gatk4.yaml"
+        "../envs/gatk4.1.7.0.yaml"
     params:
         name="mark_duplicates_{sample}_{type}_{lane}",
         nthread=config["mark_duplicates"]["classic"]["nthread"]
@@ -29,7 +29,7 @@ rule BaseRecalibrator:
         name="base_recalibrator_{sample}",
         nthread=5
     conda:
-        "../envs/gatk4.yaml"
+        "../envs/gatk4.1.7.0.yaml"
     shell:
         "gatk BaseRecalibrator \
             -I {input} \
@@ -51,7 +51,7 @@ rule ApplyBQSR:
     output:
         temp("results/preprocessing/{sample}_marked_duplicates_BQSR.bam")
     conda:
-        "../envs/gatk4.yaml"
+        "../envs/gatk4.1.7.0.yaml"
     shell:
         "gatk ApplyBQSR \
             -R {params.reference} \

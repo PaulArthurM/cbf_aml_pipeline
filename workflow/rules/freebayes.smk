@@ -4,7 +4,7 @@ rule freebayes:
         bamTumor="results/preprocessing/{sample}_D.bam",
         bamNormal="results/preprocessing/{sample}_G.bam"
     output:
-        "results/variantCalling/freebayes/{sample}/freebayes_calls.vcf"  # either .vcf or .bcf
+        "results/{token}/variantCalling/freebayes/{sample}/freebayes_calls.vcf"  # either .vcf or .bcf
     params:
         name="freebayes_{sample}",
         extra=extra_freebayes,         # optional parameters

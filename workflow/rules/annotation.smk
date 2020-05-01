@@ -1,8 +1,8 @@
 rule Funcotator:
     input:
-        "results/vcf/filtered/{sample}_somatic_filtered.vcf.gz"
+        "results/{token}/vcf/filtered/{sample}_somatic_filtered.vcf.gz"
     output:
-        "results/vcf/annotated/{sample}_variants.funcotated.vcf"
+        "results/{token}/vcf/annotated/{sample}_variants.funcotated.vcf"
     params:
         reference=config["reference"],
         data_sources=config["funcotator"]["directory"],
@@ -23,9 +23,9 @@ rule Funcotator:
 
 rule table_annovar:
     input:
-        "results/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass.vcf"
+        "results/{token}/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass.vcf"
     output:
-        "results/variantCalling/annovar/{sample}.hg19_multianno.vcf"
+        "results/{token}/variantCalling/annovar/{sample}.hg19_multianno.vcf"
     params:
         path=config["project_dir"] + "results",
         name="Annovar_annotate_{sample}",
