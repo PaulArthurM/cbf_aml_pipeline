@@ -35,9 +35,9 @@ rule samtools_index:
 
 rule IndexFeatureFile:
     input:
-        "results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz"
+        "results/{token}/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz"
     output:
-        "results/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz.tbi"
+        "results/{token}/variantCalling/mutect2/filtered/{sample}_somatic_filtered.vcf.gz.tbi"
     params:
         name="IndexFeatureFile_{sample}",
         nthread=5
