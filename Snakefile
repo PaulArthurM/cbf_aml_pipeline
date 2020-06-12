@@ -10,16 +10,16 @@ import numpy as np
 import pandas as pd
 
 # Load json configuration file
-configfile: "config/config.yaml"
+configfile: "config/config_laptop.yaml"
 
 
 # Load tsv sample sheet
-sample_sheet = pd.read_csv(config['sample_sheet'])
+sample_sheet = pd.read_csv(config['sample_sheet'], sep=";")
 
 
 include: "workflow/rules/commons.smk"
 include: "workflow/rules/qc.smk"
-#include: "workflow/rules/utils.smk"
+include: "workflow/rules/utils.smk"
 include: "workflow/rules/preprocessing.smk"
 include: "workflow/rules/mutect2.smk"
 include: "workflow/rules/panelsOfNormals.smk"
