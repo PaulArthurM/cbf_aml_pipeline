@@ -1,7 +1,7 @@
 # Project Metadata
 project_dir: "/data1/scratch/pamesl/cbf_aml_pipeline/"
 sample_sheet: "config/sample_sheet.tsv"
-token: "gatk4_1_7_0_run_1"
+token: "test04"
 
 #  Reference Genome
 reference: "/data1/scratch/pamesl/projet_cbf/data/b37_data/GRCh37-lite.fa"
