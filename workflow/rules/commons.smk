@@ -94,8 +94,8 @@ def get_input(wildcards):
     if config["annovar"]["activate"] == True:
         wanted_input.extend(expand("results/{token}/variantCalling/annovar/{sample}.hg19_multianno.vcf", sample=SAMPLES, token=TOKEN))
     if config["FASTQC"]["activate"] == True:
-        wanted_input.extend(expand("results/{token}/quality_control/{sample}_{type}_fastqc.html", sample=SAMPLES, type=['G', 'D'], token=TOKEN))
-        wanted_input.append("results/{token}/report/multiqc_report.html")
+        #wanted_input.extend(expand("results/{token}/quality_control/{sample}_{type}_fastqc.html", sample=SAMPLES, type=['G', 'D'], token=TOKEN))
+        wanted_input.append("results/{token}/report/multiqc_report.html".format(token=TOKEN))
     #if config['sequenza']['activate'] == True:
         #wanted_input.extend(expand('results/{token}/sequenza/{sample}.small.seqz.gz', sample=SAMPLES, token=TOKEN))
         #wanted_input.extend(expand('results/{token}/sequenza/{sample}_seqz/{sample}_segments.bed', sample=SAMPLES, token=TOKEN))
