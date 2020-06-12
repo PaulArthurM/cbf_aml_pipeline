@@ -44,7 +44,7 @@ rule seqz_binning:
     input:
         'results/{token}/sequenza/{sample}.seqz.gz'
     output:
-        'results/{token}/sequenza/small.{sample}.seqz.gz'
+        'results/{token}/sequenza/small.{sample, [A-Za-z0-9]+}.seqz.gz'
     params:
         name="seqz_binning_{sample}",
         nthread=5
@@ -61,7 +61,7 @@ rule sequenza_R:
     input:
         input = 'results/{token}/sequenza/small.{sample}.seqz.gz'
     output:
-        output = 'results/{token}/sequenza/{sample}_seqz/{sample}_segments.txt'
+        output = 'results/{token}/sequenza/{sample, [A-Za-z0-9]+}_seqz/{sample}_segments.txt'
     params:
         name="Sequenza_r_{sample}",
         nthread=5,
@@ -77,7 +77,7 @@ rule segments_bed:
     input:
         'results/{token}/sequenza/{sample}_seqz/{sample}_segments.txt'
     output:
-        'results/{token}/sequenza/{sample}_seqz/{sample}_segments.bed'
+        'results/{token}/sequenza/{sample, [A-Za-z0-9]+}_seqz/{sample}_segments.bed'
     params:
         name = "Segments_bed_{sample}",
         nthread = 5
