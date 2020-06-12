@@ -15,7 +15,7 @@ rule fastqc:
 
 rule multiqc:
     input:
-        expand("results/{token}/quality_control/{sample}_{type}_fastqc.html", sample=sample_sheet['samples'], type=['D', 'G'])
+        expand("results/{token}/quality_control/{sample}_{type}_fastqc.html", sample=sample_sheet['samples'], type=['D', 'G'], token = config['token'])
     output:
         "results/{token}/report/multiqc_report.html"
     params:

@@ -93,7 +93,7 @@ FilterMutectCalls:
 # FastQC
 FASTQC:
   DIR: "results/qualities/"
-  activate: False
+  activate: True
 
 
 # Sequenza
