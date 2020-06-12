@@ -47,7 +47,7 @@ rule bedtools_keep_diploid_variants:
         vcf="results/{token}/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass.vcf",
         diploid_regions="results/{token}/sequenza/{sample}_seqz/{sample}_segments.bed"
     output:
-        diploid_snv="results/{token}/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass_diploid.vcf"
+        diploid_snv="results/{token}/variantCalling/vcf/mutect2/pass/{sample, [A-Za-z0-9]+}_somatic_filtered_pass_diploid.vcf"
     params:
         name="Keep_diploid_{sample}",
         nthread=5,
