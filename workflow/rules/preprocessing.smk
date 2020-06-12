@@ -20,13 +20,13 @@ rule MarkDuplicates:
 #Generates recalibration table for Base Quality Score Recalibration (BQSR)
 rule BaseRecalibrator:
     input:
-        "results/preprocessing/{sample}_marked_duplicates.bam"
+        "results/preprocessing/{sample}_{type}.{lane}_marked_duplicates.bam"
     output:
-        temp("results/preprocessing/recal_data_{sample}.table")
+        temp("results/preprocessing/recal_data_{sample}_{type}.{lane}.table")
     params:
         reference=config["reference"],
         intervals_list=config["intervals_list"],
-        name="base_recalibrator_{sample}",
+        name="base_recalibrator_{sample}_{type}.{lane}",
         nthread=5
     conda:
         "../envs/gatk4.1.7.0.yaml"
@@ -42,14 +42,14 @@ rule BaseRecalibrator:
 #Apply base quality score recalibration
 rule ApplyBQSR:
     input:
-        table = "results/preprocessing/recal_data_{sample}.table",
-        bam = "results/preprocessing/{sample}_marked_duplicates.bam"
+        table = "results/preprocessing/recal_data_{sample}_{type}.{lane}.table",
+        bam = "results/preprocessing/{sample}_{type}.{lane}_marked_duplicates.bam"
+    output:
+        temp("results/preprocessing/{sample}_{type}.{lane, [0-9]}_marked_duplicates_BQSR.bam")
     params:
         reference=config["reference"],
-        name="apply_BQSR_{sample}",
+        name="apply_BQSR_{sample}_{type}.{lane}",
         nthread=5
-    output:
-        temp("results/preprocessing/{sample}_marked_duplicates_BQSR.bam")
     conda:
         "../envs/gatk4.1.7.0.yaml"
     shell:

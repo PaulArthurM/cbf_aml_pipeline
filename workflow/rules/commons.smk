@@ -40,9 +40,15 @@ def getBamToMerge(wildcards):
     """Return a list containing all files expected as input for MergeSamFiles command."""
     SAMPLES = sample_sheet['samples']
     out = []
-    for bam in SAMPLES[wildcards.sample][wildcards.type]:
-        template = "results/preprocessing/" + wildcards.sample + "_" + wildcards.type + "." + get_lane(bam) + "_marked_duplicates_BQSR.bam"
-        out.append(template)
+    SAMPLE = sample_sheet[sample_sheet.samples.eq(wildcards.sample)]
+    if wildcards.type == "D":
+        for bam in SAMPLE.at[0, "somatic_path"].split(" "):
+            template = "results/preprocessing/" + wildcards.sample + "_" + wildcards.type + "." + getLane(bam) + "_marked_duplicates_BQSR.bam"
+            out.append(template)
+    if wildcards.type == "G":
+        for bam in SAMPLE.at[0, "germline_path"].split(" "):
+            template = "results/preprocessing/" + wildcards.sample + "_" + wildcards.type + "." + getLane(bam) + "_marked_duplicates_BQSR.bam"
+            out.append(template)
     return out
 
 
@@ -56,7 +62,7 @@ def get_id(sample):
 
 
 def get_lane(sample):
-    return re.search("\.(\d+)$", sample).group(1)
+    return re.match("\.(\d+)$", sample).group(1)
 
 
 def getLane(sample):
@@ -76,9 +82,9 @@ def get_input(wildcards):
     SAMPLES = sample_sheet['samples']
     TOKEN = config["token"]
     if config["panelsOfNormals"]["activate"] == True:
-        wanted_input.extend(expand("results/{token}/pon/{sample}_{type}_marked_duplicates_BQSR_merge_for_pon.vcf.gz", sample=SAMPLES, type=['G', 'D'], token=TOKEN))
+        wanted_input.extend(expand("results/{token}/pon/{sample}_G_marked_duplicates_BQSR_merge_for_pon.vcf.gz", sample=SAMPLES, type=['G', 'D'], token=TOKEN))
     if config["mutect2"]["activate"] == True:
-        wanted_input.extend(expand("results/{token}/variantCalling/vcf/mutect2/filtered/{sample}_oxog_filtered.vcf.gz", sample=SAMPLES, token=TOKEN))
+        wanted_input.extend(expand("results/{token}/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered.vcf.gz", sample=SAMPLES, token=TOKEN))
     if config["strelka"]["activate"] == True:
         wanted_input.extend(expand("results/{token}/variantCalling/strelka/{sample}/strelka_calls.vcf.gz", sample=SAMPLES, token=TOKEN))
     if config["freebayes"]["activate"] == True:
@@ -90,9 +96,9 @@ def get_input(wildcards):
     if config["FASTQC"]["activate"] == True:
         wanted_input.extend(expand("results/{token}/quality_control/{sample}_{type}_fastqc.html", sample=SAMPLES, type=['G', 'D'], token=TOKEN))
         wanted_input.append("results/{token}/report/multiqc_report.html")
-    if config['sequenza']['activate'] == True:
-        wanted_input.extend(expand('results/{token}/sequenza/small.{sample}.seqz.gz', sample=SAMPLES, token=TOKEN))
-        wanted_input.extend(expand('results/{token}/sequenza/{sample}_seqz/{sample}_segments.bed', sample=SAMPLES, token=TOKEN))
+    #if config['sequenza']['activate'] == True:
+        #wanted_input.extend(expand('results/{token}/sequenza/{sample}.small.seqz.gz', sample=SAMPLES, token=TOKEN))
+        #wanted_input.extend(expand('results/{token}/sequenza/{sample}_seqz/{sample}_segments.bed', sample=SAMPLES, token=TOKEN))
     if config["VariantFiltering"]["diploid_variants"] == True:
         wanted_input.extend(expand('results/{token}/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass_diploid.vcf', sample=SAMPLES, token=TOKEN))
     if config["VariantFiltering"]["oxog_filtering"] == True:

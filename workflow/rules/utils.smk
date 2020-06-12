@@ -2,7 +2,7 @@ rule MergeSamFiles:
     input:
         getBamToMerge
     output:
-        "results/preprocessing/{sample}_{type}.bam"
+        "results/preprocessing/{sample, [A-Za-z0-9]+}_{type}.bam"
     conda:
         "../envs/gatk4.yaml"
     params:
