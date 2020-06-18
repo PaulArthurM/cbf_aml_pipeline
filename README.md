@@ -11,3 +11,12 @@ Multiple variant callers are being added :
 - Freebayes
 
 - SomaticSniper
+
+
+# Genomic data
+
+Data have been downloaded with following command-line using [AWS iGenomes](https://ewels.github.io/AWS-iGenomes/):
+
+```
+$ aws s3 --no-sign-request --region eu-west-1 sync s3://ngi-igenomes/igenomes/Homo_sapiens/GATK/GRCh37/ ./references/Homo_sapiens/GATK/GRCh37/
+```
