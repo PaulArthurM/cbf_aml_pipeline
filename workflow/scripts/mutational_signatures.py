@@ -10,14 +10,19 @@ vcfFiles = "/home/puissant/old_cbf_aml_pipeline/data/vcf/mutect2"
 matrices = matGen.SigProfilerMatrixGeneratorFunc(project, genome, vcfFiles, exome=True, bed_file=None, chrom_based=False, plot=True, tsb_stat=True, seqInfo=True)
 """
 
-sample = snakemake.wildcards["sample"]
-genome_version = snakemake.params["genome_version"]
-out_dir = snakemake.params["out_dir"]
-bed = snakemake.input["bed"]
+#sample = snakemake.wildcards["sample"]
+#genome_version = snakemake.params["genome_version"]
+#out_dir = snakemake.params["out_dir"]
+#bed = snakemake.input["bed"]
+
+sample = "SJCBF"
+genome_version = "GRCh37"
+out_dir = ".tests/"
+bed = None
 
 
 from SigProfilerMatrixGenerator import install as genInstall
-genInstall.install('GRCh37', rsync=False, bash=True)
+genInstall.install(genome_version, rsync=False, bash=True)
 
 
 from SigProfilerMatrixGenerator.scripts import SigProfilerMatrixGeneratorFunc as matGen

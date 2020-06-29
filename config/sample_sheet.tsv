@@ -1,2 +1,2 @@
 samples;germline_path;somatic_path
-test04;/mnt/d/Pipelines/cbf_aml_pipeline/results/preprocessing/test04_G.5.bam /mnt/d/Pipelines/cbf_aml_pipeline/results/preprocessing/test04_G.6.bam;/mnt/d/Pipelines/cbf_aml_pipeline/results/preprocessing/test04_D.4.bam /mnt/d/Pipelines/cbf_aml_pipeline/results/preprocessing/test04_D.3.bam
+SJCBF040;/home/puissant/cbf_aml_pipeline/results/preprocessing/SJCBF040_G.1.bam /home/puissant/cbf_aml_pipeline/results/preprocessing/SJCBF040_G.2.bam;/home/puissant/cbf_aml_pipeline/results/preprocessing/SJCBF040_D.4.bam /home/puissant/cbf_aml_pipeline/results/preprocessing/SJCBF040_D.3.bam

@@ -7,6 +7,8 @@ rule cg_wiggle:
         name = "GC_Wiggle",
         nthread = 5,
         window = 50
+    log:
+        "logs/{token}/cg_wiggle/genome_gc.log"
     conda:
         "../envs/sequenza.yaml"
     shell:
@@ -29,6 +31,8 @@ rule sequenza_bam2seqz:
         chrom = config['sequenza']['chrom'],
         name = "Sequenza_{sample}",
         nthread = 5
+    log:
+        "logs/{token}/sequenza_bam2seqz/{sample}.log"
     conda:
         "../envs/sequenza.yaml"
     shell:
@@ -48,6 +52,8 @@ rule seqz_binning:
     params:
         name="seqz_binning_{sample}",
         nthread=5
+    log:
+        "logs/{token}/seqz_binning/{sample}.log"
     conda:
         "../envs/sequenza.yaml"
     shell:
@@ -65,7 +71,9 @@ rule sequenza_R:
     params:
         name="Sequenza_r_{sample}",
         nthread=5,
-        dir = 'results/sequenza/{sample}_seqz/'
+        dir = 'results/{token}/sequenza/{sample}_seqz/',
+    log:
+        "logs/{token}/sequenza_R/{sample}.log"
     conda:
         "../envs/sequenza.yaml"
     script:

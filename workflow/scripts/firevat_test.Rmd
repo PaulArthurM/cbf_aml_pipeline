@@ -1,0 +1,43 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+library(FIREVAT)
+```
+
+
+```{r}
+# Output directory
+output.dir <- "/home/puissant/cbf_aml_pipeline/results/WES_SJCBF040/firevat" # assign this path
+
+# VCF file
+sample.vcf.file <- "/home/puissant/cbf_aml_pipeline/results/WES_SJCBF040/variantCalling/somatic-sniper/SJCBF040/somatic-sniper_calls.vcf"
+
+# Configuration file
+config.file <- "/home/puissant/cbf_aml_pipeline/ressources/firevat/SomaticSniper_Filtering_Params.json"
+
+# Run FIREVAT
+results <- RunFIREVAT(vcf.file = sample.vcf.file,
+                      vcf.file.genome = 'hg19', # for mouse variants: 'mm10'
+                      config.file = config.file,
+                      df.ref.mut.sigs = GetPCAWGMutSigs(),
+                      target.mut.sigs = GetPCAWGMutSigsNames(),
+                      sequencing.artifact.mut.sigs = PCAWG.All.Sequencing.Artifact.Signatures,
+                      output.dir = output.dir,
+                      objective.fn = Default.Obj.Fn,
+                      num.cores = 2,
+                      ga.pop.size = 100,
+                      ga.max.iter = 5,
+                      ga.run = 5,
+                      perform.strand.bias.analysis = FALSE,
+                      ref.forward.strand.var = "TumorDPRefForward",
+                      ref.reverse.strand.var = "TumorDPRefReverse",
+                      alt.forward.strand.var = "TumorDPAltForward",
+                      alt.reverse.strand.var = "TumorDPAltReverse",
+                      annotate = FALSE)
+
+```
+

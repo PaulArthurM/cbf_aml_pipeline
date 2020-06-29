@@ -1,17 +1,29 @@
+# This script contain rules for:
+#    - call candidates variants with Mutect2
+#    - compute contamination for each sample
+#    - learn orientation model for artifacts filtering
+
+
+
 rule variant_calling_Mutect2:
     input:
         normal_bam="results/preprocessing/{sample}_G.bam",
         tumour_bam="results/preprocessing/{sample}_D.bam",
         normal_bai="results/preprocessing/{sample}_G.bai",
-        tumour_bai="results/preprocessing/{sample}_D.bai"
+        tumour_bai="results/preprocessing/{sample}_D.bai",
+        pon="results/{token}/pon/panel_of_normals.vcf.gz"
     output:
         vcf_gz = "results/{token}/variantCalling/mutect2/{sample}/mutect2_calls.vcf.gz",
         f1r2_gz = "results/{token}/variantCalling/mutect2/f1r2/{sample}_f1r2.tar.gz"
     params:
         ref=config["reference"],
-        extra=extra_mutect2,
+        gnomad_raw=config["mutect2"]["gnomad"]["files"]["raw"],
+        intervals=config["mutect2"]["intervals"],
+        #extra=extra_mutect2,
         name="Mutect2_somatic_{sample}",
         nthread=config["mutect2"]["nthread"]
+    log:
+        "logs/{token}/variant_calling_Mutect2/{sample}.log"
     conda:
         "../envs/gatk4.1.7.0.yaml"
     shell:
@@ -22,29 +34,31 @@ rule variant_calling_Mutect2:
         --tumor {wildcards.sample}_D_FREQEXCAP \
         --normal {wildcards.sample}_G_FREQEXCAP \
         --f1r2-tar-gz {output.f1r2_gz} \
-        {params.extra} \
+        --panel-of-normals {input.pon} \
+        --germline-resource {params.gnomad_raw} \
+        --L {params.intervals} \
         -O {output.vcf_gz}"
 
 
 rule Calculate_Contamination_GetPileupSummaries:
     input:
         bam="results/preprocessing/{sample}_{type}.bam",
-	    bai="results/preprocessing/{sample}_{type}.bai"
+	    bai="results/preprocessing/{sample}_{type}.bai",
+        exac="/home/puissant/cbf_aml_pipeline/ressources/GetPileupSummaries/somatic-b37_small_exac_common_3.vcf"
     output:
         "results/{token}/variantCalling/mutect2/pileups/{sample}_{type}_pileups.table"
-    wildcard_constraints:
-        lanes="[0-9]\.[0-9]",
     params:
-        exac=config["CalculateContamination"]["GetPileupSummaries"]["exac"],
-	    intervals=config["intervals_list"],
+        intervals=config["mutect2"]["intervals"],
         name="GetPileupSummaries_{sample}_{type}",
         nthread=10
+    log:
+        "logs/{token}/Calculate_Contamination_GetPileupSummaries/{sample}_{type}.log"
     conda:
         "../envs/gatk4.1.7.0.yaml"
     shell:
         " gatk GetPileupSummaries \
             -I {input.bam} \
-            -V {params.exac} \
+            -V {input.exac} \
             -L {params.intervals} \
             -O {output}"
 
@@ -59,6 +73,8 @@ rule Calculate_Contamination:
     params:
         name="CalculateContamination_{sample}",
         nthread=5
+    log:
+        "logs/{token}/CalculateContamination/{sample}.log"
     conda:
         "../envs/gatk4.1.7.0.yaml"
     shell:
@@ -77,6 +93,8 @@ rule LearnReadOrientationModel:
     params:
         name="LearnReadOrientationModel_{sample}",
         nthread=5
+    log:
+        "logs/{token}/LearnReadOrientationModel/{sample}.log"
     conda:
         "../envs/gatk4.1.7.0.yaml"
     shell:
@@ -88,40 +106,20 @@ rule LearnReadOrientationModel:
 rule GetPileupSummaries:
     input:
         bam="results/preprocessing/{sample}_D.bam",
-        bai="results/preprocessing/{sample}_D.bai"
+        bai="results/preprocessing/{sample}_D.bai",
+        gnomad_biallelic="/home/puissant/cbf_aml_pipeline/ressources/somatic-b37_af-only-gnomad.b37.BIALLELIC.vcf"
     output:
         "results/{token}/variantCalling/mutect2/f1r2/pileups/{sample}_D_getpileupsummaries.table"
     params:
-        gnomad=config["mutect2"]["gnomad"]["files"]["biallelic"],
-	    intervals=config["intervals_list"],
         name="GetPileupSummaries_{sample}",
         nthread=5
+    log:
+        "logs/{token}/GetPileupSummaries/{sample}.log"
     conda:
         "../envs/gatk4.1.7.0.yaml"
     shell:
         "gatk GetPileupSummaries \
             -I {input.bam} \
-            -V {params.gnomad}  \
-            -L {params.intervals} \
+            -V {input.gnomad_biallelic}  \
+            -L {input.gnomad_biallelic} \
             -O {output}"
-
-
-
-rule CollectSequencingArtifactMetrics:
-    input:
-        "results/preprocessing/{sample}_D.bam"
-    output:
-        "results/{token}/artifacts/{sample}/tumor_artifact.pre_adapter_detail_metrics.txt"
-    params:
-        reference=config["reference"],
-        path_out="results/{token}/artifacts/{sample}/tumor_artifact",
-        name="CollectSequencingArtifactMetrics_{sample}",
-        nthread=5
-    conda:
-        "../envs/gatk4.1.7.0.yaml"
-    shell:
-        ' gatk CollectSequencingArtifactMetrics \
-            -R {params.reference} \
-            -I {input} \
-            --FILE_EXTENSION ".txt" \
-            -O {params.path_out}'

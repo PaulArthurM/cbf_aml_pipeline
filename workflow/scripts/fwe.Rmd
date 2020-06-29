@@ -1,0 +1,90 @@
+---
+title: "MOBSTER - Prise en main"
+output: html_notebook
+---
+
+# Prise en main de MOBSTER
+
+## Libraries
+
+```{r}
+library(mobster)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+```
+
+
+## Data
+
+```{r}
+
+max.sample <- NULL
+max <- 0
+for (sample in samples %>% pull() ) {
+  n <- df %>% filter(SAMPLE == sample) %>% filter(gt_AF > 0.25) %>% nrow()
+  if (n > max) {
+    max <- n
+    max.sample <- sample
+    print(sample)
+  }
+}
+#max.sample
+max
+
+
+```
+
+
+
+```{r}
+
+for (sample in samples %>% pull() ) {
+  if (df %>% filter(SAMPLE == sample) %>% nrow() > 150) {
+      p <- df %>% filter(SAMPLE == sample) %>% ggplot(aes(x=gt_AF)) + geom_histogram(binwidth = 0.01) + ggtitle(sample)
+      print(p)
+  } 
+}
+
+#df %>% filter(SAMPLE == "SJCBF137") %>% nrow()
+
+#df %>% filter(SAMPLE == "SJCBF144") %>% ggplot(aes(x=gt_AF)) + geom_histogram()
+```
+
+
+```{r}
+vaf.137.df <- df %>% filter(SAMPLE == "SJCBF029") %>% select(gt_AF) %>% rename(VAF = gt_AF)
+
+print(vaf.137.df)
+```
+
+```{r}
+load_vcf("/home/puissant/old_cbf_aml_pipeline/data/vcf/filtered/SJCBF121_1.2-7.8_somatic_filtered.vcf.gz")
+```
+
+```{r}
+mobster::LU4_lung_sample$best$data %>% unite(VAR, c(ref, alt)) %>% count(VAR) %>% 
+  arrange(desc(n)) %>% 
+  ggplot(aes(x=reorder(VAR, -n), y=n, fill=VAR)) + 
+  geom_bar(position="dodge", stat="identity") +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d()
+
+
+mobster::PD4120a_breast_sample$best$data %>% unite(VAR, c(ref, alt)) %>% count(VAR) %>% 
+  arrange(desc(n)) %>% 
+  ggplot(aes(x=reorder(VAR, -n), y=n, fill=VAR)) + 
+  geom_bar(position="dodge", stat="identity") +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d()
+
+
+mobster::LUFF76_lung_sample$best$data %>% unite(VAR, c(ref, alt)) %>% count(VAR) %>% 
+  arrange(desc(n)) %>% 
+  ggplot(aes(x=reorder(VAR, -n), y=n, fill=VAR)) + 
+  geom_bar(position="dodge", stat="identity") +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d()
+
+```
+
