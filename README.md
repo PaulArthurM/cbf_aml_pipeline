@@ -9,5 +9,5 @@ Rely on two variant callers:
 - Strelka2 + Manta
 
 <p align="center">
-    <img title="Snakemake Workflow" src="./docs/images/Snakefile_orga.png" width=40%>
+    <img title="Snakemake Workflow" src="https://github.com/PaulArthurM/cbf_aml_pipeline/blob/master/docs/images/Snakemake_orga.png" width=60%>
 </p>
