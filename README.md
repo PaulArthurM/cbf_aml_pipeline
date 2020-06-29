@@ -5,7 +5,7 @@ A Snakemake pipeline for the bioinformatics analysis of WES data with normal/tum
 </br>
 
 <p align="center">
-    <img title="Snakemake Workflow" src="https://github.com/PaulArthurM/cbf_aml_pipeline/blob/master/docs/images/Snakemake_orga.png" width=60%>
+    <img title="Snakemake Workflow" src="https://github.com/PaulArthurM/cbf_aml_pipeline/blob/master/docs/images/Snakefile_orga.png" width=60%>
 </p>
 
 </br>
