@@ -4,7 +4,7 @@ A Snakemake pipeline for the bioinformatics analysis of WES data with normal/tum
 
 </br>
 
-This Snakemake's pipeline take aligned BAM files from germline/diagnosis as input and perform:
+This Snakemake's pipeline take aligned BAM files from germline/diagnosis samples as input and perform:
 
 1. GATK Best Practices Preprocessing
 
