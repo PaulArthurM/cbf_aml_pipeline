@@ -1,0 +1,2 @@
+samples;germline_path;somatic_path
+test;/home/puissant/cbf_aml_pipeline/results/preprocessing/test_G.3.bam /home/puissant/cbf_aml_pipeline/results/preprocessing/test_G.3.bam;/home/puissant/cbf_aml_pipeline/results/preprocessing/test_D.1.bam /home/puissant/cbf_aml_pipeline/results/preprocessing/test_D.2.bam

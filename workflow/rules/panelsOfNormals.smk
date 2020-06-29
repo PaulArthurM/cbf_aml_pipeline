@@ -3,15 +3,17 @@ rule Mutect2_tumour_only:
         bam="results/preprocessing/{sample}_G.bam",
         bai="results/preprocessing/{sample}_G.bai"
     output:
-        temp("results/vcf/{sample}_pon.vcf.gz")
+        temp("results/{token}/vcf/{sample}_pon.vcf.gz")
     params:
         ref=config["reference"],
         gnomad=config["mutect2"]["gnomad"]["files"]["raw"],
-        intervals=config["intervals_list"],
+        intervals=config["mutect2"]["intervals"],
         name="Mutect2_tumour_only_{sample}",
         nthread=config["mutect2"]["nthread"]
+    log:
+        "logs/{token}/Mutect2_tumour_only/{sample}.log"
     conda:
-        "../envs/gatk4.yaml"
+        "../envs/gatk4.1.7.0.yaml"
     shell:
         " gatk Mutect2 \
         -R {params.ref} \
@@ -23,18 +25,20 @@ rule Mutect2_tumour_only:
 
 rule GenomicsDBImport:
     input:
-        config["PON_VCF"]
+        expand("results/{token}/vcf/{sample}_pon.vcf.gz", token=config["token"], sample=sample_sheet["samples"])
     output:
-        db=directory(config["db_GDBI"]),
-        test="genomicsdb.txt"
+        db=directory("results/{token}/GenomicsDBImport".format(token=config["token"])),
+        test="results/{token}/genomicsdb.txt".format(token=config["token"])
     params:
         ref=config["reference"],
         inputString = lambda wildcards, input: " -V ".join(input),
-        intervals=config["intervals_list"],
+        intervals=config["mutect2"]["intervals"],
         name="GenomicsDB",
         nthread=20
+    log:
+        "logs/{token}/GenomicsDBImport/logs.log".format(token=config["token"])
     conda:
-        "../envs/gatk4.yaml"
+        "../envs/gatk4.1.7.0.yaml"
     shell:
         "gatk GenomicsDBImport \
         -R {params.ref} \
@@ -46,16 +50,18 @@ rule GenomicsDBImport:
 
 rule CreateSomaticPanelOfNormals:
     input:
-        "genomicsdb.txt"
+        "results/{token}/genomicsdb.txt"
     output:
-        config["PON_VCF"]
+        "results/{token}/pon/panel_of_normals.vcf.gz"
     params:
         ref=config["reference"],
-        db=config["db_GDBI"],
+        db="/home/puissant/cbf_aml_pipeline/results/{token}/GenomicsDBImport",
         name="create_PON",
         nthread=20
+    log:
+        "logs/{token}/CreateSomaticPanelOfNormals/logs.log"
     conda:
-        "../envs/gatk4.yaml"
+        "../envs/gatk4.1.7.0.yaml"
     shell:
         "gatk CreateSomaticPanelOfNormals \
         -R {params.ref} \

@@ -3,19 +3,22 @@ rule somatic_sniper:
         normal = "results/preprocessing/{sample}_G.bam",
         tumor = "results/preprocessing/{sample}_D.bam"
     output:
-        "results/variantCalling/somatic-sniper/{sample}/somatic-sniper_calls.vcf"
+        "results/{token}/variantCalling/somatic-sniper/{sample}/somatic-sniper_calls.vcf"
     params:
         name="somatic-sniper_{sample}",
         nthread=5,
         ref = config["reference"],
-        extra=extra_somatic_sniper
+        #extra=extra_somatic_sniper
+    log:
+        "logs/{token}/somatic_sniper/{sample}.log"
     conda:
         "../envs/somaticSniper.yaml"
     shell:
         "bam-somaticsniper \
             -F vcf \
-            {params.extra} \
             -f {params.ref} \
+            -q 20 \
+            -Q 20 \
             {input.tumor} \
             {input.normal} \
             {output}"
