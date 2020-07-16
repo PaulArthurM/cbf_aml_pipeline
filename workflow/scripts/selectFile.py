@@ -8,46 +8,56 @@ from os.path import isfile, join
 import json
 import glob
 import argparse
+import pandas
+
 
 class Sample():
+    """A class for samples manipulation."""
     def __init__(self, string):
 
         def get_sample_name(string):
+            """Return sample's name."""
             m = re.search("^WXS-(SJCBF[0-9]+)", string)
             if m:
                 return m.group(1)
 
 
         def get_sample_type(string):
+            """Return sample's type [D|G] (diagnosis or germline)"""
             m = re.search("^WXS-SJCBF[0-9]+_([DG])", string)
             if m:
                 return m.group(1)
 
 
         def get_bam_file_name(string):
+            """Return bam file's name."""
             m = re.search("(SJCBF[0-9]+_[DG]-[A-Za-z0-9]+\.[0-9]\.bam)\.cip", string)
             if m:
                 return m.group(1)
 
 
         def get_file_prefix(string):
+            """Return sample's prefix."""
             m = re.search("(SJCBF[0-9]+_[DG]-\w+\.[0-9])", string)
             if m:
                 return m.group(1)
 
 
         def get_EGAF(string):
+            """Return sample's EGAF ID."""
             m = re.search("(EGAF.+$)", string)
             if m:
                 return m.group(1)
 
 
         def get_name_no_machine_id(string):
+            """Return sample's filename without machine's ID."""
             m = re.search("(SJCBF[0-9]+_[DG])-[A-Za-z0-9]+(\.[0-9]\.bam)\.cip", string)
             if m:
                 return m.group(1) + m.group(2)
 
         def get_short_file_name(string):
+            """Return short sample's name."""
             m = re.search("(SJCBF[0-9]+_[DG])-[A-Za-z0-9]+\.[0-9]\.bam\.cip", string)
             if m:
                 return m.group(1) + ".bam"
@@ -62,11 +72,13 @@ class Sample():
 
 
 def open_file(file_path):
+    """Return lines from file."""
     file = open(file_path, 'r')
     return file.readlines()
 
 
 def rename_file_in_dir(sample):
+    """Return files in directory. Deprecated."""
     path = "/data1/scratch/pamesl/projet_cbf/data/bam/"
     files_in_dir = [f for f in listdir(path) if isfile(join(path, f))]
     for file in files_in_dir:
@@ -84,6 +96,7 @@ def rename_file_in_dir(sample):
 
 
 def request_germline_file(sample):
+    """Download germline bam files associated to given sample. Deprecated."""
     if sample.sample_type == "G":
         cmd = "java -jar /data1/scratch/pamesl/projet_cbf/data/bam/EgaDemoClient.jar -p {email} {password} -rf {egaf_id} -re abc -label {label}"
         cmd = cmd.format(email=sys.argv[2], password=sys.argv[3], egaf_id=sample.egaf_id, label="label_"+sample.egaf_id)
@@ -96,6 +109,7 @@ def request_germline_file(sample):
 
 
 def download_germline_file(sample):
+    """Download diagnosis bam files associated to given sample. Deprecated."""
     if sample.sample_type == "G":
         cmd = "java -jar /data1/scratch/pamesl/projet_cbf/data/bam/EgaDemoClient.jar -p {email} {password} -dr {label} -nt 7"
         cmd = cmd.format(email=sys.argv[2], password=sys.argv[3], label="label_"+sample.egaf_id)
@@ -107,6 +121,7 @@ def download_germline_file(sample):
 
 
 def decrypt_file(sample):
+    """Decrypt bam files. Deprecated."""
     if sample.sample_type == "G":
         cmd = "java -jar /data1/scratch/pamesl/projet_cbf/data/bam/get_EgaDemoClient.jar -p {email} {password} -dc /data1/scratch/pamesl/projet_cbf/data/bam/{bam}.cip -dck abc"
         cmd = cmd.format(email=sys.argv[2], password=sys.argv[3], bam=sample.bam_file_name)
@@ -115,8 +130,9 @@ def decrypt_file(sample):
         process.wait()
         print(process.returncode)
 
-
+#TODO: update to new sample sheet format. Add path parameter. 
 def write_json(dictionary, conf):
+    """Write a JSON file (sample sheet)."""
     if os.path.isfile(conf):
         print("File a json file already exist.")
     else:
@@ -124,7 +140,9 @@ def write_json(dictionary, conf):
             json.dump(dictionary, fp)
 
 
+#TODO: update for new pipeline version.
 def check_merge(sample, files, type):
+    """Check if a merged bam files already exist."""
     sample_name = sample.sample_name
     if sample.sample_type == type:
         for f in files:
@@ -138,7 +156,9 @@ def check_merge(sample, files, type):
         return True
 
 
+#TODO: add path parameters.
 def download_file_pyega3(sample):
+    """Download bam files using pyega3."""
     saveto="/data1/scratch/pamesl/projet_cbf/data/bam/{bam_file_name}".format(bam_file_name=sample.name_no_machine_id)
     cmd = "pyega3 -c 4 -cf CREDENTIALS_FILE fetch {egaf_id} --saveto {saveto}".format(egaf_id=sample.egaf_id, saveto=saveto)
     print(cmd)
@@ -148,6 +168,7 @@ def download_file_pyega3(sample):
 
 
 def check_two_file_forms(sample, directory):
+    """Check if a sample exist as file."""
     isFile_1 = os.path.isfile(directory + sample.bam_file_name)
     isFile_2 = os.path.isfile(directory + sample.name_no_machine_id)
     isFile_3 = os.path.isfile(directory + sample.short_file_name)
@@ -157,14 +178,30 @@ def check_two_file_forms(sample, directory):
         return False
 
 
+def create_sample_for_experience(metadata, experiment):
+    samples = [Sample(line) for line in open_file(metadata) if experiment in line]
+    return samples
+
+def create_sample_sheet(samples):
+    index = [str(i) for i in range(1, len(samples)+1)]
+    sample_sheet = pandas.DataFrame(columns=['samples', 'germline_path', 'somatic_path'], index=index)
+    for sample in samples:
+        if sample.sample_name not in sample_sheet.index:
+            
+
+
+
 def main(args):
+    """Main function."""
     #objets = [Sample(line) for line in open_file(args.m) if args.e in line]
-    objets = []
-    lines = open_file(args.m)
-    for line in lines:
-        if args.e in line:
-            sample = Sample(line)
-            objets.append(sample)
+    #objets = []
+    #lines = open_file(args.m)
+    #for line in lines:
+    #    if args.e in line:
+    #        sample = Sample(line)
+    #        objets.append(sample)
+
+    samples = create_sample_for_experience(args.m, args.e)
 
     if args.j:
         json_file = {"samples":{}}
