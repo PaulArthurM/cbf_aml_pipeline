@@ -162,7 +162,7 @@ def check_merge(sample, files, type):
 def download_file_pyega3(sample, path_to_bam):
     """Download bam files using pyega3."""
     saveto="{path_to_bam}{bam_file_name}".format(path_to_bam=path_to_bam, bam_file_name=sample.name_no_machine_id)
-    cmd = "pyega3 -c 4 -cf CREDENTIALS_FILE fetch {egaf_id} --saveto {saveto}".format(egaf_id=sample.egaf_id, saveto=saveto)
+    cmd = "pyega3 -c 4 -cf CREDENTIALS_FILE.json fetch {egaf_id} --saveto {saveto}".format(egaf_id=sample.egaf_id, saveto=saveto)
     print(cmd)
     process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     process.wait()
