@@ -19,7 +19,6 @@ rule variant_calling_Mutect2:
         ref=config["reference"],
         gnomad_raw=config["mutect2"]["gnomad"]["files"]["raw"],
         intervals=config["mutect2"]["intervals"],
-        #extra=extra_mutect2,
         name="Mutect2_somatic_{sample}",
         nthread=config["mutect2"]["nthread"]
     log:

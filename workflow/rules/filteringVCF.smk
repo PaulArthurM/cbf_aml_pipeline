@@ -128,6 +128,7 @@ rule bcftools_merge_strelka2_vcf:
         {input.indels_gz} {input.snvs_gz} > {output}"
 
 
+
 rule intersection_mutect2_strelka2_calls:
     input:
         strelka2="results/{token}/variantCalling/vcf/strelka2/pass/{sample}_somatic_filtered_pass.merged.vcf.gz",
@@ -145,7 +146,7 @@ rule intersection_mutect2_strelka2_calls:
         "bcftools isec \
         -n=2 \
         -w2 \
-        {input.strelka2} {input.mutect2} > "
+        {input.strelka2} {input.mutect2} > {output}"
 
 
 
