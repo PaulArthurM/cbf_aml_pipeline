@@ -9,6 +9,7 @@ import json
 import glob
 import argparse
 import pandas
+import click
 
 
 class Sample():
@@ -130,7 +131,8 @@ def decrypt_file(sample):
         process.wait()
         print(process.returncode)
 
-#TODO: update to new sample sheet format. Add path parameter. 
+
+#TODO: update to new sample sheet format. Add path parameter.
 def write_json(dictionary, conf):
     """Write a JSON file (sample sheet)."""
     if os.path.isfile(conf):
@@ -157,9 +159,9 @@ def check_merge(sample, files, type):
 
 
 #TODO: add path parameters.
-def download_file_pyega3(sample):
+def download_file_pyega3(sample, path_to_bam):
     """Download bam files using pyega3."""
-    saveto="/data1/scratch/pamesl/projet_cbf/data/bam/{bam_file_name}".format(bam_file_name=sample.name_no_machine_id)
+    saveto="{path_to_bam}{bam_file_name}".format(path_to_bam=path_to_bam, bam_file_name=sample.name_no_machine_id)
     cmd = "pyega3 -c 4 -cf CREDENTIALS_FILE fetch {egaf_id} --saveto {saveto}".format(egaf_id=sample.egaf_id, saveto=saveto)
     print(cmd)
     process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
@@ -173,8 +175,10 @@ def check_two_file_forms(sample, directory):
     isFile_2 = os.path.isfile(directory + sample.name_no_machine_id)
     isFile_3 = os.path.isfile(directory + sample.short_file_name)
     if (isFile_1 or isFile_2 or isFile_3):
+        print("File already exist.")
         return True
     else:
+        print("No file exist.")
         return False
 
 
@@ -182,71 +186,57 @@ def create_sample_for_experience(metadata, experiment):
     samples = [Sample(line) for line in open_file(metadata) if experiment in line]
     return samples
 
+
 def create_sample_sheet(samples):
     index = [str(i) for i in range(1, len(samples)+1)]
     sample_sheet = pandas.DataFrame(columns=['samples', 'germline_path', 'somatic_path'], index=index)
     for sample in samples:
         if sample.sample_name not in sample_sheet.index:
-            
+            None
 
 
+@click.command()
+@click.option('-e', '--experience', default=None, help="Experience.", required=True)
+@click.option('-s', '--create-sample-sheet', default=True, type=bool, help="Create sample-sheet. Default: True")
+@click.option('-n', '--sample-sheet-name', default='sample-sheet.csv', help="Create sample-sheet. Default: 'sample-sheet.csv'")
+@click.option('-b', '--path-to-bam', default=None, help="Path to bam files repository.", required=True)
+@click.option('-h', '--number', default=1, type=int, help="Number of files to download. Default: 1.")
+@click.option('-t', '--type', default=None, help="Type of files to download. For exemple: 'D' or 'G'.", required=True)
+@click.option('-l', '--location', default=None, help="Location where to scan existing files.", required=True)
+@click.option('-d', '--dry-run', default=False, type=bool, help="Dryrun. Default: False")
+@click.option('-w', '--latency', default=5, help="latency between downloads. Default: 5 seconds.")
+@click.argument('sample_map')
+def main(sample_map, experience, create_sample_sheet, sample_sheet_name, path_to_bam, number, type, location, dry_run, latency):
+    """Wrapper for Pyega3 utility. Download files from EGA and create proper sample-sheet."""
 
-def main(args):
-    """Main function."""
-    #objets = [Sample(line) for line in open_file(args.m) if args.e in line]
-    #objets = []
-    #lines = open_file(args.m)
-    #for line in lines:
-    #    if args.e in line:
-    #        sample = Sample(line)
-    #        objets.append(sample)
+    samples = create_sample_for_experience(sample_map, experience)
 
-    samples = create_sample_for_experience(args.m, args.e)
-
-    if args.j:
-        json_file = {"samples":{}}
-        for objet in objets:
-            if objet.sample_name not in json_file["samples"]:
-                json_file["samples"][objet.sample_name] = {"D":[], "G":[]}
-                json_file["samples"][objet.sample_name][objet.sample_type].append(objet.file_prefix)
-        write_json(json_file, args.c)
+    # if create_sample_sheet:
+    #     json_file = {"samples":{}}
+    #     for sample in samples:
+    #         if sample.sample_name not in json_file["samples"]:
+    #             json_file["samples"][sample.sample_name] = {"D":[], "G":[]}
+    #             json_file["samples"][sample.sample_name][sample.sample_type].append(sample.file_prefix)
+    #     write_json(json_file, args.c)
 
 
-    path = args.p
-    dry_run = args.b
-    wait_time = args.w
-    files = [f for f in glob.glob(path + "*merge.bam")]
+    files = [f for f in glob.glob(path_to_bam + "*.bam")]
     limit = 0
-    for objet in objets:
-        if limit < args.l:
+    for sample in samples:
+        if limit < number:
             print("\n\n")
-            print(objet.bam_file_name)
-            if not check_merge(objet, files, args.t):
-                if check_two_file_forms(objet, args.d):
-                    print("File already exist.")
-                else:
-                    time.sleep(wait_time)
-                    print("Sample {sample} is being downloaded.".format(sample=objet.file_prefix))
-                    if not dry_run:
-                        download_file_pyega3(objet)
+            print(sample.bam_file_name)
+            if not check_merge(sample, files, type):
+                if not check_two_file_forms(sample, location):
+                    if dry_run:
+                        print("Sample {sample} is being downloaded (dry-run).".format(sample=sample.file_prefix))
+                    else:
+                        print("Sample {sample} is being downloaded.".format(sample=sample.file_prefix))
+                        download_file_pyega3(sample, path_to_bam)
+                        time.sleep(latency)
                     limit+=1
         else: break
 
 
 if __name__== '__main__':
-
-    parser = argparse.ArgumentParser(description='Downloading files from EGA and create proper JSON file.')
-    parser.add_argument('-m', default='/data1/scratch/pamesl/projet_cbf/Sample_File_SJCBF.map', type=str, help="Metadata file.")
-    parser.add_argument('-e', default='SJCBF', type=str, help="Experience. Default: SJCBF.")
-    parser.add_argument('-j', default=True, type=bool, help="Create JSON. Default: True")
-    parser.add_argument('-c', default="data.json", type=str, help="Config JSON name. Default: data.json")
-    parser.add_argument('-p', default='/data1/scratch/pamesl/projet_cbf/data/bam/', type=str, help="Path to bam files repository.")
-    parser.add_argument('-l', default=1, type=int, help="Number of files to download. Default: 1.")
-    parser.add_argument('-t', default=None, type=str, help="Type of files to download. For exemple: 'D' or 'G'.", required=True)
-    parser.add_argument('-d', default="~/", type=str, help="Location where to scan existing files.")
-    parser.add_argument('-b', default=False, type=bool, help="Dryrun")
-    parser.add_argument('-w', default=5, type=int, help="Wait time")
-
-    args = parser.parse_args()
-
-    main(args)
+    main()
