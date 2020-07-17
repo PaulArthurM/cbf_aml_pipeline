@@ -12,8 +12,8 @@ import pandas
 import click
 
 
-class Sample():
-    """A class for samples manipulation."""
+class File():
+    """A class for files manipulation."""
     def __init__(self, string):
 
         def get_sample_name(string):
@@ -182,22 +182,39 @@ def check_two_file_forms(sample, directory):
         return False
 
 
-def create_sample_for_experience(metadata, experiment):
-    samples = [Sample(line) for line in open_file(metadata) if experiment in line]
-    return samples
+def extract_metadata(metadata, experiment):
+    metadata = [File(line) for line in open_file(metadata) if experiment in line]
+    return metadata
 
 
-def create_sample_sheet(samples):
-    index = [str(i) for i in range(1, len(samples)+1)]
+def create_sample_sheet(samples_json_file, sample_sheet_name):
+    index = samples_json_file.keys()
     sample_sheet = pandas.DataFrame(columns=['samples', 'germline_path', 'somatic_path'], index=index)
-    for sample in samples:
-        if sample.sample_name not in sample_sheet.index:
-            None
+    for sample in samples_json_file:
+        sample_sheet.ix[sample, 'samples'] = sample
+        sample_sheet.ix[sample, 'germline_path'] = " ".join(samples_json_file[sample]['germline_path'])
+        sample_sheet.ix[sample, 'somatic_path'] = " ".join(samples_json_file[sample]['somatic_path'])
+    sample_sheet.to_csv(sample_sheet_name, sep = ";", index = False)
+
+
+
+def create_json(metadata):
+    """Return a JSON file with a resume of sample. Necessary for sample-sheet creation."""
+    samples_json_file = {}
+    for file in metadata:
+        if not file.sample_name in samples_json_file:
+            samples_json_file[file.sample_name] = {"germline_path": [], "somatic_path": []}
+        if file.sample_type == "G":
+            samples_json_file[file.sample_name]["germline_path"].append(file.name_no_machine_id)
+        elif file.sample_type == "D":
+            samples_json_file[file.sample_name]["somatic_path"].append(file.name_no_machine_id)
+    return samples_json_file
+
 
 
 @click.command()
 @click.option('-e', '--experience', default=None, help="Experience.", required=True)
-@click.option('-s', '--create-sample-sheet', default=True, type=bool, help="Create sample-sheet. Default: True")
+@click.option('-s', '--sample-sheet', default=True, type=bool, help="Create sample-sheet. Default: True")
 @click.option('-n', '--sample-sheet-name', default='sample-sheet.csv', help="Create sample-sheet. Default: 'sample-sheet.csv'")
 @click.option('-b', '--path-to-bam', default=None, help="Path to bam files repository.", required=True)
 @click.option('-h', '--number', default=1, type=int, help="Number of files to download. Default: 1.")
@@ -206,23 +223,19 @@ def create_sample_sheet(samples):
 @click.option('-d', '--dry-run', default=False, type=bool, help="Dryrun. Default: False")
 @click.option('-w', '--latency', default=5, help="latency between downloads. Default: 5 seconds.")
 @click.argument('sample_map')
-def main(sample_map, experience, create_sample_sheet, sample_sheet_name, path_to_bam, number, type, location, dry_run, latency):
+def main(sample_map, experience, sample_sheet, sample_sheet_name, path_to_bam, number, type, location, dry_run, latency):
     """Wrapper for Pyega3 utility. Download files from EGA and create proper sample-sheet."""
 
-    samples = create_sample_for_experience(sample_map, experience)
+    metadata = extract_metadata(sample_map, experience)
 
-    # if create_sample_sheet:
-    #     json_file = {"samples":{}}
-    #     for sample in samples:
-    #         if sample.sample_name not in json_file["samples"]:
-    #             json_file["samples"][sample.sample_name] = {"D":[], "G":[]}
-    #             json_file["samples"][sample.sample_name][sample.sample_type].append(sample.file_prefix)
-    #     write_json(json_file, args.c)
+    samples_json_file = create_json(metadata)
 
+    if sample_sheet:
+        create_sample_sheet(samples_json_file, sample_sheet_name)
 
     files = [f for f in glob.glob(path_to_bam + "*.bam")]
     limit = 0
-    for sample in samples:
+    for sample in metadata:
         if limit < number:
             print("\n\n")
             print(sample.bam_file_name)
