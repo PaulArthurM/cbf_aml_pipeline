@@ -191,9 +191,9 @@ def create_sample_sheet(samples_json_file, sample_sheet_name):
     index = samples_json_file.keys()
     sample_sheet = pandas.DataFrame(columns=['samples', 'germline_path', 'somatic_path'], index=index)
     for sample in samples_json_file:
-        sample_sheet.ix[sample, 'samples'] = sample
-        sample_sheet.ix[sample, 'germline_path'] = " ".join(samples_json_file[sample]['germline_path'])
-        sample_sheet.ix[sample, 'somatic_path'] = " ".join(samples_json_file[sample]['somatic_path'])
+        sample_sheet.loc[sample, 'samples'] = sample
+        sample_sheet.loc[sample, 'germline_path'] = " ".join(samples_json_file[sample]['germline_path'])
+        sample_sheet.loc[sample, 'somatic_path'] = " ".join(samples_json_file[sample]['somatic_path'])
     save_path = "config/" + sample_sheet_name
     sample_sheet.to_csv(save_path, sep = ";", index = False)
 
