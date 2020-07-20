@@ -219,7 +219,7 @@ def create_sarek_sample_sheet(samples_json_file, sample_sheet_name):
         for type in samples_json_file[sample]:
             for file in samples_json_file[sample][type]:
                 sample_sheet.loc[sample, 'subject'] = sample
-                sample_sheet.loc[sample, 'sex'] = None
+                sample_sheet.loc[sample, 'sex'] = None  # Use metadata from supplementary table S1
                 if type == 'G':
                     sample_sheet.loc[sample, 'status'] = str(0)
                 if type == 'D':
