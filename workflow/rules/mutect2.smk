@@ -11,7 +11,7 @@ rule variant_calling_Mutect2:
         tumour_bam="results/preprocessing/{sample}_D.bam",
         normal_bai="results/preprocessing/{sample}_G.bai",
         tumour_bai="results/preprocessing/{sample}_D.bai",
-        pon="results/{token}/pon/panel_of_normals.vcf.gz"
+        #pon="results/{token}/pon/panel_of_normals.vcf.gz"
     output:
         vcf_gz = "results/{token}/variantCalling/mutect2/{sample}/mutect2_calls.vcf.gz",
         f1r2_gz = "results/{token}/variantCalling/mutect2/f1r2/{sample}_f1r2.tar.gz"
@@ -33,17 +33,18 @@ rule variant_calling_Mutect2:
         --tumor {wildcards.sample}_D_FREQEXCAP \
         --normal {wildcards.sample}_G_FREQEXCAP \
         --f1r2-tar-gz {output.f1r2_gz} \
-        --panel-of-normals {input.pon} \
         --germline-resource {params.gnomad_raw} \
         --L {params.intervals} \
         -O {output.vcf_gz}"
+
+#        --panel-of-normals {input.pon} \
 
 
 rule Calculate_Contamination_GetPileupSummaries:
     input:
         bam="results/preprocessing/{sample}_{type}.bam",
 	    bai="results/preprocessing/{sample}_{type}.bai",
-        exac="/home/puissant/cbf_aml_pipeline/ressources/GetPileupSummaries/somatic-b37_small_exac_common_3.vcf"
+        exac="ressources/GetPileupSummaries/somatic-b37_small_exac_common_3.vcf"
     output:
         "results/{token}/variantCalling/mutect2/pileups/{sample}_{type}_pileups.table"
     params:
@@ -106,7 +107,7 @@ rule GetPileupSummaries:
     input:
         bam="results/preprocessing/{sample}_D.bam",
         bai="results/preprocessing/{sample}_D.bai",
-        gnomad_biallelic="/home/puissant/cbf_aml_pipeline/ressources/somatic-b37_af-only-gnomad.b37.BIALLELIC.vcf"
+        gnomad_biallelic="ressources/somatic-b37_af-only-gnomad.b37.BIALLELIC.vcf"
     output:
         "results/{token}/variantCalling/mutect2/f1r2/pileups/{sample}_D_getpileupsummaries.table"
     params:

@@ -212,6 +212,24 @@ def create_json(metadata):
     return samples_json_file
 
 
+def create_sarek_sample_sheet(samples_json_file, sample_sheet_name):
+    index = samples_json_file.keys()
+    sarek_sample_sheet = pandas.DataFrame(columns=['subject', 'sex', 'status', 'sample', 'bam', 'bai'], index=index)
+    for sample in samples_json_file:
+        for type in samples_json_file[sample]:
+            for file in samples_json_file[sample][type]:
+                sample_sheet.loc[sample, 'subject'] = sample
+                sample_sheet.loc[sample, 'sex'] = None  # Use metadata from supplementary table S1
+                if type == 'G':
+                    sample_sheet.loc[sample, 'status'] = str(0)
+                if type == 'D':
+                    sample_sheet.loc[sample, 'status'] = str(1)
+                sample_sheet.loc[sample, 'sample'] = '{sample}_{type}'.format(sample=sample, type=type)
+                sample_sheet.loc[sample, 'bam'] = file
+                sample_sheet.loc[sample, 'bai'] = file[0:-1] + "i"
+    save_path = "config/{filename}_sarek.tsv".format(filename=sample_sheet_name)
+    sample_sheet.to_csv(save_path, sep = ";", index = False)
+
 
 @click.command()
 @click.option('-e', '--experience', default=None, help="Experience.", required=True)
