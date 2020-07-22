@@ -12,7 +12,7 @@ mutect2:
   activate: True
   extra: ""
   nthread: 8
-  intervals: "/home/data/igenomes/Homo_sapiens/GATK/GRCh37/Annotation/intervals/Broad.human.exome.b37.interval_list.gz"
+  intervals: "/home/data/igenomes/Homo_sapiens/GATK/GRCh37/Annotation/intervals/Broad.human.exome.b37.interval_list"
   gnomad:
     files:
         raw: "/home/data/igenomes/Homo_sapiens/GATK/GRCh37/Annotation/GermlineResource/gnomAD.r2.1.1.GRCh37.PASS.AC.AF.only.vcf.gz"
