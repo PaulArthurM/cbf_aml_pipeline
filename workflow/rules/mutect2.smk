@@ -44,7 +44,7 @@ rule Calculate_Contamination_GetPileupSummaries:
     input:
         bam="results/preprocessing/{sample}_{type}.bam",
 	    bai="results/preprocessing/{sample}_{type}.bai",
-        exac="ressources/GetPileupSummaries/somatic-b37_small_exac_common_3.vcf"
+        exac=config["CalculateContamination"]["GetPileupSummaries"]["exac"]
     output:
         "results/{token}/variantCalling/mutect2/pileups/{sample}_{type}_pileups.table"
     params:
