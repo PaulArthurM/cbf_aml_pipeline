@@ -39,7 +39,6 @@ def extra_strelka(wildcards):
 def getBamToMergeCommand(wildcards):
     """Return a string to inject in MergeSamFiles command for multiple input files."""
     SAMPLES = sample_sheet['samples']
-    LANES = SAMPLES[wildcards.sample][wildcards.type]
     fileToMerge = ""
     for file in getBamToMerge(wildcards):
         fileToMerge += " -I " + str(file)
