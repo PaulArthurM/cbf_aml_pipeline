@@ -35,6 +35,7 @@ rule variant_calling_Mutect2:
         --f1r2-tar-gz {output.f1r2_gz} \
         --germline-resource {params.gnomad_raw} \
         --L {params.intervals} \
+        -ip 20 \
         -O {output.vcf_gz}"
 
 #        --panel-of-normals {input.pon} \
