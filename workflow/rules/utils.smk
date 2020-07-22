@@ -42,7 +42,7 @@ rule samtools_index:
     log:
         "logs/preprocessing/samtools_index/{sample}_{type}.log"
     shell:
-        "samtools index -b {input} {output}"
+        "samtools index {input} {output}"
 
 
 rule IndexFeatureFile:
