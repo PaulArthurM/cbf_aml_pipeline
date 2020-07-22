@@ -102,7 +102,7 @@ panelsOfNormals:
 VCF_MAP: "/mnt/d/bioinfo_data/ref/flt3.fa"
 reader_threads: 1
 batch_size: 50
-bed_intervals: "/home/data/igenomes/Homo_sapiens/GATK/GRCh37/Annotation/intervals/Broad.human.exome.b37.bed"
+bed_intervals: "/home/data/igenomes/Homo_sapiens/GATK/GRCh37/Annotation/intervals/Broad.human.exome.b37.bed.gz"
 
 
 #  DataBase GenomicsDBImport
