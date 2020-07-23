@@ -121,7 +121,7 @@ rule bcftools_merge_strelka2_vcf:
         "../envs/samtools.yaml"
     shell:
         "bcftools merge \
-        results/{wildcards.token}/variantCalling/{wildcards.tool}/{sample}/results/variants/*vcf.gz \
+        results/{wildcards.token}/variantCalling/{wildcards.tool}/{wildcards.sample}/results/variants/*vcf.gz \
         --force-samples \
         -Ov \
         -o {output}"
