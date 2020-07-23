@@ -119,4 +119,6 @@ def get_input(wildcards):
         wanted_input.extend(expand('results/{token}/variantCalling/vcf/mutect2/diploid/{sample}_somatic_filtered_diploid.vcf', sample=SAMPLES, token=TOKEN))
     if config["VariantFiltering"]["mutect2_strelka2_intersection"] == True:
         wanted_input.extend(expand("results/{token}/variantCalling/intersection/{sample}_mutect2_strelka2_intersection.vcf", sample=SAMPLES, token=TOKEN))
+    if config["VariantFiltering"]["varlociraptor"] == True:
+        wanted_input.extend(expand("results/{token}/varlociraptor/{sample}/calls.filtered.bcf", sample=SAMPLES, token=TOKEN))
     return wanted_input
