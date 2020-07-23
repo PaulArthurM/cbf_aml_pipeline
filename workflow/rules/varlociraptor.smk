@@ -14,8 +14,8 @@ rule varlociraptor_preprocessing:
     shell:
         "varlociraptor preprocess variants {params.ref} \
         --bam {input.bam} \
-        --output {output} < {input.vcf}"
-
+        --candidates {input.vcf} \
+        --output {output}"
 
 
 rule varlociraptor_calling:
