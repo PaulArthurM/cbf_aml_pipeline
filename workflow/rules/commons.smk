@@ -105,7 +105,8 @@ def get_input(wildcards):
     if config["mutect2"]["activate"] == True:  # useless if vcf output from mutect2 is activated in VariantFiltering
         wanted_input.extend(expand("results/{token}/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered.vcf.gz", sample=SAMPLES, token=TOKEN))
     if config["strelka"]["activate"] == True:
-        wanted_input.extend(expand("results/{token}/variantCalling/strelka/{sample}/results/variants/somatic.snvs.vcf.gz", sample=SAMPLES, token=TOKEN))
+        wanted_input.extend(expand("results/{token}/variantCalling/vcf/strelka/merged/{sample}.merged.vcf.gz", sample=SAMPLES, token=TOKEN))
+        #wanted_input.extend(expand("results/{token}/variantCalling/strelka/{sample}/results/variants/somatic.snvs.vcf.gz", sample=SAMPLES, token=TOKEN))
     if config["freebayes"]["activate"] == True:
         wanted_input.extend(expand("results/{token}/variantCalling/freebayes/{sample}/freebayes_calls.vcf", sample=SAMPLES, token=TOKEN))
     if config["somaticSniper"]["activate"] == True:
