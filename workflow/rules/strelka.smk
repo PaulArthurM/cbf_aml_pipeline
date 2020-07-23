@@ -52,6 +52,17 @@ rule runWorkflow_strelka:
         mv results/{wildcards.token}/variantCalling/strelka/{wildcards.sample}/results/variants/somatic.indels.vcf.gz results/{wildcards.token}/variantCalling/strelka/{wildcards.sample}/results/variants/somatic.indels.vcf"
 
 
+rule strelka2_bgzip_compression:
+    input:
+        "results/{token}/variantCalling/strelka/{sample}/results/variants/somatic.{type}.vcf"
+    output:
+        "results/{token}/variantCalling/strelka/{sample}/results/variants/somatic.{type}.vcf.gz"
+    params:
+        name="strelka2_bgzip_compression_{sample}",
+        nthread=5
+    shell:
+        "bgzip {input}"
+
 
 rule mantaCandidateSmallsIndels:
     input:
