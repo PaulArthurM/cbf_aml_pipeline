@@ -130,7 +130,7 @@ rule vcf_tabix_index:
 rule intersection_mutect2_strelka2_calls:
     input:
         strelka2="results/{token}/variantCalling/vcf/strelka/merged/{sample}.merged.vcf.gz",
-        strelka2_tbi="results/{token}/variantCalling/vcf/strelka/merged/{sample}.merged.vcf.gz",
+        strelka2_tbi="results/{token}/variantCalling/vcf/strelka/merged/{sample}.merged.vcf.gz.tbi",
         mutect2="results/{token}/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass.indels_snvs.vcf.gz",
         mutect2_tbi="results/{token}/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass.indels_snvs.vcf.gz.tbi"
     output:
