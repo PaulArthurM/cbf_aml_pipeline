@@ -1,4 +1,4 @@
-# Project Metadata
+# Project MetadataFalse
 sample_sheet: "config/sample_sheet.tsv"
 token: "WES_SJCBF040"
 
@@ -92,7 +92,7 @@ sequenza:
 VariantFiltering:
   diploid_variants: False
   pass: False
-  mutect2_strelka2_intersection: True
+  mutect2_strelka2_intersection: False
 
 
 

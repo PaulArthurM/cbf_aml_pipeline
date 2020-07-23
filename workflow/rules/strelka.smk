@@ -35,8 +35,8 @@ rule runWorkflow_strelka:
     input:
         "results/{token}/variantCalling/strelka/{sample}/runWorkflow.py"
     output:
-        snv="results/{token}/variantCalling/strelka/{sample}/results/variants/somatic.snvs.vcf",
-        indel="results/{token}/variantCalling/strelka/{sample}/results/variants/somatic.indels.vcf"
+        snv="results/{token}/variantCalling/strelka/{sample}/results/variants/somatic.snvs.vcf.gz",
+        indel="results/{token}/variantCalling/strelka/{sample}/results/variants/somatic.indels.vcf.gz"
     params:
         name="runWorkflow_strelka_{sample}",
         nthread=5
@@ -47,21 +47,19 @@ rule runWorkflow_strelka:
     shell:
         "results/{wildcards.token}/variantCalling/strelka/{wildcards.sample}/runWorkflow.py \
         --jobs {params.nthread} \
-        -m local && \
-        mv  results/{wildcards.token}/variantCalling/strelka/{wildcards.sample}/results/variants/somatic.snvs.vcf.gz results/{wildcards.token}/variantCalling/strelka/{wildcards.sample}/results/variants/somatic.snvs.vcf && \
-        mv results/{wildcards.token}/variantCalling/strelka/{wildcards.sample}/results/variants/somatic.indels.vcf.gz results/{wildcards.token}/variantCalling/strelka/{wildcards.sample}/results/variants/somatic.indels.vcf"
+        -m local"
 
 
-rule strelka2_bgzip_compression:
-    input:
-        "results/{token}/variantCalling/strelka/{sample}/results/variants/somatic.{type}.vcf"
-    output:
-        "results/{token}/variantCalling/strelka/{sample}/results/variants/somatic.{type}.vcf.gz"
-    params:
-        name="strelka2_bgzip_compression_{sample}",
-        nthread=5
-    shell:
-        "bgzip {input}"
+# rule strelka2_bgzip_compression:
+#     input:
+#         "results/{token}/variantCalling/strelka/{sample}/results/variants/somatic.{type}.vcf"
+#     output:
+#         "results/{token}/variantCalling/strelka/{sample}/results/variants/somatic.{type}.vcf.gz"
+#     params:
+#         name="strelka2_bgzip_compression_{sample}",
+#         nthread=5
+#     shell:
+#         "bgzip {input}"
 
 
 rule mantaCandidateSmallsIndels:
