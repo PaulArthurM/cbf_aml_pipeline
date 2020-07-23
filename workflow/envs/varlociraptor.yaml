@@ -3,4 +3,4 @@ channels:
   - bioconda
   - conda-forge
 dependencies:
-  - varlociraptor=1.5.0
+  - varlociraptor=2.0.0
