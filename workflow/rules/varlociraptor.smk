@@ -31,7 +31,7 @@ rule varlociraptor_calling:
         "../envs/varlociraptor.yaml"
     shell:
         "varlociraptor call variants tumor-normal \
-            --purity 0.75 \
+            --purity 0.1 \
             --tumor {input.tumor} \
             --normal {input.normal} > {output}"
 
@@ -50,5 +50,5 @@ rule varlociraptor_filter:
     shell:
         "varlociraptor filter-calls control-fdr \
         --events SOMATIC_TUMOR \
-        --fdr 0.05 \
+        --fdr 0.01 \
         --var SNV {input} > {output}"
