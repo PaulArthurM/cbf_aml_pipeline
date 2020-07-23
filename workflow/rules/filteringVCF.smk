@@ -84,30 +84,6 @@ rule keep_pass_variants_mutect2:
 #         {input} > {output}"
 
 
-# rule bgzip_compression:
-#     input:
-#         "results/{token}/variantCalling/vcf/{tool}/pass/{sample}_somatic_filtered_pass.{type}.vcf"
-#     output:
-#         "results/{token}/variantCalling/vcf/{tool}/pass/{sample}_somatic_filtered_pass.{type}.vcf.gz"
-#     params:
-#         name="bgzip_compression_{sample}",
-#         nthread=5
-#     shell:
-#         "bgzip {input}"
-#
-#
-# rule vcf_tabix_index:
-#     input:
-#         "results/{token}/variantCalling/vcf/{tool}/pass/{sample}_somatic_filtered_pass.{type}.vcf.gz"
-#     output:
-#         "results/{token}/variantCalling/vcf/{tool}/pass/{sample}_somatic_filtered_pass.{type}.vcf.gz.tbi"
-#     params:
-#         name="vcf_tabix_index_{sample}",
-#         nthread=5
-#     shell:
-#         "tabix {input}"
-
-
 rule bcftools_merge_strelka2_vcf:
     input:
         snv="results/{token}/variantCalling/strelka/{sample}/results/variants/somatic.snvs.vcf.gz",
@@ -123,29 +99,52 @@ rule bcftools_merge_strelka2_vcf:
         "bcftools merge \
         results/{wildcards.token}/variantCalling/{wildcards.tool}/{wildcards.sample}/results/variants/*vcf.gz \
         --force-samples \
-        -Ov \
+        -Oz \
         -o {output}"
 
 
+rule bgzip_compression:
+    input:
+        "results/{token}/variantCalling/vcf/{tool}/{step}/{sample}_somatic_filtered_pass.{type}.vcf"
+    output:
+        "results/{token}/variantCalling/vcf/{tool}/{step}/{sample}_somatic_filtered_pass.{type}.vcf.gz"
+    params:
+        name="bgzip_compression_{sample}",
+        nthread=5
+    shell:
+        "bgzip {input}"
 
-# rule intersection_mutect2_strelka2_calls:
-#     input:
-#         strelka2="results/{token}/variantCalling/vcf/strelka2/pass/{sample}_somatic_filtered_pass.merged.vcf.gz",
-#         strelka2_tbi="results/{token}/variantCalling/vcf/strelka2/pass/{sample}_somatic_filtered_pass.merged.vcf.gz.tbi",
-#         mutect2="results/{token}/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass.indels_snvs.vcf.gz",
-#         mutect2_tbi="results/{token}/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass.indels_snvs.vcf.gz.tbi"
-#     output:
-#         "results/{token}/variantCalling/intersection/{sample}_mutect2_strelka2_intersection.vcf"
-#     params:
-#         name="bcftools_merge_strelka2_vcf_{sample}",
-#         nthread=5
-#     conda:
-#         "../envs/samtools.yaml"
-#     shell:
-#         "bcftools isec \
-#         -n=2 \
-#         -w2 \
-#         {input.strelka2} {input.mutect2} > {output}"
+
+rule vcf_tabix_index:
+    input:
+        "results/{token}/variantCalling/vcf/{tool}/{step}/{sample}_somatic_filtered_pass.{type}.vcf.gz"
+    output:
+        "results/{token}/variantCalling/vcf/{tool}/{step}/{sample}_somatic_filtered_pass.{type}.vcf.gz.tbi"
+    params:
+        name="vcf_tabix_index_{sample}",
+        nthread=5
+    shell:
+        "tabix {input}"
+
+
+rule intersection_mutect2_strelka2_calls:
+    input:
+        strelka2="results/{token}/variantCalling/vcf/strelka2/pass/{sample}_somatic_filtered_pass.merged.vcf.gz",
+        strelka2_tbi="results/{token}/variantCalling/vcf/strelka2/pass/{sample}_somatic_filtered_pass.merged.vcf.gz.tbi",
+        mutect2="results/{token}/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass.indels_snvs.vcf.gz",
+        mutect2_tbi="results/{token}/variantCalling/vcf/mutect2/pass/{sample}_somatic_filtered_pass.indels_snvs.vcf.gz.tbi"
+    output:
+        "results/{token}/variantCalling/intersection/{sample}_mutect2_strelka2_intersection.vcf"
+    params:
+        name="bcftools_merge_strelka2_vcf_{sample}",
+        nthread=5
+    conda:
+        "../envs/samtools.yaml"
+    shell:
+        "bcftools isec \
+        -n=2 \
+        -w2 \
+        {input.strelka2} {input.mutect2} > {output}"
 
 
 
