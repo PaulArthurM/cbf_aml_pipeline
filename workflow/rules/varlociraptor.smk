@@ -33,8 +33,8 @@ rule varlociraptor_calling_scenario:
     shell:
         "varlociraptor call variants generic \
             --scenario config/varlociraptor_events.yaml \
-            --tumor {input.tumor} \
-            --normal {input.normal} > {output}"
+            --obs tumor={input.tumor} normal={input.normal} \
+            --output {output}"
 
 
 
