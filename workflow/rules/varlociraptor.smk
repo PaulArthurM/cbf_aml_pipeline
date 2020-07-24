@@ -18,12 +18,32 @@ rule varlociraptor_preprocessing:
         --output {output}"
 
 
+
 rule varlociraptor_calling:
     input:
         tumor="results/{token}/varlociraptor/{sample}/varlociraptor_D_preprocessing.bcf",
         normal="results/{token}/varlociraptor/{sample}/varlociraptor_G_preprocessing.bcf"
     output:
-        "results/{token}/varlociraptor/{sample}/calls.bcf"
+        "results/{token}/varlociraptor/{sample}/scenario_calls.bcf"
+    params:
+        name="varlociraptor_preprocessing_{sample}",
+        nthread=5,
+    conda:
+        "../envs/varlociraptor.yaml"
+    shell:
+        "varlociraptor call variants generic \
+            --scenario config/varlociraptor_events.yaml \
+            --tumor {input.tumor} \
+            --normal {input.normal} > {output}"
+
+
+
+rule varlociraptor_calling:
+    input:
+        tumor="results/{token}/varlociraptor/{sample}/varlociraptor_D_preprocessing.bcf",
+        normal="results/{token}/varlociraptor/{sample}/varlociraptor_G_preprocessing.bcf"
+    output:
+        "results/{token}/varlociraptor/{sample}/classic_calls.bcf"
     params:
         name="varlociraptor_preprocessing_{sample}",
         nthread=5,
@@ -31,7 +51,7 @@ rule varlociraptor_calling:
         "../envs/varlociraptor.yaml"
     shell:
         "varlociraptor call variants tumor-normal \
-            --purity 0.1 \
+            --purity 0.75 \
             --tumor {input.tumor} \
             --normal {input.normal} > {output}"
 
@@ -39,9 +59,9 @@ rule varlociraptor_calling:
 
 rule varlociraptor_filter:
     input:
-        "results/{token}/varlociraptor/{sample}/calls.bcf"
+        "results/{token}/varlociraptor/{sample}/{type}_calls.bcf"
     output:
-        "results/{token}/varlociraptor/{sample}/calls.filtered.bcf"
+        "results/{token}/varlociraptor/{sample}/{type}_calls.filtered.bcf"
     params:
         name="varlociraptor_filter_{sample}",
         nthread=5
