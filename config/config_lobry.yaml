@@ -84,7 +84,7 @@ FASTQC:
 
 # Sequenza
 sequenza:
-  activate: True
+  activate: False
   gcfile: "config/sequenza/gc.file"
   chrom: "config/sequenza/chrom.txt"
 
