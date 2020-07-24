@@ -93,7 +93,9 @@ VariantFiltering:
   diploid_variants: False
   pass: False
   mutect2_strelka2_intersection: False
-  varlociraptor: True
+  varlociraptor:
+    classic: False
+    scenario: True
 
 
 
