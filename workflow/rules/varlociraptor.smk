@@ -19,7 +19,7 @@ rule varlociraptor_preprocessing:
 
 
 
-rule varlociraptor_calling:
+rule varlociraptor_calling_scenario:
     input:
         tumor="results/{token}/varlociraptor/{sample}/varlociraptor_D_preprocessing.bcf",
         normal="results/{token}/varlociraptor/{sample}/varlociraptor_G_preprocessing.bcf"
@@ -38,7 +38,7 @@ rule varlociraptor_calling:
 
 
 
-rule varlociraptor_calling:
+rule varlociraptor_calling_classic:
     input:
         tumor="results/{token}/varlociraptor/{sample}/varlociraptor_D_preprocessing.bcf",
         normal="results/{token}/varlociraptor/{sample}/varlociraptor_G_preprocessing.bcf"
