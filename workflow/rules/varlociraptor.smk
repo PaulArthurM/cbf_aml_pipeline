@@ -69,6 +69,5 @@ rule varlociraptor_filter:
         "../envs/varlociraptor.yaml"
     shell:
         "varlociraptor filter-calls control-fdr \
-        --events SOMATIC_TUMOR \
         --fdr 0.05 \
         --var SNV {input} > {output}"
