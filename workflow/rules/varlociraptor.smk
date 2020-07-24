@@ -50,5 +50,5 @@ rule varlociraptor_filter:
     shell:
         "varlociraptor filter-calls control-fdr \
         --events SOMATIC_TUMOR \
-        --fdr 0.01 \
+        --fdr 0.05 \
         --var SNV {input} > {output}"
