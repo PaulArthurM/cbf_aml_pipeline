@@ -51,11 +51,11 @@ def getBamToMerge(wildcards):
     out = []
     SAMPLE = sample_sheet[sample_sheet.samples.eq(wildcards.sample)]
     if wildcards.type == "D":
-        for bam in SAMPLE.at[0, "somatic_path"].split(" "):
+        for bam in SAMPLE.at[wildcards.sample, "somatic_path"].split(" "):
             template = "results/preprocessing/{sample}_{type}.{lane}_marked_duplicates_BQSR.bam".format(sample=wildcards.sample, type=wildcards.type, lane=getLane(bam))
             out.append(template)
     if wildcards.type == "G":
-        for bam in SAMPLE.at[0, "germline_path"].split(" "):
+        for bam in SAMPLE.at[wildcards.sample, "germline_path"].split(" "):
             template = "results/preprocessing/{sample}_{type}.{lane}_marked_duplicates_BQSR.bam".format(sample=wildcards.sample, type=wildcards.type, lane=getLane(bam))
             out.append(template)
     return out
