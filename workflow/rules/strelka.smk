@@ -65,7 +65,9 @@ rule runWorkflow_strelka:
 rule mantaCandidateSmallsIndels:
     input:
         normal = "results/preprocessing/{sample}_G.bam",
+        normal_index = "results/preprocessing/{sample}_G.bai",
         tumor = "results/preprocessing/{sample}_D.bam",
+        tumor_index = "results/preprocessing/{sample}_D.bai",
     output:
         "results/{token}/variantCalling/manta/{sample}/results/variants/candidateSmallIndels.vcf.gz"
     params:
