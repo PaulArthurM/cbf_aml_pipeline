@@ -49,7 +49,7 @@ def getBamToMerge(wildcards):
     """Return a list containing all files expected as input for MergeSamFiles command."""
     SAMPLES = sample_sheet['samples']
     out = []
-    SAMPLE = sample_sheet[sample_sheet.samples.eq(wildcards.sample)]
+    SAMPLE = sample_sheet.set_index("samples", drop = False)
     if wildcards.type == "D":
         for bam in SAMPLE.at[wildcards.sample, "somatic_path"].split(" "):
             template = "results/preprocessing/{sample}_{type}.{lane}_marked_duplicates_BQSR.bam".format(sample=wildcards.sample, type=wildcards.type, lane=getLane(bam))
