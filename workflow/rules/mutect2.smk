@@ -11,7 +11,7 @@ rule variant_calling_Mutect2:
         tumour_bam="results/preprocessing/{sample}_D.bam",
         normal_bai="results/preprocessing/{sample}_G.bai",
         tumour_bai="results/preprocessing/{sample}_D.bai",
-        #pon="results/{token}/pon/panel_of_normals.vcf.gz"
+        pon="results/{token}/pon/panel_of_normals.vcf.gz"
     output:
         vcf_gz = "results/{token}/variantCalling/mutect2/{sample}/mutect2_calls.vcf.gz",
         f1r2_gz = "results/{token}/variantCalling/mutect2/f1r2/{sample}_f1r2.tar.gz"
@@ -36,6 +36,7 @@ rule variant_calling_Mutect2:
         --germline-resource {params.gnomad_raw} \
         --L {params.intervals} \
         -ip 20 \
+        --panel-of-normals {input.pon} \
         -O {output.vcf_gz}"
 
 #        --panel-of-normals {input.pon} \
