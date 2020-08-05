@@ -50,11 +50,24 @@ rule runWorkflow_strelka:
         -m local"
 
 
+# rule strelka2_bgzip_compression:
+#     input:
+#         "results/{token}/variantCalling/strelka/{sample}/results/variants/somatic.{type}.vcf"
+#     output:
+#         "results/{token}/variantCalling/strelka/{sample}/results/variants/somatic.{type}.vcf.gz"
+#     params:
+#         name="strelka2_bgzip_compression_{sample}",
+#         nthread=5
+#     shell:
+#         "bgzip {input}"
+
 
 rule mantaCandidateSmallsIndels:
     input:
         normal = "results/preprocessing/{sample}_G.bam",
+        normal_index = "results/preprocessing/{sample}_G.bai",
         tumor = "results/preprocessing/{sample}_D.bam",
+        tumor_index = "results/preprocessing/{sample}_D.bai",
     output:
         "results/{token}/variantCalling/manta/{sample}/results/variants/candidateSmallIndels.vcf.gz"
     params:

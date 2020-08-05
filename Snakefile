@@ -9,7 +9,7 @@ import pandas as pd
 
 
 # Load yaml configuration file
-configfile: "config/config_puissant.yaml"
+configfile: "config/config_lobry_serveur.yaml"
 
 
 

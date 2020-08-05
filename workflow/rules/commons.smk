@@ -39,7 +39,6 @@ def extra_strelka(wildcards):
 def getBamToMergeCommand(wildcards):
     """Return a string to inject in MergeSamFiles command for multiple input files."""
     SAMPLES = sample_sheet['samples']
-    LANES = SAMPLES[wildcards.sample][wildcards.type]
     fileToMerge = ""
     for file in getBamToMerge(wildcards):
         fileToMerge += " -I " + str(file)
@@ -50,14 +49,14 @@ def getBamToMerge(wildcards):
     """Return a list containing all files expected as input for MergeSamFiles command."""
     SAMPLES = sample_sheet['samples']
     out = []
-    SAMPLE = sample_sheet[sample_sheet.samples.eq(wildcards.sample)]
+    SAMPLE = sample_sheet.set_index("samples", drop = False)
     if wildcards.type == "D":
-        for bam in SAMPLE.at[0, "somatic_path"].split(" "):
-            template = "results/preprocessing/" + wildcards.sample + "_" + wildcards.type + "." + getLane(bam) + "_marked_duplicates_BQSR.bam"
+        for bam in SAMPLE.at[wildcards.sample, "somatic_path"].split(" "):
+            template = "results/preprocessing/{sample}_{type}.{lane}_marked_duplicates_BQSR.bam".format(sample=wildcards.sample, type=wildcards.type, lane=getLane(bam))
             out.append(template)
     if wildcards.type == "G":
-        for bam in SAMPLE.at[0, "germline_path"].split(" "):
-            template = "results/preprocessing/" + wildcards.sample + "_" + wildcards.type + "." + getLane(bam) + "_marked_duplicates_BQSR.bam"
+        for bam in SAMPLE.at[wildcards.sample, "germline_path"].split(" "):
+            template = "results/preprocessing/{sample}_{type}.{lane}_marked_duplicates_BQSR.bam".format(sample=wildcards.sample, type=wildcards.type, lane=getLane(bam))
             out.append(template)
     return out
 
@@ -106,7 +105,7 @@ def get_input(wildcards):
     if config["mutect2"]["activate"] == True:  # useless if vcf output from mutect2 is activated in VariantFiltering
         wanted_input.extend(expand("results/{token}/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered.vcf.gz", sample=SAMPLES, token=TOKEN))
     if config["strelka"]["activate"] == True:
-        wanted_input.extend(expand("results/{token}/variantCalling/strelka/{sample}/results/variants/somatic.snvs.vcf.gz", sample=SAMPLES, token=TOKEN))
+        wanted_input.extend(expand("results/{token}/variantCalling/vcf/strelka/merged/{sample}.merged.vcf.gz", sample=SAMPLES, token=TOKEN))
     if config["freebayes"]["activate"] == True:
         wanted_input.extend(expand("results/{token}/variantCalling/freebayes/{sample}/freebayes_calls.vcf", sample=SAMPLES, token=TOKEN))
     if config["somaticSniper"]["activate"] == True:
@@ -119,4 +118,12 @@ def get_input(wildcards):
         wanted_input.extend(expand('results/{token}/variantCalling/vcf/mutect2/diploid/{sample}_somatic_filtered_diploid.vcf', sample=SAMPLES, token=TOKEN))
     if config["VariantFiltering"]["mutect2_strelka2_intersection"] == True:
         wanted_input.extend(expand("results/{token}/variantCalling/intersection/{sample}_mutect2_strelka2_intersection.vcf", sample=SAMPLES, token=TOKEN))
+    if config["VariantFiltering"]["varlociraptor"]["classic"] == True:
+        wanted_input.extend(expand("results/{token}/varlociraptor/{sample}/classic_calls.filtered.bcf", sample=SAMPLES, token=TOKEN))
+    if config["VariantFiltering"]["varlociraptor"]["scenario"] == True:
+        wanted_input.extend(expand("results/{token}/varlociraptor/{sample}/scenario_calls.filtered.bcf", sample=SAMPLES, token=TOKEN))
+    if config["sequenza"]["activate"] == True:
+        wanted_input.extend(expand('results/{token}/sequenza/{sample}_seqz/{sample}_segments.bed', sample=SAMPLES, token=TOKEN))
+
+
     return wanted_input

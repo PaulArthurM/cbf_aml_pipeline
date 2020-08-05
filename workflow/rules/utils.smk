@@ -42,7 +42,7 @@ rule samtools_index:
     log:
         "logs/preprocessing/samtools_index/{sample}_{type}.log"
     shell:
-        "samtools index -b {input} {output}"
+        "samtools index {input} {output}"
 
 
 rule IndexFeatureFile:
@@ -65,7 +65,7 @@ rule biallelic_vcf:
     input:
         config["mutect2"]["gnomad"]["files"]["raw"]
     output:
-        "/home/puissant/cbf_aml_pipeline/ressources/somatic-b37_af-only-gnomad.b37.BIALLELIC.vcf"
+        "ressources/somatic-b37_af-only-gnomad.b37.BIALLELIC.vcf"
     params:
         name="SelectVariants_BIALLELIC",
         nthread=5

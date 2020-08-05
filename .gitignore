@@ -2,7 +2,7 @@ data/bam/*.bam
 data/bam
 stdoe_sge/
 data/trash
-CREDENTIALS_FILE
+CREDENTIALS_FILE.json
 .snakemake/*
 *.pdf
 results/*

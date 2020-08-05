@@ -19,7 +19,6 @@ rule variant_calling_Mutect2:
         ref=config["reference"],
         gnomad_raw=config["mutect2"]["gnomad"]["files"]["raw"],
         intervals=config["mutect2"]["intervals"],
-        #extra=extra_mutect2,
         name="Mutect2_somatic_{sample}",
         nthread=config["mutect2"]["nthread"]
     log:
@@ -34,17 +33,20 @@ rule variant_calling_Mutect2:
         --tumor {wildcards.sample}_D_FREQEXCAP \
         --normal {wildcards.sample}_G_FREQEXCAP \
         --f1r2-tar-gz {output.f1r2_gz} \
-        --panel-of-normals {input.pon} \
         --germline-resource {params.gnomad_raw} \
         --L {params.intervals} \
+        -ip 20 \
+        --panel-of-normals {input.pon} \
         -O {output.vcf_gz}"
+
+#        --panel-of-normals {input.pon} \
 
 
 rule Calculate_Contamination_GetPileupSummaries:
     input:
         bam="results/preprocessing/{sample}_{type}.bam",
 	    bai="results/preprocessing/{sample}_{type}.bai",
-        exac="/home/puissant/cbf_aml_pipeline/ressources/GetPileupSummaries/somatic-b37_small_exac_common_3.vcf"
+        exac=config["CalculateContamination"]["GetPileupSummaries"]["exac"]
     output:
         "results/{token}/variantCalling/mutect2/pileups/{sample}_{type}_pileups.table"
     params:
@@ -107,7 +109,7 @@ rule GetPileupSummaries:
     input:
         bam="results/preprocessing/{sample}_D.bam",
         bai="results/preprocessing/{sample}_D.bai",
-        gnomad_biallelic="/home/puissant/cbf_aml_pipeline/ressources/somatic-b37_af-only-gnomad.b37.BIALLELIC.vcf"
+        gnomad_biallelic="ressources/somatic-b37_af-only-gnomad.b37.BIALLELIC.vcf"
     output:
         "results/{token}/variantCalling/mutect2/f1r2/pileups/{sample}_D_getpileupsummaries.table"
     params:

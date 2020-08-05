@@ -8,46 +8,57 @@ from os.path import isfile, join
 import json
 import glob
 import argparse
+import pandas
+import click
 
-class Sample():
+
+class File():
+    """A class for files manipulation."""
     def __init__(self, string):
 
         def get_sample_name(string):
+            """Return sample's name."""
             m = re.search("^WXS-(SJCBF[0-9]+)", string)
             if m:
                 return m.group(1)
 
 
         def get_sample_type(string):
+            """Return sample's type [D|G] (diagnosis or germline)"""
             m = re.search("^WXS-SJCBF[0-9]+_([DG])", string)
             if m:
                 return m.group(1)
 
 
         def get_bam_file_name(string):
+            """Return bam file's name."""
             m = re.search("(SJCBF[0-9]+_[DG]-[A-Za-z0-9]+\.[0-9]\.bam)\.cip", string)
             if m:
                 return m.group(1)
 
 
         def get_file_prefix(string):
+            """Return sample's prefix."""
             m = re.search("(SJCBF[0-9]+_[DG]-\w+\.[0-9])", string)
             if m:
                 return m.group(1)
 
 
         def get_EGAF(string):
+            """Return sample's EGAF ID."""
             m = re.search("(EGAF.+$)", string)
             if m:
                 return m.group(1)
 
 
         def get_name_no_machine_id(string):
+            """Return sample's filename without machine's ID."""
             m = re.search("(SJCBF[0-9]+_[DG])-[A-Za-z0-9]+(\.[0-9]\.bam)\.cip", string)
             if m:
                 return m.group(1) + m.group(2)
 
         def get_short_file_name(string):
+            """Return short sample's name."""
             m = re.search("(SJCBF[0-9]+_[DG])-[A-Za-z0-9]+\.[0-9]\.bam\.cip", string)
             if m:
                 return m.group(1) + ".bam"
@@ -62,11 +73,13 @@ class Sample():
 
 
 def open_file(file_path):
+    """Return lines from file."""
     file = open(file_path, 'r')
     return file.readlines()
 
 
 def rename_file_in_dir(sample):
+    """Return files in directory. Deprecated."""
     path = "/data1/scratch/pamesl/projet_cbf/data/bam/"
     files_in_dir = [f for f in listdir(path) if isfile(join(path, f))]
     for file in files_in_dir:
@@ -84,6 +97,7 @@ def rename_file_in_dir(sample):
 
 
 def request_germline_file(sample):
+    """Download germline bam files associated to given sample. Deprecated."""
     if sample.sample_type == "G":
         cmd = "java -jar /data1/scratch/pamesl/projet_cbf/data/bam/EgaDemoClient.jar -p {email} {password} -rf {egaf_id} -re abc -label {label}"
         cmd = cmd.format(email=sys.argv[2], password=sys.argv[3], egaf_id=sample.egaf_id, label="label_"+sample.egaf_id)
@@ -96,6 +110,7 @@ def request_germline_file(sample):
 
 
 def download_germline_file(sample):
+    """Download diagnosis bam files associated to given sample. Deprecated."""
     if sample.sample_type == "G":
         cmd = "java -jar /data1/scratch/pamesl/projet_cbf/data/bam/EgaDemoClient.jar -p {email} {password} -dr {label} -nt 7"
         cmd = cmd.format(email=sys.argv[2], password=sys.argv[3], label="label_"+sample.egaf_id)
@@ -107,6 +122,7 @@ def download_germline_file(sample):
 
 
 def decrypt_file(sample):
+    """Decrypt bam files. Deprecated."""
     if sample.sample_type == "G":
         cmd = "java -jar /data1/scratch/pamesl/projet_cbf/data/bam/get_EgaDemoClient.jar -p {email} {password} -dc /data1/scratch/pamesl/projet_cbf/data/bam/{bam}.cip -dck abc"
         cmd = cmd.format(email=sys.argv[2], password=sys.argv[3], bam=sample.bam_file_name)
@@ -116,7 +132,9 @@ def decrypt_file(sample):
         print(process.returncode)
 
 
+#TODO: update to new sample sheet format. Add path parameter.
 def write_json(dictionary, conf):
+    """Write a JSON file (sample sheet)."""
     if os.path.isfile(conf):
         print("File a json file already exist.")
     else:
@@ -124,7 +142,9 @@ def write_json(dictionary, conf):
             json.dump(dictionary, fp)
 
 
+#TODO: update for new pipeline version.
 def check_merge(sample, files, type):
+    """Check if a merged bam files already exist."""
     sample_name = sample.sample_name
     if sample.sample_type == type:
         for f in files:
@@ -138,9 +158,11 @@ def check_merge(sample, files, type):
         return True
 
 
-def download_file_pyega3(sample):
-    saveto="/data1/scratch/pamesl/projet_cbf/data/bam/{bam_file_name}".format(bam_file_name=sample.name_no_machine_id)
-    cmd = "pyega3 -c 4 -cf CREDENTIALS_FILE fetch {egaf_id} --saveto {saveto}".format(egaf_id=sample.egaf_id, saveto=saveto)
+#TODO: add path parameters.
+def download_file_pyega3(sample, path_to_bam):
+    """Download bam files using pyega3."""
+    saveto="{path_to_bam}{bam_file_name}".format(path_to_bam=path_to_bam, bam_file_name=sample.name_no_machine_id)
+    cmd = "pyega3 -c 4 -cf CREDENTIALS_FILE.json fetch {egaf_id} --saveto {saveto}".format(egaf_id=sample.egaf_id, saveto=saveto)
     print(cmd)
     process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     process.wait()
@@ -148,68 +170,105 @@ def download_file_pyega3(sample):
 
 
 def check_two_file_forms(sample, directory):
+    """Check if a sample exist as file."""
     isFile_1 = os.path.isfile(directory + sample.bam_file_name)
     isFile_2 = os.path.isfile(directory + sample.name_no_machine_id)
     isFile_3 = os.path.isfile(directory + sample.short_file_name)
     if (isFile_1 or isFile_2 or isFile_3):
+        print("File already exist.")
         return True
     else:
+        print("No file exist.")
         return False
 
 
-def main(args):
-    #objets = [Sample(line) for line in open_file(args.m) if args.e in line]
-    objets = []
-    lines = open_file(args.m)
-    for line in lines:
-        if args.e in line:
-            sample = Sample(line)
-            objets.append(sample)
-
-    if args.j:
-        json_file = {"samples":{}}
-        for objet in objets:
-            if objet.sample_name not in json_file["samples"]:
-                json_file["samples"][objet.sample_name] = {"D":[], "G":[]}
-                json_file["samples"][objet.sample_name][objet.sample_type].append(objet.file_prefix)
-        write_json(json_file, args.c)
+def extract_metadata(metadata, experiment):
+    metadata = [File(line) for line in open_file(metadata) if experiment in line]
+    return metadata
 
 
-    path = args.p
-    dry_run = args.b
-    wait_time = args.w
-    files = [f for f in glob.glob(path + "*merge.bam")]
+def create_sample_sheet(samples_json_file, sample_sheet_name):
+    index = samples_json_file.keys()
+    sample_sheet = pandas.DataFrame(columns=['samples', 'germline_path', 'somatic_path'], index=index)
+    for sample in samples_json_file:
+        sample_sheet.loc[sample, 'samples'] = sample
+        sample_sheet.loc[sample, 'germline_path'] = " ".join(samples_json_file[sample]['germline_path'])
+        sample_sheet.loc[sample, 'somatic_path'] = " ".join(samples_json_file[sample]['somatic_path'])
+    save_path = "config/" + sample_sheet_name
+    sample_sheet.to_csv(save_path, sep = ";", index = False)
+
+
+
+def create_json(metadata):
+    """Return a JSON file with a resume of sample. Necessary for sample-sheet creation."""
+    samples_json_file = {}
+    for file in metadata:
+        if not file.sample_name in samples_json_file:
+            samples_json_file[file.sample_name] = {"germline_path": [], "somatic_path": []}
+        if file.sample_type == "G":
+            samples_json_file[file.sample_name]["germline_path"].append(file.name_no_machine_id)
+        elif file.sample_type == "D":
+            samples_json_file[file.sample_name]["somatic_path"].append(file.name_no_machine_id)
+    return samples_json_file
+
+
+def create_sarek_sample_sheet(samples_json_file, sample_sheet_name):
+    index = samples_json_file.keys()
+    sarek_sample_sheet = pandas.DataFrame(columns=['subject', 'sex', 'status', 'sample', 'bam', 'bai'], index=index)
+    for sample in samples_json_file:
+        for type in samples_json_file[sample]:
+            for file in samples_json_file[sample][type]:
+                sample_sheet.loc[sample, 'subject'] = sample
+                sample_sheet.loc[sample, 'sex'] = None  # Use metadata from supplementary table S1
+                if type == 'G':
+                    sample_sheet.loc[sample, 'status'] = str(0)
+                if type == 'D':
+                    sample_sheet.loc[sample, 'status'] = str(1)
+                sample_sheet.loc[sample, 'sample'] = '{sample}_{type}'.format(sample=sample, type=type)
+                sample_sheet.loc[sample, 'bam'] = file
+                sample_sheet.loc[sample, 'bai'] = file[0:-1] + "i"
+    save_path = "config/{filename}_sarek.tsv".format(filename=sample_sheet_name)
+    sample_sheet.to_csv(save_path, sep = ";", index = False)
+
+
+@click.command()
+@click.option('-e', '--experience', default=None, help="Experience.", required=True)
+@click.option('-s', '--sample-sheet', default=True, type=bool, help="Create sample-sheet. Default: True")
+@click.option('-n', '--sample-sheet-name', default='sample-sheet.csv', help="Create sample-sheet. Default: 'sample-sheet.csv'")
+@click.option('-b', '--path-to-bam', default=None, help="Path to bam files repository.", required=True)
+@click.option('-h', '--number', default=1, type=int, help="Number of files to download. Default: 1.")
+@click.option('-t', '--type', default=None, help="Type of files to download. For exemple: 'D' or 'G'.", required=True)
+@click.option('-l', '--location', default=None, help="Location where to scan existing files.", required=True)
+@click.option('-d', '--dry-run', default=False, type=bool, help="Dryrun. Default: False")
+@click.option('-w', '--latency', default=5, help="latency between downloads. Default: 5 seconds.")
+@click.argument('sample_map')
+def main(sample_map, experience, sample_sheet, sample_sheet_name, path_to_bam, number, type, location, dry_run, latency):
+    """Wrapper for Pyega3 utility. Download files from EGA and create proper sample-sheet."""
+
+    metadata = extract_metadata(sample_map, experience)
+
+    samples_json_file = create_json(metadata)
+
+    if sample_sheet:
+        create_sample_sheet(samples_json_file, sample_sheet_name)
+
+    files = [f for f in glob.glob(path_to_bam + "*.bam")]
     limit = 0
-    for objet in objets:
-        if limit < args.l:
+    for sample in metadata:
+        if limit < number:
             print("\n\n")
-            print(objet.bam_file_name)
-            if not check_merge(objet, files, args.t):
-                if check_two_file_forms(objet, args.d):
-                    print("File already exist.")
-                else:
-                    time.sleep(wait_time)
-                    print("Sample {sample} is being downloaded.".format(sample=objet.file_prefix))
-                    if not dry_run:
-                        download_file_pyega3(objet)
+            print(sample.bam_file_name)
+            if not check_merge(sample, files, type):
+                if not check_two_file_forms(sample, location):
+                    if dry_run:
+                        print("Sample {sample} is being downloaded (dry-run).".format(sample=sample.file_prefix))
+                    else:
+                        print("Sample {sample} is being downloaded.".format(sample=sample.file_prefix))
+                        download_file_pyega3(sample, path_to_bam)
+                        time.sleep(latency)
                     limit+=1
         else: break
 
 
 if __name__== '__main__':
-
-    parser = argparse.ArgumentParser(description='Downloading files from EGA and create proper JSON file.')
-    parser.add_argument('-m', default='/data1/scratch/pamesl/projet_cbf/Sample_File_SJCBF.map', type=str, help="Metadata file.")
-    parser.add_argument('-e', default='SJCBF', type=str, help="Experience. Default: SJCBF.")
-    parser.add_argument('-j', default=True, type=bool, help="Create JSON. Default: True")
-    parser.add_argument('-c', default="data.json", type=str, help="Config JSON name. Default: data.json")
-    parser.add_argument('-p', default='/data1/scratch/pamesl/projet_cbf/data/bam/', type=str, help="Path to bam files repository.")
-    parser.add_argument('-l', default=1, type=int, help="Number of files to download. Default: 1.")
-    parser.add_argument('-t', default=None, type=str, help="Type of files to download. For exemple: 'D' or 'G'.", required=True)
-    parser.add_argument('-d', default="~/", type=str, help="Location where to scan existing files.")
-    parser.add_argument('-b', default=False, type=bool, help="Dryrun")
-    parser.add_argument('-w', default=5, type=int, help="Wait time")
-
-    args = parser.parse_args()
-
-    main(args)
+    main()
