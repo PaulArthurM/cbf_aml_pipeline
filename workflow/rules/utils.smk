@@ -24,7 +24,7 @@ rule MergeSamFiles:
     shell:
         "gatk MergeSamFiles \
             {params.bamToMerge} \
-            -O {output}"
+            -O {output} 2> {log}"
 
 
 
@@ -42,7 +42,7 @@ rule samtools_index:
     log:
         "logs/preprocessing/samtools_index/{sample}_{type}.log"
     shell:
-        "samtools index {input} {output}"
+        "samtools index {input} {output} 2> {log}"
 
 
 rule IndexFeatureFile:
@@ -76,4 +76,4 @@ rule biallelic_vcf:
         -R {params.ref} \
         -V {input} \
         -O {output} \
-        --restrict-alleles-to BIALLELIC"
+        --restrict-alleles-to BIALLELIC 2> {log}"
