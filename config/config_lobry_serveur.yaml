@@ -1,6 +1,6 @@
 # Project Metadata
 sample_sheet: "config/sample-sheet_short.csv"
-token: "WES_SJCBF016_test_lobry_serveur"
+token: "panelOfNormals_test"
 directory: "/home/data/pameslin/cbf_aml_pipeline/"
 
 #  Reference Genome
@@ -21,7 +21,7 @@ mutect2:
 
 # Strelka configuration
 strelka:
-  activate: True
+  activate: False
   extra: ""
 
 
@@ -85,7 +85,7 @@ FASTQC:
 
 # Sequenza
 sequenza:
-  activate: True
+  activate: False
   gcfile: "config/sequenza/gc.file"
   chrom: "config/sequenza/chrom.txt"
 
@@ -96,7 +96,7 @@ VariantFiltering:
   mutect2_strelka2_intersection: False
   varlociraptor:
     classic: False
-    scenario: True
+    scenario: False
 
 
 
