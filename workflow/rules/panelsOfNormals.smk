@@ -20,7 +20,7 @@ rule Mutect2_tumour_only:
         -I {input.bam} \
         -max-mnp-distance 0 \
         -L {params.intervals} \
-        -O {output}"
+        -O {output} 2> {log}"
 
 
 rule GenomicsDBImport:
@@ -55,7 +55,7 @@ rule CreateSomaticPanelOfNormals:
         "results/{token}/pon/panel_of_normals.vcf.gz"
     params:
         ref=config["reference"],
-        db="/home/puissant/cbf_aml_pipeline/results/{token}/GenomicsDBImport",
+        db= config["directory"] + "results/{token}/GenomicsDBImport",
         name="create_PON",
         nthread=20
     log:
@@ -66,4 +66,4 @@ rule CreateSomaticPanelOfNormals:
         "gatk CreateSomaticPanelOfNormals \
         -R {params.ref} \
         -V gendb://{params.db} \
-        -O {output}"
+        -O {output} 2> {log}"

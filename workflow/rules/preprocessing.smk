@@ -23,7 +23,7 @@ rule MarkDuplicates:
         "gatk MarkDuplicates \
             -I {input} \
             -O {output.marked_bam} \
-            -M {output.metrics_txt}"
+            -M {output.metrics_txt}  2> {log}"
 
 
 
@@ -50,7 +50,7 @@ rule BaseRecalibrator:
             -R {params.reference} \
             --known-sites {params.dbsnp} \
             --known-sites {params.mills} \
-            -O {output}"
+            -O {output} 2> {log}"
 
 
 
@@ -74,4 +74,4 @@ rule ApplyBQSR:
             -R {params.reference} \
             -I {input.bam} \
             --bqsr-recal-file {input.table} \
-            -O {output}"
+            -O {output} 2> {log}"
