@@ -103,6 +103,8 @@ def get_input(wildcards):
 
     if config["mode"] == "preprocessing":
         return expand("results/preprocessing/{sample}_{type}.bam", sample=SAMPLES, type=['G', 'D'])
+    if config["mode"] == "qc":
+        return "results/{token}/quality_control/report/multiqc_report.html".format(token=TOKEN)
 
     if config["panelsOfNormals"]["activate"] == True:  #  should not be an option?
         wanted_input.extend(expand("results/{token}/pon/{sample}_G_marked_duplicates_BQSR_merge_for_pon.vcf.gz", sample=SAMPLES, type=['G', 'D'], token=TOKEN))
