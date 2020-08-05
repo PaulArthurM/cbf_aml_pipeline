@@ -22,10 +22,25 @@ rule fastqc:
 
 
 
+def getBamToQC(wildcards):
+    """Return a list containing all files expected as input for MultiQC command."""
+    SAMPLES = sample_sheet['samples']
+    out = []
+    SAMPLE = sample_sheet.set_index("samples", drop = False)
+    for sample in SAMPLE["samples"]:
+        for bam in SAMPLE.at[sample, "somatic_path"].split(" "):
+            template = "results/{token}/quality_control/{sample}_D.{lane}_fastqc.html".format(token=wildcards.token, sample=sample, lane=getLane(bam))
+            out.append(template)
+        for bam in SAMPLE.at[sample, "germline_path"].split(" "):
+            template = "results/{token}/quality_control/{sample}_G.{lane}_fastqc.html".format(token=wildcards.token, sample=sample, lane=getLane(bam))
+            out.append(template)
+    return out
+
+
 rule multiqc:
     """Run multiqc on all html reports from FastQC and return a html file summarize it in one html file."""
     input:
-        expand("results/{token}/quality_control/{sample}_{type}_{lane}_fastqc.html", sample=sample_sheet['samples'], type=['D', 'G'], token = config['token'])
+        getBamToQC
     output:
         "results/{token}/quality_control/report/multiqc_report.html"
     params:
