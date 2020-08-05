@@ -100,6 +100,10 @@ def get_input(wildcards):
     #  Token is used to run the pipeline multiple times without erasing other results,
     #  just by changing token's value in config file.
     TOKEN = config["token"]
+
+    if config["mode"] == "preprocessing":
+        return expand("results/preprocessing/{sample}_{type}.bam", sample=SAMPLES, type=['G', 'D'])
+
     if config["panelsOfNormals"]["activate"] == True:  #  should not be an option?
         wanted_input.extend(expand("results/{token}/pon/{sample}_G_marked_duplicates_BQSR_merge_for_pon.vcf.gz", sample=SAMPLES, type=['G', 'D'], token=TOKEN))
     if config["mutect2"]["activate"] == True:  # useless if vcf output from mutect2 is activated in VariantFiltering
@@ -124,6 +128,5 @@ def get_input(wildcards):
         wanted_input.extend(expand("results/{token}/varlociraptor/{sample}/scenario_calls.filtered.bcf", sample=SAMPLES, token=TOKEN))
     if config["sequenza"]["activate"] == True:
         wanted_input.extend(expand('results/{token}/sequenza/{sample}_seqz/{sample}_segments.bed', sample=SAMPLES, token=TOKEN))
-
 
     return wanted_input

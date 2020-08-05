@@ -1,11 +1,16 @@
 # Project Metadata
 sample_sheet: "config/sample-sheet_short.csv"
-token: "panelOfNormals_test"
+token: "WES_SJCBF"
 directory: "/home/data/pameslin/cbf_aml_pipeline/"
 
 #  Reference Genome
 reference: "/home/data/igenomes/Homo_sapiens/GATK/GRCh37/Sequence/WholeGenomeFasta/human_g1k_v37_decoy.fasta"
 reference_index: "/home/data/igenomes/Homo_sapiens/GATK/GRCh37/Sequence/WholeGenomeFasta/human_g1k_v37_decoy.fasta.fai"
+
+
+# Pipeline segmentation:
+# preprocessing
+mode: "preprocessing"
 
 
 #  Mutect2 configuration
