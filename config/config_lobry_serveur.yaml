@@ -1,6 +1,7 @@
 # Project Metadata
 sample_sheet: "config/sample-sheet_short.csv"
 token: "WES_SJCBF016_test_lobry_serveur"
+directory: "/home/data/pameslin/cbf_aml_pipeline/"
 
 #  Reference Genome
 reference: "/home/data/igenomes/Homo_sapiens/GATK/GRCh37/Sequence/WholeGenomeFasta/human_g1k_v37_decoy.fasta"
