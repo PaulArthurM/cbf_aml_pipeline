@@ -6,7 +6,8 @@ rule FilterMutectCalls:
         segmentation="results/{token}/variantCalling/mutect2/pileups/segmentation/{sample}.tumour_segmentation.tsv",
         orientation="results/{token}/variantCalling/mutect2/f1r2/{sample}_read-orientation-model.tar.gz"
     output:
-        "results/{token}/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered.vcf.gz"
+        vcf="results/{token}/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered.vcf.gz",
+        stats="results/{token}/variantCalling/stats/{sample}_fmc_stats.txt"
     params:
         reference=config["reference"],
         name="FilterMutectCalls_{sample}",
@@ -25,7 +26,8 @@ rule FilterMutectCalls:
         --max-events-in-region 4 \
         --threshold-strategy OPTIMAL_F_SCORE\
         --f-score-beta 1.0 \
-        -O {output}"
+        --filtering-stats {output.stats} \
+        -O {output.vcf}"
 
 
 
