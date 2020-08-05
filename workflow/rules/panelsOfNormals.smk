@@ -55,7 +55,7 @@ rule CreateSomaticPanelOfNormals:
         "results/{token}/pon/panel_of_normals.vcf.gz"
     params:
         ref=config["reference"],
-        db="/home/puissant/cbf_aml_pipeline/results/{token}/GenomicsDBImport",
+        db= config["directory"] + "results/{token}/GenomicsDBImport",
         name="create_PON",
         nthread=20
     log:
