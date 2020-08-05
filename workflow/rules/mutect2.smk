@@ -37,9 +37,7 @@ rule variant_calling_Mutect2:
         --L {params.intervals} \
         -ip 20 \
         --panel-of-normals {input.pon} \
-        -O {output.vcf_gz}"
-
-#        --panel-of-normals {input.pon} \
+        -O {output.vcf_gz} 2> {log}"
 
 
 rule Calculate_Contamination_GetPileupSummaries:
@@ -62,7 +60,7 @@ rule Calculate_Contamination_GetPileupSummaries:
             -I {input.bam} \
             -V {input.exac} \
             -L {params.intervals} \
-            -O {output}"
+            -O {output} 2> {log}"
 
 
 rule Calculate_Contamination:
@@ -84,7 +82,7 @@ rule Calculate_Contamination:
             -I {input.tumour} \
             -matched {input.matched} \
             --tumor-segmentation {output.segmentation} \
-            -O {output.contamination_table}"
+            -O {output.contamination_table} 2> {log}"
 
 
 rule LearnReadOrientationModel:
@@ -102,7 +100,7 @@ rule LearnReadOrientationModel:
     shell:
         "gatk LearnReadOrientationModel \
             -I {input} \
-            -O {output}"
+            -O {output} 2> {log}"
 
 
 rule GetPileupSummaries:
@@ -124,4 +122,4 @@ rule GetPileupSummaries:
             -I {input.bam} \
             -V {input.gnomad_biallelic}  \
             -L {input.gnomad_biallelic} \
-            -O {output}"
+            -O {output} 2> {log}"

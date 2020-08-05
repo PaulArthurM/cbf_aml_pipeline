@@ -20,7 +20,7 @@ rule Mutect2_tumour_only:
         -I {input.bam} \
         -max-mnp-distance 0 \
         -L {params.intervals} \
-        -O {output}"
+        -O {output} 2> {log}"
 
 
 rule GenomicsDBImport:
@@ -66,4 +66,4 @@ rule CreateSomaticPanelOfNormals:
         "gatk CreateSomaticPanelOfNormals \
         -R {params.ref} \
         -V gendb://{params.db} \
-        -O {output}"
+        -O {output} 2> {log}"
