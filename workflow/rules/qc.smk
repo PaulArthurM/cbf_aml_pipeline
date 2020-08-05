@@ -7,14 +7,14 @@
 rule fastqc:
     """Run fastqc on input bam file and return a html report."""
     input:
-        "results/preprocessing/{sample}_{type}.bam"
+        "results/preprocessing/{sample}_{type}.{lane}.bam"
     output:
-        "results/{token}/quality_control/{sample}_{type}_fastqc.html"
+        "results/{token}/quality_control/{sample}_{type}.{lane}_fastqc.html"
     params:
-        name="fastq_{sample}_{type}",
+        name="fastq_{sample}_{type}_{lane}",
         nthread=4
     log:
-        "logs/{token}/fastqc/{sample}_{type}.log"
+        "logs/{token}/fastqc/{sample}_{type}_{lane}.log"
     conda:
         "../envs/fastqc.yaml"
     shell:
@@ -25,7 +25,7 @@ rule fastqc:
 rule multiqc:
     """Run multiqc on all html reports from FastQC and return a html file summarize it in one html file."""
     input:
-        expand("results/{token}/quality_control/{sample}_{type}_fastqc.html", sample=sample_sheet['samples'], type=['D', 'G'], token = config['token'])
+        expand("results/{token}/quality_control/{sample}_{type}_{lane}_fastqc.html", sample=sample_sheet['samples'], type=['D', 'G'], token = config['token'])
     output:
         "results/{token}/quality_control/report/multiqc_report.html"
     params:
@@ -43,4 +43,4 @@ rule multiqc:
         --force \
         -o {params.out_dir} \
         -n {params.out_file} \
-        {params.input_dir}"
+        {params.input_dir} 2> {log}"
