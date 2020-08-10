@@ -11,7 +11,7 @@ reference_index: "/home/data/igenomes/Homo_sapiens/GATK/GRCh37/Sequence/WholeGen
 # Pipeline segmentation:
 # preprocessing
 # qc
-mode: "qc"
+mode: "variantCalling"
 
 
 #  Mutect2 configuration
