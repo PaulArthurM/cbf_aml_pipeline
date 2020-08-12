@@ -23,6 +23,8 @@ rule FilterMutectCalls:
         --orientation-bias-artifact-priors {input.orientation} \
         --max-events-in-region 4 \
         --threshold-strategy OPTIMAL_F_SCORE \
+        --strict-strand-bias \
+        --max-strand-artifact-probability 0.9 \
         --f-score-beta 1.0 \
         -O {output}"
 
