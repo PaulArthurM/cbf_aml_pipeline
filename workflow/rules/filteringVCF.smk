@@ -25,7 +25,7 @@ rule FilterMutectCalls:
         --max-events-in-region 4 \
         --threshold-strategy OPTIMAL_F_SCORE\
         --f-score-beta 1.0 \
-        -O {output}"
+        -O {output} 2> {log}"
 
 
 
