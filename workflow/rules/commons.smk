@@ -108,6 +108,7 @@ def get_input(wildcards):
     if config["mode"] == "variantCalling":
         wanted_input.extend(expand("results/{token}/variantCalling/vcf/mutect2/filtered/{sample}_somatic_filtered.vcf.gz", sample=SAMPLES, token=TOKEN))
         wanted_input.extend(expand("results/{token}/variantCalling/vcf/strelka/merged/{sample}.merged.vcf.gz", sample=SAMPLES, token=TOKEN))
+        wanted_input.extend(expand("results/{token}/variantCalling/vcf/mutect2/stats/{sample}_filter_stats.txt", sample=SAMPLES, token=TOKEN))
         #wanted_input.extend(expand("results/{token}/variantCalling/freebayes/{sample}/freebayes_calls.vcf", sample=SAMPLES, token=TOKEN))
         return wanted_input
 
