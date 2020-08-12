@@ -111,6 +111,9 @@ def get_input(wildcards):
         wanted_input.extend(expand("results/{token}/variantCalling/vcf/mutect2/stats/{sample}_filter_stats.txt", sample=SAMPLES, token=TOKEN))
         #wanted_input.extend(expand("results/{token}/variantCalling/freebayes/{sample}/freebayes_calls.vcf", sample=SAMPLES, token=TOKEN))
         return wanted_input
+    if config["mode"] == "ploidy_cellularity":
+        wanted_input.extend(expand('results/{token}/sequenza/{sample}_seqz/{sample}_segments.txt', sample=SAMPLES, token=TOKEN))
+        return wanted_input
 
 
     if config["panelsOfNormals"]["activate"] == True:  #  should not be an option?
