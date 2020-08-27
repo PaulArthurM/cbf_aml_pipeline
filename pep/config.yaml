@@ -1,0 +1,7 @@
+pep_version: 2.0.0
+sample_table: "sample_table.csv"
+subsample_table: "subsample_table.csv"
+derive:
+  sources:
+    germline_path: "../results/preprocessing/{sample_name}_G.bam"
+    somatic_path: "../results/preprocessing/{sample_name}_D.bam"

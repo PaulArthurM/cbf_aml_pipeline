@@ -6,16 +6,12 @@ import re
 import numpy as np
 import pandas as pd
 
-
-
 # Load yaml configuration file
 configfile: "config/config_lobry_serveur.yaml"
 
 
-
-# Load sample sheet
-sample_sheet = pd.read_csv(config['sample_sheet'], sep=";")
-
+# Load PEP files
+pepfile: "pep/config.yaml"
 
 
 # Include all rules's scripts
