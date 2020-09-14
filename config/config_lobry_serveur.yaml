@@ -1,5 +1,5 @@
 # Project Metadata
-sample_sheet: "config/sample-sheet_short.csv"
+sample_sheet: "config/sample_sheets/sample-sheet.csv"
 token: "WES_SJCBF"
 directory: "/home/data/pameslin/cbf_aml_pipeline/"
 
