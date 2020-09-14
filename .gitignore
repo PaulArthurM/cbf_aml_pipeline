@@ -20,3 +20,4 @@ ressources/*
 renv.lock
 .ipynb_checkpoints/*
 renv/*
+results/*

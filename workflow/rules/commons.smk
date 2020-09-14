@@ -38,7 +38,7 @@ def extra_strelka(wildcards):
 
 def getBamToMergeCommand(wildcards):
     """Return a string to inject in MergeSamFiles command for multiple input files."""
-    SAMPLES = sample_sheet['samples']
+    SAMPLES = pep.sample_table["sample_name"]
     fileToMerge = ""
     for file in getBamToMerge(wildcards):
         fileToMerge += " -I " + str(file)
@@ -47,9 +47,25 @@ def getBamToMergeCommand(wildcards):
 
 def getBamToMerge(wildcards):
     """Return a list containing all files expected as input for MergeSamFiles command."""
-    SAMPLES = sample_sheet['samples']
+    SAMPLES = pep.sample_table["sample_name"]
     out = []
     SAMPLE = sample_sheet.set_index("samples", drop = False)
+    if wildcards.type == "D":
+        for bam in SAMPLE.at[wildcards.sample, "somatic_path"].split(" "):
+            template = "results/preprocessing/{sample}_{type}.{lane}_marked_duplicates_BQSR.bam".format(sample=wildcards.sample, type=wildcards.type, lane=getLane(bam))
+            out.append(template)
+    if wildcards.type == "G":
+        for bam in SAMPLE.at[wildcards.sample, "germline_path"].split(" "):
+            template = "results/preprocessing/{sample}_{type}.{lane}_marked_duplicates_BQSR.bam".format(sample=wildcards.sample, type=wildcards.type, lane=getLane(bam))
+            out.append(template)
+    return out
+
+
+def getBamToMerge(wildcards):
+    """Return a list containing all files expected as input for MergeSamFiles command."""
+    SAMPLES = pep.sample_table["sample_name"]
+    SUBSAMPLES_TABLE = pep.subsample_table
+    out = []
     if wildcards.type == "D":
         for bam in SAMPLE.at[wildcards.sample, "somatic_path"].split(" "):
             template = "results/preprocessing/{sample}_{type}.{lane}_marked_duplicates_BQSR.bam".format(sample=wildcards.sample, type=wildcards.type, lane=getLane(bam))
@@ -96,7 +112,7 @@ def get_input(wildcards):
     """Return a list of all input file based on config file and sample sheet."""
     wanted_input = []
     # Load sample sheet
-    SAMPLES = sample_sheet['samples']
+    SAMPLES = pep.sample_table["sample_name"]
     #  Token is used to run the pipeline multiple times without erasing other results,
     #  just by changing token's value in config file.
     TOKEN = config["token"]
