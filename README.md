@@ -1,6 +1,4 @@
-# Yet Another Pipeline for Normal/Tumor Variant Calling from Whole-Exome Sequencing data v0.2
-
-A Snakemake pipeline for the bioinformatics analysis of WES data with normal/tumor pair.
+# An pipeline for the study of genetic instability automated with Snakemake v0.2
 
 </br>
 
@@ -19,11 +17,13 @@ This Snakemake pipeline take aligned BAM files from germline/diagnosis samples a
     - Mutect2 (GATK4)
 
     - Strelka2 + Manta
+    
+    - More to come.
 
 3. Ploidy/Cellularity analysis using:
 
     - Sequenza
     
-4. (TODO) Add Williams *et al*, 2018 and/or Mobster package (Caravagna *et al*, 2019 preprint)  
+4. (TODO) Add Mobster package (Caravagna *et al*, 2020 Nature Genetics, Subclonal reconstruction of tumors by using machine learning and population genetics)  
 
 
