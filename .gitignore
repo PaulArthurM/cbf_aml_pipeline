@@ -21,3 +21,4 @@ renv.lock
 .ipynb_checkpoints/*
 renv/*
 results/*
+notebooks/*
