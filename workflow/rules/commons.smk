@@ -63,15 +63,14 @@ def getBamToMergeCommand(wildcards):
 
 def getBamToMerge(wildcards):
     """Return a list containing all files expected as input for MergeSamFiles command."""
-    SAMPLE_TABLE = pep.sample_table["sample_name"]
     SUBSAMPLES_TABLE = pep.subsample_table
     out = []
     if wildcards.type == "D":
-        for lane in SUBSAMPLES_TABLE[(SUBSAMPLES_TABLE.sample_name == wildcards.sample) & (SUBSAMPLES_TABLE.type != "D")]["lane"]:
+        for lane in SUBSAMPLES_TABLE[(SUBSAMPLES_TABLE.sample_name == wildcards.sample) & (SUBSAMPLES_TABLE.type == "D")]["lane"]:
             template = "results/preprocessing/{sample}_{type}.{lane}_marked_duplicates_BQSR.bam".format(sample=wildcards.sample, type=wildcards.type, lane=lane)
             out.append(template)
     if wildcards.type == "G":
-        for lane in SUBSAMPLES_TABLE[(SUBSAMPLES_TABLE.sample_name == wildcards.sample) & (SUBSAMPLES_TABLE.type != "G")]["lane"]:
+        for lane in SUBSAMPLES_TABLE[(SUBSAMPLES_TABLE.sample_name == wildcards.sample) & (SUBSAMPLES_TABLE.type == "G")]["lane"]:
             template = "results/preprocessing/{sample}_{type}.{lane}_marked_duplicates_BQSR.bam".format(sample=wildcards.sample, type=wildcards.type, lane=lane)
             out.append(template)
     return out
