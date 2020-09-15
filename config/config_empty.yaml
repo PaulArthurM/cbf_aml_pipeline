@@ -1,0 +1,121 @@
+# Project Metadata
+sample_sheet: "config/config_file.csv"
+token: ""
+directory: ""
+
+#  Reference Genome
+reference: ""
+reference_index: ""
+
+
+# Pipeline segmentation:
+# preprocessing
+# qc
+# variantCalling
+mode: ""
+
+
+#  Mutect2 configuration
+mutect2:
+  activate: False
+  extra: ""
+  nthread: 1
+  intervals: ""
+  gnomad:
+    files:
+        raw: ""
+
+
+# Strelka configuration
+strelka:
+  activate: True
+  extra: ""
+
+
+# Freebayes configuration
+freebayes:
+  activate: False
+  extra: "--pooled-continuous \
+          --pooled-discrete \
+          --genotype-qualities \
+          --report-genotype-likelihood-max \
+          --allele-balance-priors-off \
+          --min-alternate-fraction 0.05 \
+          --min-repeat-entropy 1 \
+          --min-alternate-count 2"
+
+
+# somaticSniper configuration
+somaticSniper:
+  activate: False
+  extra: "-q 20 \
+          -Q 20 "
+
+
+
+# CalculateContamination
+CalculateContamination:
+        GetPileupSummaries:
+                exac: ""
+
+
+
+# MarkDuplicates
+mark_duplicates:
+  nthread: 1
+  spark:
+  classic:
+    nthread: 1
+
+
+
+# MergeSamFiles
+MergeSamFiles:
+  nthread: 1
+
+
+# Samtools
+samtools:
+  nthread: 1
+
+
+# FilterMutectCalls
+FilterMutectCalls:
+  nthread: 1
+
+
+# FastQC
+FASTQC:
+  DIR: "results/qualities/"
+  activate: False
+
+
+# Sequenza
+sequenza:
+  activate: False
+  gcfile: "config/sequenza/gc.file"
+  chrom: "config/sequenza/chrom.txt"
+
+
+VariantFiltering:
+  diploid_variants: False
+  pass: False
+  mutect2_strelka2_intersection: False
+  varlociraptor:
+    classic: False
+    scenario: False
+
+
+
+#  Panel of Normales parameters:
+panelsOfNormals:
+  activate: False
+reader_threads: 1
+batch_size: 50
+bed_intervals: ""
+
+
+#  DataBase GenomicsDBImport
+known-sites:
+  dbsnp_138: ""
+  mills_1000G: ""

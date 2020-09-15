@@ -11,7 +11,7 @@ results/varlociraptor/*
 vcf_files.txt
 .tests/*
 logs/*
-ressources/*
+resources/*
 .Rproj.user
 .RData
 .Rhistory

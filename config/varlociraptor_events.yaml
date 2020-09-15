@@ -1,8 +1,0 @@
-samples:
-  tumor:
-    universe: "[0.0,1.0]"
-    resolution: 100
-
-events:
-  oxog_artifact: "(C>A | G>T) & tumor:]0.0,0.1["
-  present: "((C>A | G>T) & tumor:]0.05,1.0]) | (!(C>A | G>T) & tumor:]0.0,1.0[)"

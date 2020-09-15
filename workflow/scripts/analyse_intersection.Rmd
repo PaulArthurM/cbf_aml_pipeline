@@ -1,0 +1,258 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(gridExtra)
+library(vcfR)
+library(readr)
+library(magrittr)
+library(stringr)
+library(scales)
+library(plotly)
+library(grid)
+library(gridExtra)
+library(reshape2)
+```
+
+```{r}
+res <- read_delim("/media/paularthur/data/Pipelines/old_cbf_aml_pipeline/patients_comptages2.csv", ",", escape_double = FALSE, trim_ws = TRUE) %>% slice_head(n=69)
+res <- res %>% 
+  mutate(Group = ifelse(interf2 == 0, "No_Mutation", ifelse(interf2 == 1, "Single_Mutation", "Clonal_Interference")))
+
+head(res)
+
+res %>% group_by(Group) %>% summarise(n=n())
+```
+
+
+```{r}
+mutect2_strelka2_common_calls <- read_csv("/media/paularthur/data/Projets/DNA-seq_M2.1/vcf/mutect2_strelka2_common_calls.csv")
+head(mutect2_strelka2_common_calls)
+```
+
+```{r}
+sample.group <- res %>% select(Sample, Group, signaling, n_article)
+
+common_calls <- merge(x = mutect2_strelka2_common_calls, y = sample.group, by.x = "sample", by.y = "Sample")
+
+head(common_calls)
+```
+
+
+```{r}
+p1 <- common_calls %>%
+  filter(filter=="PASS") %>%
+  filter(ref=='C' | ref=='T') %>% 
+  filter(alt=='A' | alt=='T' | alt=='C' | alt=='G') %>% 
+  unite(VAR, c(ref, alt), sep = ">") %>% 
+  count(VAR) %>% 
+  arrange(desc(n)) %>% 
+  ggplot(aes(x=reorder(VAR, -n), y=n, fill=VAR)) + 
+    geom_bar(position="dodge", stat="identity") +
+    scale_fill_viridis_d() +
+    scale_color_viridis_d() +
+    theme_classic() +
+    labs(x = "Type", y = "Nombre de mutations") +
+    theme(legend.position = "none") +
+    ggtitle("")
+
+p1
+
+p1 <- arrangeGrob(p1, top = textGrob("A", x = unit(0, "npc")
+         , y   = unit(1, "npc"), just=c("left","top"),
+         gp=gpar(col="black", fontsize=18)))
+```
+
+```{r}
+
+plot_tstv <- function(tstv) {
+pie_data <- tstv %>% 
+  group_by(type) %>%
+  summarise(n = n()) %>%
+  mutate(freq = n / sum(n))
+
+count.data <- pie_data %>%
+  arrange(desc(type)) %>%
+  mutate(lab.ypos = cumsum(freq) - 0.5*freq)
+
+ggplot(count.data, aes(x = "", y = freq, fill = type)) +
+  geom_bar(width = 1, stat = "identity", color = "white") +
+  coord_polar("y", start = 0)+
+  geom_text(aes(y = lab.ypos, label = paste0(100*round(freq, digits = 2),"%")), color = "white") +
+  scale_fill_manual(values = mycols, name = "") +
+  theme_void()  
+}
+
+mycols <- c("#EFC000FF", "#0073C2FF", "#868686FF", "#CD534CFF")
+
+purines <- c("A", "G")
+
+pyrimidines <- c("C", "T")
+
+ALPHABET <- c("A", "C", "G", "T")
+
+tstv <- common_calls %>% filter(filter=="PASS" & ref %in% ALPHABET & alt %in% ALPHABET) %>% mutate(type = ifelse(ref %in% purines & alt %in% purines, "Transition", ifelse(ref %in% pyrimidines & alt %in% pyrimidines, "Transition", "Transversion"))) %>% select(ref, alt, type)
+
+
+
+p2 <- plot_tstv(tstv)
+
+p2
+
+p2 <- arrangeGrob(p2, top = textGrob("B", x = unit(0, "npc")
+         , y   = unit(1, "npc"), just=c("left","top"),
+         gp=gpar(col="black", fontsize=18)))
+```
+
+```{r}
+palette_itzykson <- c("#43556E", "#DE7C3D", "#971B2E")
+
+common_calls$Group <- factor(common_calls$Group, levels=c("No_Mutation", "Single_Mutation", "Clonal_Interference"))
+
+p3 <- common_calls %>% 
+  group_by(Group, sample, signaling) %>%
+  summarise(n = n()) %>%
+  ggplot(aes(x = Group, y = n-signaling, color = Group)) + 
+    scale_x_discrete(labels=c("", "", "")) +
+    geom_boxplot() +
+    theme_classic() +
+    labs(x = "Groupe", y = "Nombre de mutations") +
+    scale_color_manual(labels = c("Pas de clone", "Un seul clone", "Interférence clonale"), values = palette_itzykson, name="Groupe")
+  
+p3
+
+p3 <- arrangeGrob(p3, top = textGrob("C", x = unit(0, "npc")
+         , y   = unit(1, "npc"), just=c("left","top"),
+         gp=gpar(col="black", fontsize=18)))
+```
+
+```{r}
+
+```
+
+
+```{r}
+grid.arrange(p1, p2, p3, ncol = 2)
+```
+
+```{r}
+common_counts <- common_calls %>% 
+  group_by(Group, sample, signaling, n_article) %>%
+  summarise(n = n()) %>%
+  mutate(n_corrected_reanalyse=n-signaling, n_corrected_article=n_article-signaling)
+```
+
+```{r}
+a <- common_counts %>% ungroup() %>% filter(Group == "No_Mutation") %>% select(sample, n_corrected_reanalyse, n_corrected_article, Group)
+
+b <- common_counts %>% ungroup() %>% filter(Group == "Single_Mutation") %>% select(sample, n_corrected_reanalyse, n_corrected_article, Group)
+
+c <- common_counts %>% ungroup() %>% filter(Group == "Clonal_Interference") %>% select(sample, n_corrected_reanalyse, n_corrected_article, Group)
+
+df.melt <- rbind(melt(a), rbind(melt(c), melt(b)))
+
+df.melt$Group <- factor(df.melt$Group, levels=c("No_Mutation", "Single_Mutation", "Clonal_Interference"))
+
+df.melt %>% ggplot(aes(x=Group, y=value, color=variable)) + 
+  geom_boxplot() + 
+  theme(legend.position = "none") + 
+  theme_classic() +
+  scale_x_discrete(labels=c("Aucune mutation\nde signalisation", "Unique mutation\nde signalisation", "Interférence clonale")) +
+  scale_color_discrete(labels = c("Ré-analyse", "Article d'origine"), name="Source") + 
+  labs(x = "Groupe", y = "Nombre de mutations")
+```
+
+```{r}
+linearMod <- lm(common_counts$n_corrected_reanalyse ~ common_counts$n_corrected_article)  # build linear regression model on full data
+
+cor.test(common_counts$n_corrected_reanalyse, common_counts$n_corrected_article)
+
+summary(linearMod)
+
+scatter <- common_counts %>% ggplot(aes(n_corrected_reanalyse, n_corrected_article)) +
+  theme_classic() +
+  geom_point(aes(color = Group)) +
+  geom_smooth(method='lm') +
+  labs(x = "Nombre de mutations (article)", y = "Nombre de mutations (ré-analyse)") +
+  scale_color_manual(labels = c("Pas de clone", "Un seul clone", "Interférence clonale"), values = palette_itzykson, name="Groupe")
+
+scatter
+```
+
+  
+
+
+
+
+
+
+
+```{r}
+wilcox.test(common_counts[common_counts['Group']=="Clonal_Interference", ]$n_corrected, common_counts[common_counts['Group']=="Single_Mutation", ]$n_corrected, alternative = "greater")
+
+wilcox.test(common_counts[common_counts['Group']=="Clonal_Interference", ]$n_corrected, common_counts[common_counts['Group']=="No_Mutation", ]$n_corrected, alternative = "greater")
+```
+
+
+```{r}
+purines <- c("A", "G")
+
+pyrimidines <- c("C", "T")
+
+ALPHABET <- c("A", "C", "G", "T")
+
+mutect2_strelka2_common_calls %>%
+  filter(filter=="PASS" & ref %in% ALPHABET & alt %in% ALPHABET) %>%
+  mutate(type = ifelse(ref %in% purines & alt %in% purines, "Transition", ifelse(ref %in% pyrimidines & alt %in% pyrimidines, "Transition", "Transversion"))) %>%
+  group_by(type) %>%
+  summarise(n=n())
+
+mutect2_strelka2_common_calls %>%
+  filter(filter=="PASS" & ref %in% ALPHABET & alt %in% ALPHABET) %>%
+  mutate(type = ifelse(ref %in% purines & alt %in% purines, "Transition", ifelse(ref %in% pyrimidines & alt %in% pyrimidines, "Transition", "Transversion"))) %>%
+  summarise(n=n())
+
+```
+
+```{r}
+head(mutect2_strelka2_common_calls)
+```
+
+
+```{r}
+mutect2_strelka2_common_calls %>% 
+  #filter(FILTER=="PASS") %>%
+  #unite(VAR, c(REF, ALT), sep = ">") %>%
+  #filter((VAR!="C>A") | (gt_F1R2_ALT > 2 & gt_F2R1_ALT > 2)) %>%
+  #filter((VAR!="G>T") | (gt_F1R2_ALT > 2 & gt_F2R1_ALT > 2)) %>%
+  #filter(gt_F1R2_ALT > 1 & gt_F2R1_ALT > 1) %>%
+  #filter((VAR!="C>A") | (gt_F1R2_ALT > 2 & gt_F2R1_ALT > 2)) %>%
+  #filter((VAR!="G>T") | (gt_F1R2_ALT > 2 & gt_F2R1_ALT > 2)) %>%
+  #filter(gt_F1R2_ALT > 2 & gt_F2R1_ALT > 2) %>%
+  #filter(gt_AF < 0.375) %>%
+  #filter((VAR!="C>A") | (TLOD > -10 + (100/3)*FOXOG)) %>%
+  #filter((VAR!="G>T") | (TLOD > -10 + (100/3)*FOXOG)) %>%
+  #filter(TLOD > -10 + (100/3)*FOXOG) %>%
+  #filter(gt_F1R2_ALT > 2 & gt_F2R1_ALT > 2) %>%
+  #separate(VAR, c("ref", "alt"), sep=">") %>%
+  mutate(Projet="SJCBF_WES_Intersection_SNV-dependant_filtering",
+         Sample="Pooled",
+         ID=".",
+         Genome="GRCh37",
+         mut_type="SNP",
+         chrom=chr,
+         pos_start=pos,
+         pos_end=pos,
+         ref=ref,
+         alt=alt,
+         type="SOMATIC") %>%
+  select(Projet, Sample, ID, Genome, mut_type, chrom, pos_start, pos_end, ref, alt, type) %>%
+  write.table("/home/paularthur/Documents/sigprofiler/input/variants.txt", row.names = F, quote = F, sep = "\t")
+```
+
