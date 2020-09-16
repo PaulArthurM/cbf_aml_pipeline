@@ -27,7 +27,6 @@ include: "workflow/rules/strelka2.smk"
 include: "workflow/rules/freebayes.smk"
 include: "workflow/rules/somatic_sniper.smk"
 include: "workflow/rules/filtering.smk"
-include: "workflow/rules/varlociraptor.smk"
 include: "workflow/rules/varscan.smk"
 include: "workflow/rules/sequenza.smk"
 
