@@ -3,7 +3,7 @@ rule Mutect2_tumour_only:
         bam="results/preprocessing/{sample}_G.bam",
         bai="results/preprocessing/{sample}_G.bai"
     output:
-        temp("results/{token}/vcf/{sample}_pon.vcf.gz")
+        "results/{token}/vcf/{sample}_pon.vcf.gz"
     params:
         ref=config["reference"],
         gnomad=config["mutect2"]["gnomad"]["files"]["raw"],
