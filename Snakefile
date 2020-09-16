@@ -18,7 +18,7 @@ pepfile: "pep/config.yaml"
 
 # Include all rules's scripts
 include: "workflow/rules/commons.smk"
-include: "workflow/rules/quality_controlc.smk"
+include: "workflow/rules/quality_control.smk"
 include: "workflow/rules/utils.smk"
 include: "workflow/rules/preprocessing.smk"
 include: "workflow/rules/mutect2.smk"
