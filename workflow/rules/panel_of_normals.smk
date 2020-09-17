@@ -44,7 +44,6 @@ rule GenomicsDBImport:
         -R {params.ref} \
         -L {params.intervals} \
         --genomicsdb-workspace-path {output.db} \
-        --merge-input-intervals \
         -V {params.inputString} && touch {output.test}"
 
 
