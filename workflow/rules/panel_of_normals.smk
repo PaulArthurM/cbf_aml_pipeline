@@ -25,7 +25,7 @@ rule Mutect2_tumour_only:
 
 rule GenomicsDBImport:
     input:
-        expand("results/{token}/vcf/{sample}_pon.vcf.gz", token=config["token"], sample=pep.sample_table["sample_name"])
+        expand("results/{token}/vcf/noAF_{sample}_pon.vcf.gz", token=config["token"], sample=pep.sample_table["sample_name"])
     output:
         db=directory("results/{token}/GenomicsDBImport".format(token=config["token"])),
         test="results/{token}/genomicsdb.txt".format(token=config["token"])
