@@ -44,7 +44,8 @@ rule GenomicsDBImport:
         -R {params.ref} \
         -L {params.intervals} \
         --genomicsdb-workspace-path {output.db} \
-        -V {params.inputString} && touch {output.test}"
+        --merge-input-intervals \
+        -V {params.inputString} 2> {log} && touch {output.test}"
 
 
 rule CreateSomaticPanelOfNormals:
