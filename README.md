@@ -1,4 +1,4 @@
-# Snakemake Pipeline for the Study of Genomic Instability
+# A Snakemake Pipeline for the Study of Genomic Instability
 
 A Snakemake pipeline for the bioinformatics analysis of genomic instability from NGS data with normal/tumor pair.
 
