@@ -1,6 +1,6 @@
-# Yet Another Pipeline for Normal/Tumor Variant Calling from Whole-Exome Sequencing data v0.2
+# Snakemake Pipeline for the Study of Genomic Instability
 
-A Snakemake pipeline for the bioinformatics analysis of WES data with normal/tumor pair.
+A Snakemake pipeline for the bioinformatics analysis of genomic instability from NGS data with normal/tumor pair.
 
 </br>
 
